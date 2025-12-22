@@ -6,61 +6,89 @@
       xmlns:local="clr-namespace:CMATCTUI.Pages"
       mc:Ignorable="d" 
         xmlns:vm="clr-namespace:CMATCTUI.ViewModels"
-      d:DesignHeight="450" d:DesignWidth="800"
         Title="Errors">
     <Page.DataContext>
         <vm:ErrorsViewModel></vm:ErrorsViewModel>
     </Page.DataContext>
+
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="500"/>
+            <!-- Header -->
+            <RowDefinition Height="*"/>
+            <!-- Grid 1 -->
+            <RowDefinition Height="Auto"/>
+            <!-- Header 2 -->
+            <RowDefinition Height="*"/>
+            <!-- Grid 2 -->
         </Grid.RowDefinitions>
 
-        <!-- Header + Filters (unchanged) -->
+        <!-- ================= HEADER + FILTERS ================= -->
         <StackPanel Grid.Row="0">
             <TextBlock Text="Audit Trail"
-                   FontSize="24"
-                   FontWeight="Bold" />
-            <StackPanel Orientation="Horizontal" Margin="0 10 0 10">
-                <!--<TextBlock Text="Severity:" VerticalAlignment="Center" Margin="0 0 5 0"/>
-                <ComboBox Width="120" Margin="0 0 15 0">
-                    <ComboBoxItem Content="All" IsSelected="True" />
-                    <ComboBoxItem Content="Critical" />
-                    <ComboBoxItem Content="Warning" />
-                    <ComboBoxItem Content="Info" />
-                </ComboBox>
+                       FontSize="24"
+                       FontWeight="Bold"/>
 
-                <TextBlock Text="Search:" VerticalAlignment="Center" Margin="0 0 5 0"/>
-                <TextBox Width="200" Margin="0 0 15 0"
-                     ToolTip="Sequence name, message..." />-->
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
+                <TextBlock Text="From Date" VerticalAlignment="Center"/>
+                <DatePicker SelectedDate="{Binding FromDate}"
+                            Width="150"
+                            Margin="10,0,0,0"/>
 
-                <TextBlock Text="From Date"></TextBlock>
-                <DatePicker SelectedDate="{Binding FromDate}" Width="150" Margin="10,0,0,0"></DatePicker>
+                <TextBlock Text="To Date"
+                           Margin="10,0,0,0"
+                           VerticalAlignment="Center"/>
+                <DatePicker SelectedDate="{Binding ToDate}"
+                            Width="150"
+                            Margin="10,0,0,0"/>
 
-                <TextBlock Margin="10,0,0,0" Text="To Date"></TextBlock>
-                <DatePicker SelectedDate="{Binding ToDate}" Width="150" Margin="10,0,0,0"></DatePicker>
-
-                
-                <Button Content="Create Ticket" Click="Button_Click" Margin="20,0,0,0" Width="80" />
+                <Button Content="Create Ticket"
+                        Width="100"
+                        Margin="20,0,0,0"
+                        Click="Button_Click"/>
             </StackPanel>
         </StackPanel>
 
-        <!-- Error Table -->
-        <DataGrid x:Name="ErrorsDataGrid"   Grid.Row="1"
-          ItemsSource="{Binding ErrorsView}"
-          AutoGenerateColumns="False"
-          IsReadOnly="True"
-          SelectionMode="Single">
+        <!-- ================= FIRST GRID ================= -->
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding ErrorsView}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True" Height="250px" VerticalScrollBarVisibility="Auto">
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="*" />
-                <DataGridTextColumn Header="Time" Binding="{Binding Time}" Width="*" />
-                <DataGridTextColumn Header="Retention Time" Binding="{Binding RetentionTime}" Width="*" />
-                <DataGridTextColumn Header="Device" Binding="{Binding Instrument}" Width="*" />
+                <DataGridTextColumn Header="Date" Binding="{Binding Date}" />
+                <DataGridTextColumn Header="Time" Binding="{Binding Time}" />
+                <DataGridTextColumn Header="Retention Time" Binding="{Binding RetentionTime}" />
+                <DataGridTextColumn Header="Device" Binding="{Binding Instrument}" />
                 <DataGridTextColumn Header="Message" Binding="{Binding Summary}" Width="2*" />
-                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*" />
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
             </DataGrid.Columns>
         </DataGrid>
+
+        <!-- ================= SECOND HEADER ================= -->
+        <TextBlock Grid.Row="2"
+                   Text="Completed Audit Trail"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   Margin="0,10,0,10"/>
+
+        <!-- ================= SECOND GRID ================= -->
+        <DataGrid Grid.Row="3"
+                  ItemsSource="{Binding AuditCompletedErrors}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True" Height="200" VerticalScrollBarVisibility="Auto">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Date" Binding="{Binding Date}" />
+                <DataGridTextColumn Header="Time" Binding="{Binding Time}" />
+                <DataGridTextColumn Header="Retention Time" Binding="{Binding RetentionTime}" />
+                <DataGridTextColumn Header="Device" Binding="{Binding Instrument}" />
+                <DataGridTextColumn Header="Message" Binding="{Binding Summary}" Width="2*" />
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
     </Grid>
+
+
 </Page>

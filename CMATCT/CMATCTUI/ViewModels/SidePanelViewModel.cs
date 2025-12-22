@@ -5,6 +5,7 @@ using System.Windows.Input;
 using CMATCTUI.Commands;
 using CMATCTUI.Pages;
 
+//Test Comment
 namespace CMATCTUI.ViewModels
 {
     public class SidePanelViewModel : INotifyPropertyChanged

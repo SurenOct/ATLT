@@ -1,0 +1,211 @@
+﻿<Page x:Class="CMATCTUI.Pages.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:CMATCTUI.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="800"
+      Title="SettingsPage">
+   
+    <ScrollViewer Margin="20">
+        <StackPanel>
+
+            <!-- Header -->
+            <TextBlock Text="Monitoring Settings"
+                    FontSize="24"
+                    FontWeight="Bold" />
+
+            <!-- Info / Admin banner -->
+            <!-- You can toggle this visibility in code-behind depending on IsAdmin -->
+            <Border x:Name="ReadOnlyBanner"
+                 Background="#FFFBE5"
+                 BorderBrush="#FFE2C2"
+                 BorderThickness="1"
+                 CornerRadius="4"
+                 Padding="10"
+                 Margin="0 10 0 15"
+                 Visibility="Collapsed">
+                <TextBlock Text="You have read-only access. Contact your administrator to change monitoring settings."
+                        TextWrapping="Wrap" />
+            </Border>
+
+            <!-- Log Reading Schedule -->
+            <GroupBox Header="Log Reading Schedule" Margin="0 10 0 10">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0"
+                            Text="Read logs every (hours):"
+                            VerticalAlignment="Center" />
+                    <StackPanel Grid.Row="0" Grid.Column="1"
+                             Orientation="Horizontal">
+                        <TextBox x:Name="TxtFrequencyHours"
+                              Width="50" Margin="0 0 5 0"
+                              Text="2" />
+                        <TextBlock Text="(Recommended: 2–4 hours)"
+                                VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0"
+                            Text="Next scan (preview):"
+                            VerticalAlignment="Center" Margin="0 10 0 0" />
+                    <TextBlock x:Name="TxtNextScanPreview"
+                            Grid.Row="1" Grid.Column="1"
+                            Margin="0 10 0 0"
+                            Text="Today, 14:45" />
+                </Grid>
+            </GroupBox>
+
+            <!-- Log Sources -->
+            <GroupBox Header="Log Sources" Margin="0 10 0 10">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Chromeleon Path -->
+                    <TextBlock Grid.Row="0" Grid.Column="0"
+                            Text="Chromeleon Root Path:"
+                            VerticalAlignment="Center" />
+                    <TextBox x:Name="TxtChromeleonPath"
+                          Grid.Row="0" Grid.Column="1"
+                          Margin="0 5 0 5"
+                          Text="C:\ProgramData\Dionex\Chromeleon\" />
+
+                    <!-- SDK usage -->
+                    <TextBlock Grid.Row="1" Grid.Column="0"
+                            Text="SSR Source:"
+                            VerticalAlignment="Top" Margin="0 5 0 0" />
+                    <StackPanel Grid.Row="1" Grid.Column="1"
+                             Margin="0 5 0 5">
+                        <CheckBox x:Name="ChkUseSdk"
+                               Content="Use Chromeleon SDK to fetch SSR logs (recommended)"
+                               IsChecked="True" Margin="0 0 0 5"/>
+                        <CheckBox x:Name="ChkBackupFolders"
+                               Content="Backup folders on each scan (InstrumentConfigurationReports, IQ, Log)"
+                               IsChecked="True" />
+                    </StackPanel>
+
+                    <!-- Retention -->
+                    <!--<TextBlock Grid.Row="2" Grid.Column="0"
+                            Text="Backup retention (days):"
+                            VerticalAlignment="Center" Margin="0 5 0 0"/>
+                 <TextBox x:Name="TxtRetentionDays"
+                          Grid.Row="2" Grid.Column="1"
+                          Margin="0 5 0 0"
+                          Width="50"
+                          Text="30" />-->
+                </Grid>
+            </GroupBox>
+
+            <!-- Log Sources -->
+            <GroupBox Header="Email Configuration" Margin="0 10 0 10">
+                <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Header -->
+                    <StackPanel Grid.Row="0" Margin="0 0 0 10">
+                        <TextBlock Text="Email Configuration"
+                   FontSize="24"
+                   FontWeight="Bold" />
+                        <TextBlock Text="Email settings are configured by an administrator using the Windows email configuration wizard. ATCT can use the existing configuration but does not allow changes here."
+                   TextWrapping="Wrap"
+                   Margin="0 8 0 0" />
+                    </StackPanel>
+
+                    <!-- Content -->
+                    <Border Grid.Row="1"
+            Padding="15"
+            CornerRadius="6"
+            BorderBrush="#DDD"
+            BorderThickness="1">
+                        <StackPanel>
+
+                            <!-- SMTP Server -->
+                            <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+                                <TextBlock Text="SMTP Server:"
+                           Width="150"
+                           VerticalAlignment="Center" />
+                                <TextBox x:Name="TxtSmtpServer"
+                         IsReadOnly="True"
+                         Width="300"
+                         Text="smtp.example.com" />
+                            </StackPanel>
+
+                            <!-- Port -->
+                            <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+                                <TextBlock Text="Port:"
+                           Width="150"
+                           VerticalAlignment="Center" />
+                                <TextBox x:Name="TxtPort"
+                         IsReadOnly="True"
+                         Width="80"
+                         Text="587" />
+                            </StackPanel>
+
+                            <!-- From Address -->
+                            <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+                                <TextBlock Text="From Address:"
+                           Width="150"
+                           VerticalAlignment="Center" />
+                                <TextBox x:Name="TxtFromAddress"
+                         IsReadOnly="True"
+                         Width="300"
+                         Text="atct-notify@example.com" />
+                            </StackPanel>
+
+                            <!-- Use SSL / TLS -->
+                            <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+                                <TextBlock Text="Security:"
+                           Width="150"
+                           VerticalAlignment="Center" />
+                                <TextBox x:Name="TxtSecurity"
+                         IsReadOnly="True"
+                         Width="150"
+                         Text="TLS" />
+                            </StackPanel>
+
+                            <!-- Last Test Status -->
+                            <StackPanel Margin="10 10 0 10">
+                                <TextBlock Text="Last Test Email Status:"
+                           FontWeight="Bold" />
+                                <TextBlock x:Name="TxtLastTestStatus"
+                           Text="Success (2025-12-04 12:50)"
+                           Margin="0 3 0 0" />
+                            </StackPanel>
+
+                            <!-- Test button (optional – calls service but does not change config) -->
+                            <!--<StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Left">
+                <Button x:Name="BtnSendTest"
+                        Content="Send Test Email"
+                        Width="150"
+                        Click="BtnSendTest_OnClick" />
+            </StackPanel>-->
+
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </GroupBox>
+
+        </StackPanel>
+    </ScrollViewer>
+
+</Page>

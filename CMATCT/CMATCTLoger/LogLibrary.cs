@@ -9,6 +9,7 @@ namespace CMATCTLoger
 {
     public class LogLibrary
     {
+        //TEst
         public static string GetLogPath()
         {
             string folder = Path.Combine(

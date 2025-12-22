@@ -1,11 +1,12 @@
-﻿using CMATCTUI.Models;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Data;
+using CMATCTUI.Models;
 
+//Test Commit
 namespace CMATCTUI.ViewModels
 {
     public class ErrorsViewModel

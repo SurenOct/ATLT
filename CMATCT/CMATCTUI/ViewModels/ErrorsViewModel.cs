@@ -1,15 +1,17 @@
-﻿using System;
+﻿using CMATCTUI.Models;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Data;
-using CMATCTUI.Models;
 
 namespace CMATCTUI.ViewModels
 {
     public class ErrorsViewModel
     {
         public ObservableCollection<ErrorItem> Errors { get; set; }
+        public ObservableCollection<ErrorItem> AuditCompletedErrors { get; set; }
         public ICollectionView ErrorsView { get; set; }
 
 
@@ -43,6 +45,7 @@ namespace CMATCTUI.ViewModels
             // Sample data
             Errors = new ObservableCollection<ErrorItem>
             {
+
                 new ErrorItem
                 {
                     Date = DateTime.Now.AddDays(-1),
@@ -94,9 +97,39 @@ namespace CMATCTUI.ViewModels
                     Status = "New"
                 }
         };
+            AuditCompletedErrors = new ObservableCollection<ErrorItem>();
+            for (int i = 0; i < 50; i++)
+            {
+                Errors.Add(new ErrorItem
+                {
+                    Date = DateTime.Now.AddDays(-1),
+                    Time = DateTime.Now.Date.ToString("10:05:12"),
+                    RetentionTime = Convert.ToDateTime("2025-12-04 10:05:12"),
+                    SequenceName = "Seq_ICS5000_RoutineRun_001",
+                    Instrument = "ICS-5000",
+                    Summary = "Chromeleon reported communication timeout during sequence execution.",
+                    Severity = "Critical",
+                    Status = "New"
+                });
 
-            ErrorsView = CollectionViewSource.GetDefaultView(Errors);
+            }
+            for (int i = 0; i < 50; i++)
+            {
+                Errors.Add(new ErrorItem
+                {
+                    Date = DateTime.Now.AddDays(-1),
+                    Time = DateTime.Now.Date.ToString("10:05:12"),
+                    RetentionTime = Convert.ToDateTime("2025-12-04 10:05:12"),
+                    SequenceName = "Seq_ICS5000_RoutineRun_001",
+                    Instrument = "ICS-5000",
+                    Summary = "Chromeleon reported communication timeout during sequence execution.",
+                    Severity = "Critical",
+                    Status = "Completed"
+                });
 
+            }
+            ErrorsView = CollectionViewSource.GetDefaultView(Errors.Where(x => x.Status != "Completed").ToList());
+            AuditCompletedErrors = new ObservableCollection<ErrorItem>(Errors.Where(x => x.Status == "Completed").ToList());
             ErrorsView.Filter = FilterErrors;
             FromDate = null;
             ToDate = null;

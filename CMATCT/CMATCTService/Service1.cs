@@ -61,6 +61,22 @@ namespace CMATCTService
        
         private void DoWork()
         {
+            using (var scope = new Thermo.Chromeleon.Sdk.Common.CmSdkScope())
+            {
+                Thermo.Chromeleon.Sdk.Common.CmSdk.Logon.DoLogon();
+                var itemFactory = Thermo.Chromeleon.Sdk.Common.CmSdk.GetItemFactory();
+                string computerName = Environment.MachineName;
+
+                Thermo.Chromeleon.Sdk.Interfaces.Data.IDataVaultServer server;
+
+                if (itemFactory.TryGetItem(new Uri($"chrom://{computerName}/"), out server))
+                {
+                    foreach (Thermo.Chromeleon.Sdk.Interfaces.Data.IDataVault dataVault in server.DataVaults)
+                    {
+                        LogLibrary.WriteErrorLog("Service is working fine at dataVault.Name: " + dataVault.Name.ToString() + DateTime.Now.ToString());
+                    }
+                }
+            }
 
             LogLibrary.WriteErrorLog("Service is working fine at " + DateTime.Now.ToString());
 

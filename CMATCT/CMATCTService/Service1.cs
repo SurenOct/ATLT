@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
-using System.Data;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.ServiceProcess;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using CMATCTLoger;
 
 namespace CMATCTService
@@ -18,14 +10,14 @@ namespace CMATCTService
     {
         int schedularTime = Convert.ToInt32(ConfigurationManager.AppSettings["ThreadTime"]);
 
-        private string serviceLogPath;
-        private Thread logThread;
-        private bool keepRunning = true;
+        //private string serviceLogPath;
+        //private Thread logThread;
+        //private bool keepRunning = true;
         private Thread workerThread;
         private bool stopRequested = false;
-        string msiPath;
-        string installLogDirectory;
-        string installLogPath;
+        //string msiPath;
+        //string installLogDirectory;
+        //string installLogPath;
         public Service1()
         {
             InitializeComponent();
@@ -38,7 +30,7 @@ namespace CMATCTService
             // Library.WriteErrorLog("Test window service started");
             workerThread.IsBackground = true;   // service will stop even if thread is running
             workerThread.Start();
-           
+
 
         }
         private void WorkerLoop()
@@ -58,7 +50,7 @@ namespace CMATCTService
                 Thread.Sleep(schedularTime * 60 * 1000);
             }
         }
-       
+
         private void DoWork()
         {
             using (var scope = new Thermo.Chromeleon.Sdk.Common.CmSdkScope())

@@ -9,3 +9,13 @@
 /.vs
 /CMATCT/.vs/CMATCT
 /.gitignore
+/CMATCT/CMATCTLoger/bin/Debug
+/CMATCT/CMATCTService/bin/Debug
+/CMATCT/CMATCTSetup/Debug
+/CMATCT/packages/Newtonsoft.Json.13.0.4
+/CMATCT/CMATCTUI/bin/Debug
+/CMATCT/CMATCTUI/.vs
+/CMATCT/CMATCTService/.vs
+/CMATCT/CMATCTLoger/.vs
+/CMATCT/UpgradeLog.htm
+/CMATCT/CMATCTSetup/CMATCTSetup.vdproj

@@ -1,0 +1,620 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Thermo.Chromeleon.Sdk.Addins</name>
+    </assembly>
+    <members>
+        <member name="T:Thermo.Chromeleon.Sdk.Addins.ExternalCommandNode">
+            <summary>
+            A custom extension node which is used for external commands.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.ExternalCommandNode.Image">
+            <summary>
+            Gets or sets the image of the command.
+            </summary>
+            <value>
+            The image.
+            </value>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.ExternalCommandNode.Name">
+            <summary>
+            Gets or sets the name of the command.
+            </summary>
+            <value>
+            The name.
+            </value>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.ExternalCommandNode.Description">
+            <summary>
+            Gets or sets the name of the command.
+            </summary>
+            <value>
+            The name.
+            </value>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.ExternalCommandNode.Application">
+            <summary>
+            Gets or sets the application name (or path).
+            </summary>
+            <value>
+            The application to run.
+            </value>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Addins.ICommandContext">
+            <summary>
+            Context for the <see cref="T:Thermo.Chromeleon.Sdk.Addins.IInProcessCommand"/>. The context can be used to interact with 
+            Chromeleon.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.ICommandContext.Refresh">
+            <summary>
+            Refreshes the corresponding Chromeleon environment (e.g. if the context was created for the data 
+            tree view, a refresh call will update the corresponding item cache).
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Addins.ICommandInfo`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.ICommandInfo`1.Instance">
+            <summary>
+            Creates the underlying command instance.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.ICommandInfo`1.AddinSignatureState">
+            <summary>
+            Gets the state.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.ICommandInfo`1.IsEnabled(System.String@)">
+            <summary>
+            Determines whether the specified command is enabled or not. The method checks the add-in signature 
+            and the corresponding license flags.
+            </summary>
+            <param name="message">Based on the return value, this parameter contains an empty string or 
+            a detailed localized reason (in the case where the return value is <c>false</c>).</param>
+            <returns>
+              <c>true</c> if the command is enabled; otherwise <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.ICommandInfo`1.IsEnabled">
+            <summary>
+            Determines whether the specified command is enabled or not. The method checks the add-in signature 
+            and the corresponding license flags.
+            </summary>
+            <returns>
+              <c>true</c> if the command is enabled; otherwise <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Addins.ICommandNode">
+            <summary>
+            Describes the basic information of a command node. This information is contained in the 
+            extension manifest and is available before the add-in is instantiated 
+            (at least for in-process add-ins)
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.ICommandNode.Name">
+            <summary>
+            Gets the command name.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.ICommandNode.Description">
+            <summary>
+            Gets the command description.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.ICommandNode.Image">
+            <summary>
+            Gets the optional command image.
+            </summary>
+            <remarks>The return value can be <c>null</c></remarks>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Addins.IInProcessCommand">
+            <summary>
+            A simple in process command.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IInProcessCommand.Initialize(Thermo.Chromeleon.Sdk.Addins.ICommandContext)">
+            <summary>
+            This method is called during initialization.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Addins.IMenuCommand">
+            <summary>
+            Base definition for the menu command add-ins.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IMenuCommand.Execute(System.Collections.Generic.IEnumerable{System.Uri})">
+            <summary>
+            Executes the command with the corresponding selection.
+            </summary>
+            <param name="currentSelection">The current selection.</param>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Addins.IMenuCommandInfo">
+            <summary>
+            Contains more detailed information about the command.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.IMenuCommandInfo.Instance">
+            <summary>
+            Creates the underlying command instance. Based on the command type, the required initialization 
+            will be handled accordingly (e.g. <see cref="M:Thermo.Chromeleon.Sdk.Addins.IInProcessCommand.Initialize(Thermo.Chromeleon.Sdk.Addins.ICommandContext)"/>).
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.IMenuCommandInfo.AddinSignatureState">
+            <summary>
+            Gets the state.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.IMenuCommandInfo.IsInProcess">
+            <summary>
+            Gets a value indicating whether this command is an in-process command
+            </summary>
+            <value>
+            	<c>true</c> if the command will be executed in-process; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.IMenuCommandInfo.RequiresSignature">
+            <summary>
+            Gets a value indicating whether the corresponding command addin requires a 
+            valid signature (e.g. in-process addins).
+            </summary>
+            <value>
+              <c>true</c> if an addin signature is required; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IMenuCommandInfo.IsEnabled(System.String@)">
+            <summary>
+            Determines whether the specified command is enabled or not. The method checks the add-in signature 
+            and the corresponding license flags.
+            </summary>
+            <param name="message">Based on the return value, this parameter contains an empty string or 
+            a detailed localized reason (in the case where the return value is <c>false</c>).</param>
+            <returns>
+              <c>true</c> if the command is enabled; otherwise <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IMenuCommandInfo.IsEnabled">
+            <summary>
+            Determines whether the specified command is enabled or not. The method checks the add-in signature 
+            and the corresponding license flags.
+            </summary>
+            <returns>
+              <c>true</c> if the command is enabled; otherwise <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IMenuCommandInfo.AssignCommandContext(Thermo.Chromeleon.Sdk.Addins.ICommandContext)">
+            <summary>
+            Assigns the corresponding command context. Based on the command type 
+            (e.g. <see cref="T:Thermo.Chromeleon.Sdk.Addins.IInProcessCommand"/>), the context will be used during 
+            the command initialization.
+            </summary>
+            <param name="context">The command context.</param>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Addins.InProcessCommandNode">
+            <summary>
+            A custom extension node which is used for in process commands.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Addins.Instruments.IQueueItemInfo">
+            <summary>
+            Contains general information about a sequence queue item
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.Instruments.IQueueItemInfo.SequenceUrl">
+            <summary>
+            The original (i.e. possibly network) URL of the sequence.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.Instruments.IQueueItemInfo.LocalUrl">
+            <summary>
+            The local URL of the sequence. This is the URL of the downloaded sequence in the
+            controller data vault. The local URL is equal to the original URL if the sequence was
+            not downloaded (local sequences are not downloaded).
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Addins.Instruments.IReadyCheckCommand">
+            <summary>
+            The ready check command which will be executed during a Chromeleon ready check. An add-in developer has 
+            to implement this interface in order to extend the Chromeleon ready check operation.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.Instruments.IReadyCheckCommand.Execute(Thermo.Chromeleon.Sdk.Addins.Instruments.IReadyCheckContext)">
+            <summary>
+            In addition to the "default" Chromeleon ready check, this method will be called by the Chromeleon instrument 
+            controller to perform additional ready check operations.
+            </summary>
+            <param name="context">The ready check context.</param>
+            <returns>The ready check result</returns>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Addins.Instruments.IReadyCheckContext">
+            <summary>
+            Holds information required during a Chromeleon ready check
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.Instruments.IReadyCheckContext.User">
+            <summary>
+            The logon data of the user who executes the ready-check or queue start.
+            </summary>
+            <value>
+            The user.
+            </value>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.Instruments.IReadyCheckContext.Instrument">
+            <summary>
+            Gets the instrument, the ready check is performed on.
+            </summary>
+            <value>
+            The instrument.
+            </value>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.Instruments.IReadyCheckContext.QueueItems">
+            <summary>
+            Gets the sequence queue items.
+            </summary>
+            <value>
+            The queue items.
+            </value>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Addins.IThirdPartyManager">
+            <summary>
+            Access to the third party addins
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IThirdPartyManager.GetInjectionListContextMenuCommands">
+            <summary>
+            Gets the command extensions for the context menu of the injection list.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IThirdPartyManager.GetDataBrowserContextMenuCommands">
+            <summary>
+            Gets the command extensions for the context menu of the data browser control
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IThirdPartyManager.GetConsoleToolsCommands">
+            <summary>
+            Gets the command extensions for the "Tools" menu item of the Chromeleon Console.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IThirdPartyManager.GetConsoleDataContextMenuCommands">
+            <summary>
+            Gets the command extensions for the context menu of the data category in the Chromeleon Console.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IThirdPartyManager.GetConsoleInstrumentsContextMenuCommands">
+            <summary>
+            Gets the command extensions for the context menu of the instruments category in the Chromeleon Console.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IThirdPartyManager.GetConsoleProcedureContextMenuCommands">
+            <summary>
+            Gets the command extensions for the context menu of the eWorkflow category in the Chromeleon Console.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IThirdPartyManager.GetStudioToolsCommands">
+            <summary>
+            Gets the command extensions for the "Tools" menu item of the Chromatography Studio.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IThirdPartyManager.GetStudioDataProcessingContextMenuCommands">
+            <summary>
+            Gets the command extensions for the context menu of the data processing category in the Chromatography Studio.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IThirdPartyManager.GetStudioReportDesignerContextMenuCommands">
+            <summary>
+            Gets the command extensions for the context menu of the printer layout category in the Chromatography Studio.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IThirdPartyManager.GetStudioSpectralLibraryContextMenuCommands">
+            <summary>
+            Gets the command extensions for the context menu of the spectral library category in the Chromatography Studio.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IThirdPartyManager.GetStudioElectronicReportContextMenuCommands">
+            <summary>
+            Gets the command extensions for the context menu of the electronic report category in the Chromatography Studio.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IThirdPartyManager.GetStudioInstrumentMethodContextMenuCommands">
+            <summary>
+            Gets the command extensions for the context menu of the instrument method category in the Chromatography Studio.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IThirdPartyManager.GetStudioInjectionListContextMenuCommands">
+            <summary>
+            Gets the command extensions for the context menu of the sequence editor category in the Chromatography Studio.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IThirdPartyManager.GetReadyCheckCommands">
+            <summary>
+            Gets the ready check commands.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IThirdPartyManager.GetSequenceReadyCommands">
+            <summary>
+            Gets the sequence ready commands.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IThirdPartyManager.GetWorkflowStartCommands">
+            <summary>
+            Gets the eWorkflow wizard start commands.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.IThirdPartyManager.GetWorkflowEndCommands">
+            <summary>
+            Gets the eWorkflow wizard end commands.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Addins.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.Properties.Resources.FailedToStartExternalProgram">
+            <summary>
+              Looks up a localized string similar to Failed to start external program: {0}.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Addins.Sequence.ISequenceReadyCommand">
+            <summary>
+            Will be called when the sequence signature state changes or injection locked
+            states change.
+            This was previously the ready to transfer to LIMS functionality.
+            The add-in developer can implement this interface to get a notification that
+            a sequence signature state or injection locked state has changed and they must
+            report whether they have received and handled the change and transferred
+            required results if required.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.Sequence.ISequenceReadyCommand.SequenceReady(System.Uri)">
+            <summary>
+            This method will be called when a sequence signature state changes to meet
+            the required state defined in the global policies.
+            </summary>
+            <param name="seqUri">The sequence URL</param>
+            <returns>The sequence ready result</returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.Sequence.ISequenceReadyCommand.SequenceNotReady(System.Uri)">
+            <summary>
+            This method will be called when a sequence signature is removed from a 
+            sequence that has previously been 'Ready'
+            </summary>
+            <param name="seqUri">The sequence URL</param>
+            <returns>The sequence ready result</returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.Sequence.ISequenceReadyCommand.InjectionLocked(System.Uri[])">
+            <summary>
+            This method will be called when an injection (or group of injections)
+            is locked.
+            </summary>
+            <param name="injUriList">The list of injection URLs</param>
+            <returns>The sequence ready result</returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.Sequence.ISequenceReadyCommand.InjectionUnlocked(System.Uri[])">
+            <summary>
+            This method will be called when an injection (or group of injections)
+            is unlocked.
+            </summary>
+            <param name="injUriList">The list of injection URLs</param>
+            <returns>The sequence ready result</returns>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Addins.SignatureState">
+            <summary>
+            The signature state of an add-in.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Addins.SignatureState.InternalValid">
+            <summary>
+            The signature is available and valid. The corresponding certificate is used for internal add-ins.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Addins.SignatureState.ExternalValid">
+            <summary>
+            The signature is available and valid. The corresponding certificate is used for external add-ins.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Addins.SignatureState.Invalid">
+            <summary>
+            The signature is available but invalid
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Addins.SignatureState.NotAvailable">
+            <summary>
+            The signature node in the add-in manifest is not available
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Addins.Workflow.IRewritableParameter`1">
+            <summary>
+            A parameter description
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.Workflow.IRewritableParameter`1.Ignore">
+            <summary>
+            Gets or sets a value indicating whether this <see cref="T:Thermo.Chromeleon.Sdk.Addins.Workflow.IRewritableParameter`1"/> should be ignored.
+            </summary>
+            <value>
+              <c>true</c> if ignore; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.Workflow.IRewritableParameter`1.Value">
+            <summary>
+            Gets the parameter value.
+            </summary>
+            <value>
+            The value.
+            </value>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.Workflow.IRewritableParameter`1.CanBeOverriden">
+            <summary>
+            Gets a value indicating whether this parameter value can be overridden by a user (e.g. change value in the user interface)
+            </summary>
+            <value>
+              <c>true</c> if this instance can be overridden; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Addins.Workflow.IWizardPreset">
+            <summary>
+            A set of parameters which will be used during the eWorkflow wizard run.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.Workflow.IWizardPreset.StartPosition">
+            <summary>
+            Gets the sampler start position
+            </summary>
+            <value>
+            The sampler start position.
+            </value>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.Workflow.IWizardPreset.NumberOfSamples">
+            <summary>
+            Gets the number of samples.
+            </summary>
+            <value>
+            The number of samples.
+            </value>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Addins.Workflow.IWizardRunContext">
+            <summary>
+            The context of the eWorkflow wizard run to create a sequence.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.Workflow.IWizardRunContext.Workflow">
+            <summary>
+            Gets the <see cref="T:System.Uri"/> of the eWorkflow which is used for the sequence creation.
+            </summary>
+            <value>
+            The eWorkflow <see cref="T:System.Uri"/>.
+            </value>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.Workflow.IWizardRunContext.Instrument">
+            <summary>
+            Gets the <see cref="T:System.Uri"/> of the instrument which was selected for this eWorkflow run.
+            </summary>
+            <remarks>Based on the current wizard step, this property may return <c>null</c></remarks>
+            <value>
+            The selected instrument <see cref="T:System.Uri"/>.
+            </value>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.Workflow.IWizardRunContext.InjectDeviceName">
+            <summary>
+            Gets the selected name of the inject device name. 
+            </summary>
+            <remarks>Based on the current wizard step, this property may return <c>null</c></remarks>        
+            <value>
+            The name of the inject device.
+            </value>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Addins.Workflow.IWizardRunContext.Tag">
+            <summary>
+            This property stores an object reference. The property is a simple way to link a certain 
+            object to the wizard workflow. It is useful in certain situations (e.g. use an object which was created 
+            for the wizard start extension in a wizard end extension).
+            </summary>
+            <remarks>This property can return <c>null</c></remarks>
+            <value>
+            The tag object.
+            </value>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Addins.Workflow.IWorkflowEndCommand">
+            <summary>
+            Will be executed when the eWorkflow wizard completes. The add-in developer has access to the created 
+            sequence before and after the commit.
+            </summary>
+            <remarks>
+            Please note it is not allowed to have multiple extensions for this extension point.
+            </remarks>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.Workflow.IWorkflowEndCommand.BeforeCommit(Thermo.Chromeleon.Sdk.Addins.Workflow.IWizardRunContext,Thermo.Chromeleon.Sdk.Interfaces.Data.ISequence)">
+            <summary>
+            This method offers an SDK developer to modify the sequence which was created during an eWorkflow wizard run. The
+            sequence is not yet committed in the data base. Furthermore it is not required to create a <see cref="T:System.Transactions.TransactionScope" />
+            in order to modify the sequence item because the caller already opened one. In addition the caller will also handle
+            the transaction completion.
+            </summary>
+            <remarks>The sequence can not be modified in a new thread because the item already contains 
+            modifications and belongs to the caller thread (which is normally the UI thread)</remarks>
+            <param name="ctx">The eWorkflow wizard context.</param>
+            <param name="createdSequence">The created sequence (not yet committed).</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.Workflow.IWorkflowEndCommand.AfterCommit(Thermo.Chromeleon.Sdk.Addins.Workflow.IWizardRunContext,System.Uri)">
+            <summary>
+            This method offers an SDK developer to access the sequence which was created during the eWorkflow run. The sequence is 
+            already committed. Please see <see cref="M:Thermo.Chromeleon.Sdk.Addins.Workflow.IWorkflowEndCommand.BeforeCommit(Thermo.Chromeleon.Sdk.Addins.Workflow.IWizardRunContext,Thermo.Chromeleon.Sdk.Interfaces.Data.ISequence)"/> in order to access the sequence item before the transaction 
+            completion. If there was an error during the save operation of the sequence (transaction completion), the method 
+            will NOT be called.
+            </summary>
+            <param name="ctx">The eWorkflow wizard context.</param>
+            <param name="createdSequenceUrl">The created sequence (not yet committed).</param>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Addins.Workflow.IWorkflowStartCommand">
+            <summary>
+            Will be used when the eWorkflow wizard starts to create a sequence. The add-in developer can 
+            implement this interface to provide a parameter presets for the run (number of samples and 
+            start position). If there is an extension registered for this interface, a button will be 
+            shown on the sample configuration page.
+            </summary>
+            <remarks>
+            Please note it is not allowed to have multiple extensions for this extension point.
+            </remarks>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.Workflow.IWorkflowStartCommand.Initialize(Thermo.Chromeleon.Sdk.Addins.Workflow.IWizardRunContext)">
+            <summary>
+            Initializes the extension with the current wizard context. The provided <paramref name="ctx"/> can be 
+            used for a decision in <see cref="M:Thermo.Chromeleon.Sdk.Addins.Workflow.IWorkflowStartCommand.CanExecute"/> or for the handling of <see cref="M:Thermo.Chromeleon.Sdk.Addins.Workflow.IWorkflowStartCommand.Execute"/>
+            </summary>
+            <remarks>This method is called only once</remarks>
+            <param name="ctx">The CTX.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.Workflow.IWorkflowStartCommand.CanExecute">
+            <summary>
+            Determines whether this instance can be executed. If the method returns <c>false</c>, the corresponding 
+            button on the sample configuration page will be disabled.
+            </summary>
+            <returns>
+              <c>true</c> if this instance can execute; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Addins.Workflow.IWorkflowStartCommand.Execute">
+            <summary>
+            Executes the command to create and provide a parameter preset which will be used during 
+            the eWorkflow wizard run. The method will be called before the sample configuration page 
+            will be shown (the number of samples and the start position can be provided 
+            with <see cref="T:Thermo.Chromeleon.Sdk.Addins.Workflow.IWizardPreset"/>).
+            </summary>
+            <returns>The parameter preset</returns>
+        </member>
+    </members>
+</doc>

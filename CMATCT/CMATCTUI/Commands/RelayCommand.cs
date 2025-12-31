@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace CMATCTUI.Commands
@@ -6,7 +10,7 @@ namespace CMATCTUI.Commands
     public class RelayCommand : ICommand
     {
 
-        //private Action start;
+        private Action start;
 
 
         private readonly Action _execute;

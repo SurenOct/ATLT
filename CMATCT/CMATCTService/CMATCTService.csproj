@@ -15,7 +15,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
@@ -46,8 +49,17 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
-    <Reference Include="Thermo.Chromeleon.Sdk">
-      <HintPath>..\CMSDKBin\Thermo.Chromeleon.Sdk.dll</HintPath>
+    <Reference Include="Thermo.Chromeleon.Sdk, Version=7.3.2.14891, Culture=neutral, PublicKeyToken=f1413f165c7768f2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Thermo.Chromeleon.Sdk\v4.0_7.3.2.10759__f1413f165c7768f2\Thermo.Chromeleon.Sdk.dll</HintPath>
+    </Reference>
+    <Reference Include="Thermo.Chromeleon.Sdk.Addins, Version=7.3.2.14891, Culture=neutral, PublicKeyToken=f1413f165c7768f2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Thermo.Chromeleon.Sdk.Addins\v4.0_7.3.2.10759__f1413f165c7768f2\Thermo.Chromeleon.Sdk.Addins.dll</HintPath>
+    </Reference>
+    <Reference Include="Thermo.Chromeleon.SdkControls, Version=7.3.2.13221, Culture=neutral, PublicKeyToken=f1413f165c7768f2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Thermo.Chromeleon.SdkControls\v4.0_7.3.2.10759__f1413f165c7768f2\Thermo.Chromeleon.SdkControls.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ProjectInstaller.resx">

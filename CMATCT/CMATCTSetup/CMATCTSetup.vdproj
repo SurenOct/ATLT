@@ -21,7 +21,25 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_1F4E03F7EF8A9085C719BBD21027BA43"
+        "OwnerKey" = "8:_81AB00C09E484B47B50C3F87E62CC5CC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2576D526A247B10B14300DDF4D2A4A87"
+        "OwnerKey" = "8:_F56D6FD6A4FC6FEC866D13EF0B837E75"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_2ED432A226A04B76BC048D91DD2A947A"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_36C10534E8F2450C9FBE566BD82DCD9E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -29,6 +47,18 @@
         {
         "MsmKey" = "8:_419A39D207E14A598722DFE32AB3135A"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_6E512EE5C12B3EDEF8BFD4AACA1A7E4B"
+        "OwnerKey" = "8:_2ED432A226A04B76BC048D91DD2A947A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_6E512EE5C12B3EDEF8BFD4AACA1A7E4B"
+        "OwnerKey" = "8:_81AB00C09E484B47B50C3F87E62CC5CC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -45,6 +75,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_F56D6FD6A4FC6FEC866D13EF0B837E75"
+        "OwnerKey" = "8:_81AB00C09E484B47B50C3F87E62CC5CC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_8E45FFC5792C46BBB821C36E1DFD123D"
         "MsmSig" = "8:_UNDEFINED"
@@ -52,7 +88,43 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_F56D6FD6A4FC6FEC866D13EF0B837E75"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_2576D526A247B10B14300DDF4D2A4A87"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_81AB00C09E484B47B50C3F87E62CC5CC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_1F4E03F7EF8A9085C719BBD21027BA43"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_36C10534E8F2450C9FBE566BD82DCD9E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_2ED432A226A04B76BC048D91DD2A947A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_6E512EE5C12B3EDEF8BFD4AACA1A7E4B"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -80,6 +152,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -210,6 +290,68 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_1F4E03F7EF8A9085C719BBD21027BA43"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:CMATCTLoger, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_1F4E03F7EF8A9085C719BBD21027BA43"
+                    {
+                    "Name" = "8:CMATCTLoger.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:CMATCTLoger.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_BCEA2C14C2AA4D09937860CA1C2A67B9"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2576D526A247B10B14300DDF4D2A4A87"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:TRUE"
+            "AssemblyAsmDisplayName" = "8:log4net, Version=2.0.14.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_2576D526A247B10B14300DDF4D2A4A87"
+                    {
+                    "Name" = "8:log4net.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:log4net.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_BCEA2C14C2AA4D09937860CA1C2A67B9"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2ED432A226A04B76BC048D91DD2A947A"
             {
             "AssemblyRegister" = "3:1"
@@ -224,6 +366,37 @@
                     }
                 }
             "SourcePath" = "8:..\\CMATCTUI\\bin\\Debug\\CMATCTUI.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_BCEA2C14C2AA4D09937860CA1C2A67B9"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_36C10534E8F2450C9FBE566BD82DCD9E"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:CMATCTLoger, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_36C10534E8F2450C9FBE566BD82DCD9E"
+                    {
+                    "Name" = "8:CMATCTLoger.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\CMATCTService\\bin\\Debug\\CMATCTLoger.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_BCEA2C14C2AA4D09937860CA1C2A67B9"
@@ -261,13 +434,49 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6E512EE5C12B3EDEF8BFD4AACA1A7E4B"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_6E512EE5C12B3EDEF8BFD4AACA1A7E4B"
+                    {
+                    "Name" = "8:Newtonsoft.Json.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Newtonsoft.Json.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_BCEA2C14C2AA4D09937860CA1C2A67B9"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_81AB00C09E484B47B50C3F87E62CC5CC"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:CMATCTService, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:CMATCTService, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_81AB00C09E484B47B50C3F87E62CC5CC"
+                    {
+                    "Name" = "8:CMATCTService.exe"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:..\\CMATCTService\\bin\\Debug\\CMATCTService.exe"
             "TargetName" = "8:"
@@ -316,6 +525,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F56D6FD6A4FC6FEC866D13EF0B837E75"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:TRUE"
+            "AssemblyAsmDisplayName" = "8:Thermo.Chromeleon.Sdk, Version=7.3.2.10759, Culture=neutral, PublicKeyToken=f1413f165c7768f2, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_F56D6FD6A4FC6FEC866D13EF0B837E75"
+                    {
+                    "Name" = "8:Thermo.Chromeleon.Sdk.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Thermo.Chromeleon.Sdk.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_BCEA2C14C2AA4D09937860CA1C2A67B9"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
         }
@@ -386,7 +626,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:CMATCTSetup"
         "ProductCode" = "8:{FF6D7D43-10B6-4FE7-B168-88928D065488}"
-        "PackageCode" = "8:{36E32E19-8ED4-43F3-B352-05324EBC07A4}"
+        "PackageCode" = "8:{C7CB7555-85C1-4051-A597-37BD78A18247}"
         "UpgradeCode" = "8:{475FB9BB-14D2-4970-8A9C-202529CC9508}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

@@ -4,8 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CMATCTUI.ChildWindows"
+          xmlns:vm="clr-namespace:CMATCTUI.ViewModels"
         mc:Ignorable="d"
         Title="EmailFormat" Height="450" Width="800">
+     
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -36,7 +38,7 @@
                     <!--<TextBlock Text="Attach File:" FontWeight="Bold" VerticalAlignment="Center" Margin="10 0 0 0"/>-->
                     <Button Content="Attach File" Width="80" Height="30" Margin="0 10 0 0" HorizontalAlignment="Left" Click="Button_Click"/>
                 </StackPanel>
-                    <Button Content="Send Email" Width="80" Height="30" Margin="200 40 0 0" HorizontalAlignment="Right"/>
+                    <Button Content="Send Email"  Width="80" Command="{Binding SendEmailCommand}" Height="30" Margin="200 40 0 0" HorizontalAlignment="Right"/>
                 </StackPanel>
 
 

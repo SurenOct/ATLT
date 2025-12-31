@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using System.Windows;
 
 namespace CMATCTUI
@@ -13,5 +8,20 @@ namespace CMATCTUI
     /// </summary>
     public partial class App : Application
     {
+        private static Mutex _mutex;
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            const string appName = "CM ATCT";
+            _mutex = new Mutex(true, appName, out bool isNew);
+
+            if (!isNew)
+            {
+                Shutdown();
+                return;
+            }
+
+            base.OnStartup(e);
+        }
     }
 }

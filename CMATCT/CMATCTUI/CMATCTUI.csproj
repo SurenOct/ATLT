@@ -35,9 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -61,7 +58,6 @@
     <Compile Include="ChildWindows\EmailFormat.xaml.cs">
       <DependentUpon>EmailFormat.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converter\SeverityToImageConverter.cs" />
     <Compile Include="Pages\AboutPage.xaml.cs">
       <DependentUpon>AboutPage.xaml</DependentUpon>
     </Compile>
@@ -74,7 +70,6 @@
     <Compile Include="Pages\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\EmailViewModel.cs" />
     <Compile Include="ViewModels\ErrorsViewModel.cs" />
     <Compile Include="ViewModels\SidePanelViewModel.cs" />
     <Page Include="ChildWindows\EmailFormat.xaml">
@@ -112,7 +107,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\AuditLogItem.cs" />
+    <Compile Include="Models\ErrorItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -130,8 +125,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="FileData\backup_2025-12-24_114803.json" />
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -142,15 +135,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="UserControls\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Information.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Error.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\Warning.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

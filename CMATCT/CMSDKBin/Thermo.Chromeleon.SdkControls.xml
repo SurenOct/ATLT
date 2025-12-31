@@ -1,0 +1,654 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Thermo.Chromeleon.SdkControls</name>
+    </assembly>
+    <members>
+        <member name="T:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.ConnectionFinishReason">
+            <summary>
+            Defines the reason why an instrument connection has finished.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.ConnectionFinishReason.Cancelled">
+            <summary>
+            The user cancelled the connection.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.ConnectionFinishReason.Failed">
+            <summary>
+            The connection failed.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.ConnectionFinishReason.Success">
+            <summary>
+            The connection could be established successfully.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.ConnectionFinishedEventArgs">
+            <summary>
+            Argument specifying how an instrument connection has finished.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.ConnectionFinishedEventArgs.#ctor(Dionex.Chromeleon.InstrumentMethodEditor.ConnectionFinishedEventArgs)">
+            <summary>
+            Construct a new object.
+            </summary>
+            <param name="adaptee"></param>
+        </member>
+        <member name="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.ConnectionFinishedEventArgs.Reason">
+            <summary>
+            Defines the reason why an instrument connection has finished.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.ConnectionFinishedEventArgs.ErrorMessage">
+            <summary>
+            Returns an error message if the <see cref="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.ConnectionFinishedEventArgs.Reason"/> is <see cref="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.ConnectionFinishReason.Failed"/>.
+            Returns an empty string in all other cases.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.IInstrumentMethodValidationResult">
+            <summary>
+            represents the result of an instrument method validation performs by
+            an <see cref="T:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.IInstrumentMethodValidationResult.Success">
+            <summary>
+            Indicates whether the validation has been successful.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.IInstrumentMethodValidationResult.ErrorMessage">
+            <summary>
+            Returns a validation error message.
+            
+            If the validation was successful, returns an empty string.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.IInstrumentMethodValidationResult.ShowErrorMessage(System.Windows.Forms.IWin32Window)">
+            <summary>
+            Displays an error message box if validation failed.
+            </summary>
+            <param name="parentWindow">Parent window. Can be null.</param>
+        </member>
+        <member name="T:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl">
+            <summary>
+            Control containing the Chromeleon instrument method editor.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl"/> class.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl.ToolStripContent">
+            <summary>
+            Specifies the content of the instrument method editor tool strip.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl.ViewGroups">
+            <summary>
+            Defines the editor view groups to be displayed.
+            
+            This property must not be changed if an <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.Data.IInstrumentMethod"/> is currently being edited.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">
+                <see cref="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl.InstrumentMethod"/> is currently being edited.
+            </exception>
+        </member>
+        <member name="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl.InstrumentMethod">
+            <summary>
+            Gets / sets the instrument method to be displayed in the control.
+            
+            When setting a new instrument method the editor will use the symbol information stored internally in the instrument method.
+            To connect to an online instrument, use <see cref="M:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl.SetInstrumentMethod(Thermo.Chromeleon.Sdk.Interfaces.Data.IInstrumentMethod,Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InteractiveInstrumentConnectionOptions)"/>.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl.SetDataItem(Thermo.Chromeleon.Sdk.Interfaces.Data.IInstrumentMethod,System.Boolean)">
+            <summary>
+            Sets the instrument method to be displayed in the control.
+            </summary>
+            <param name="instrumentMethod">The instrument method to be displayed.</param>
+            <param name="connectInstrumentInteractively">
+            True if the instrument method editor should attempt to connect the instrument 
+            referenced in the <paramref name="instrumentMethod"/> interactively.
+            </param>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl.SetInstrumentMethod(Thermo.Chromeleon.Sdk.Interfaces.Data.IInstrumentMethod,Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InteractiveInstrumentConnectionOptions)">
+            <summary>
+            Sets the instrument method to be displayed in the control.
+            </summary>
+            <param name="instrumentMethod">The instrument method to be displayed.</param>
+            <param name="interactiveConnectionOptions">
+            Options used to initially connect the instrument method to an online instrument.
+            If set to null the instrument won't be connected initially. Instead the instrument method editor
+            uses the symbol information stored internally in the <paramref name="instrumentMethod"/> (offline mode).
+            </param>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl.UpdateInstrumentMethod">
+            <summary>
+            Completes the edit process of the current instrument method.
+            If successful, the instrument method will be updated.
+            
+            If an error occurred, instrument method won't be updated.
+            </summary>
+            <returns>An object containing information about the validation result.</returns>
+        </member>
+        <member name="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl.IsModified">
+            <summary>
+            Gets / sets a value indicating whether the instrument method is modified.
+            
+            Setting the modified flag is only allowed if the <see cref="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl.InstrumentMethod"/>
+            is not stored in a Chromeleon data vault or the <see cref="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl.InstrumentMethod"/> 
+            is about to be stored in a Chromeleon data vault (a data base transaction is pending).
+            </summary>
+            <exception cref="T:System.InvalidOperationException">
+            If the <see cref="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl.InstrumentMethod"/> is stored in a Chromeleon data vault.
+            </exception>
+        </member>
+        <member name="E:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl.IsModifiedChanged">
+            <summary>
+            An event that is raised if <see cref="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl.IsModified"/> has changed.
+            </summary>
+        </member>
+        <member name="E:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl.ConnectionFinished">
+            <summary>
+            An event that is raised if the interactive connection has finished.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodEditorControl.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.EditorToolStripContent">
+            <summary>
+            Flags used to specify which items to be displayed in the tool strip of the instrument method editor.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.EditorToolStripContent.None">
+            <summary>
+            Don't show any item.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.EditorToolStripContent.InstrumentSelector">
+            <summary>
+            Show the instrument selector drop down button.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.EditorToolStripContent.ReadyCheck">
+            <summary>
+            Show the ready check button
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.EditorToolStripContent.ScriptEditorCommands">
+            <summary>
+            Show script editor commands.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.EditorToolStripContent.ViewCommands">
+            <summary>
+            Commands that control the view
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.EditorViewGroup">
+            <summary>
+            Id specifying a view or a group of views in the instrument method editor
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.EditorViewGroup.OverviewViews">
+            <summary>
+            Views containing an overview for the current instrument method.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.EditorViewGroup.ScriptEditorViews">
+            <summary>
+            Script editor views
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.EditorViewGroup.DeviceViews">
+            <summary>
+            Device views that are defined by plug-ins and hosted by the DDK plug-ins host.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.EditorViewGroup.SmartXViews">
+            <summary>
+            Views that specify smart startup, shutdown and standby settings for an instrument method.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.EditorViewGroup.MethodTransferViews">
+            <summary>
+            Views to control method transfer.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodWizardControl">
+            <summary>
+            A control that can be used to show an embedded Chromeleon instrument method wizard.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodWizardControl.#ctor">
+            <summary>
+            Initializes a new object.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodWizardControl.StartWizard(System.Uri,Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodWizardFinishOption)">
+            <summary>
+            Starts the wizard.
+            </summary>
+            <param name="instrumentUri">
+            The Uri of an instrument for which to create an instrument method. 
+            If set to null, the wizard will show an instrument selection page.
+            Example for an instrument Uri: "cm-instrument://MyComputer/MyInstrument".
+            </param>
+            <param name="finishOptions">
+            Options for the finish page of the wizard.
+            </param>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodWizardControl.StartWizardWithSymbols(System.Xml.XmlReader,Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodWizardFinishOption)">
+            <summary>
+            Starts the wizard by using the symbols provided by the <paramref name="symbolsReader"/>.
+            </summary>
+            <param name="symbolsReader">Symbol reader.</param>
+            <param name="finishOptions">
+            Options for the finish page of the wizard.
+            </param>
+            <exception cref="T:Thermo.Chromeleon.Sdk.Interfaces.Common.SdkException">
+            if any error occurred.
+            </exception>
+        </member>
+        <member name="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodWizardControl.InstrumentMethod">
+            <summary>
+            Returns the new instrument method if the wizard has terminated successfully.
+            Returns null if the wizard is still in progress or the wizard has been cancelled.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodWizardControl.AllowRetryConnection">
+            <summary>
+            Indicates whether the user is allowed to retry a failed instrument connection.
+            This property is ignored if the wizard started without an instrument.
+            
+            By default AllowRetryConnection is set to true.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodWizardControl.WizardState">
+            <summary>
+            The current state of the wizard.
+            </summary>
+        </member>
+        <member name="E:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodWizardControl.WizardStateChanged">
+            <summary>
+            An event that is raised if <see cref="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodWizardControl.WizardState"/> has changed.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodWizardControl.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodWizardControl.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodWizardControl.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodWizardFinishOption">
+            <summary>
+            Defines options for the instrument method wizard finish page
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodWizardFinishOption.SimpleFinishPage">
+            <summary>
+            Show a simple finish page without any additional input fields.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodWizardFinishOption.ExtendedFinishPage">
+            <summary>
+            Show a finish page allowing the user to enter a description and a comment.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InstrumentMethodWizardFinishOption.ExtendedFinishPageWithName">
+            <summary>
+            Show a finish page allowing the user to enter a description a comment and a method name.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InteractiveInstrumentConnectionOptions">
+            <summary>
+            Options used to connect an instrument interactively
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InteractiveInstrumentConnectionOptions.FullInteractive">
+            <summary>
+            Returns connection constraints with all options set to true.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InteractiveInstrumentConnectionOptions.#ctor">
+            <summary>
+            Initializes a new object.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InteractiveInstrumentConnectionOptions.#ctor(Dionex.Chromeleon.InstrumentMethodEditor.Editor.InteractiveInstrumentConnectionOptions)">
+            <summary>
+            Initializes a new object.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InteractiveInstrumentConnectionOptions.InstrumentToConnect">
+            <summary>
+            The Uri of the instrument that will be connected initially.
+            Can be null. In this case the instrument Uri stored in the data item will be used.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InteractiveInstrumentConnectionOptions.AllowUserInstrumentSelection">
+            <summary>
+            Indicates whether the user is allowed to choose an instrument from the list of online instruments.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InteractiveInstrumentConnectionOptions.AllowWorkOffline">
+            <summary>
+            Indicates whether the user is allowed to work offline (use instrument symbols stored in instrument method).
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InteractiveInstrumentConnectionOptions.AllowRetry">
+            <summary>
+            Indicates whether the user is allowed to retry a failed or cancelled instrument connection.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InteractiveInstrumentConnectionOptions.SetInstrumentToConnect(System.String,System.String)">
+            <summary>
+            Sets the instrument that will be connected initially by specifying serverName and instrumentName
+            </summary>
+            <param name="serverName">The server name. Must not be null or empty.</param>
+            <param name="instrumentName">The instrument name. Must not be null or empty.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.InteractiveInstrumentConnectionOptions.Clone">
+            <summary>
+            Returns a copy of this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.WizardState">
+            <summary>
+            Represents the current state of the instrument method wizard.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.WizardState.NotStarted">
+            <summary>
+            The wizard hasn't been started yet.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.WizardState.Running">
+            <summary>
+            The wizard is currently running.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.WizardState.Finished">
+            <summary>
+            The wizard has been finished successfully.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.InstrumentMethodEditor.WizardState.Cancelled">
+            <summary>
+            The wizard has been cancelled by the user.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl">
+            <summary>
+            The instrument view control.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.TabVisibilityOptions">
+            <summary>
+            enum of page tab visibility options
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.TabVisibilityOptions.None">
+            <summary>
+            Hide tabs
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.TabVisibilityOptions.Home">
+            <summary>
+            Show Home page tab
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.TabVisibilityOptions.Device">
+            <summary>
+            Show all the device tabs
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.TabVisibilityOptions.SmartX">
+            <summary>
+            Show smartX tab
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.TabVisibilityOptions.AuditRealTime">
+            <summary>
+            Show Real Time Audit tab
+            </summary>
+            <remarks>this is a sub tab of the Audit. When both sub tabs (AuditRealTime and AuditHistorical )</remarks>
+            <remarks>are not visible, the Audit tab will be hide.</remarks>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.TabVisibilityOptions.AuditHistorical">
+            <summary>
+            Show historical Audit tab
+            </summary>
+            <remarks>this is a sub tab of the Audit. show only this sub tab without AuditRealTime is not supported</remarks>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.TabVisibilityOptions.Queue">
+            <summary>
+            Show Queue tab
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.TabVisibilityOptions.MsFilter">
+            <summary>
+            Show optional mass filter tab
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.TabVisibilityOptions.ePanelEdit">
+            <summary>
+            show Edit ePanel menu option
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.TabVisibilityOptions.Status">
+            <summary>
+            SII mini status view 
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.TabVisibilityOptions.DiagnosticsHistorical">
+            <summary>
+            Show link to historical diagnostics test data sequence on Diagnostics Tests View
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.TabVisibilityOptions.All">
+            <summary>
+            Show all tabs
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions">
+            <summary>
+            enum of tool bar visibility options
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions.None">
+            <summary>
+            Hide toolbar
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions.LauncheWorkflow">
+            <summary>
+            Show Launch eWorkflow toolbar
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions.StartupUseQueue">
+            <summary>
+            Show Smart Startup toolbar with using Queue Settings menu option
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions.StartupUseMethod">
+            <summary>
+            Show Smart Startup toolbar with using Instrument Method menu option
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions.SmartShutdown">
+            <summary>
+             Show Smart Shutdown toolbar with shutdown menu option
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions.SmartStandby">
+            <summary>
+             Show Smart SmartShutdown toolbar with standby menu option
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions.SmartXGroup">
+            <summary>
+            The SmartX Group of toolbar items
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions.TakeControl">
+            <summary>
+             Show TakeControl toolbar
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions.ReleaseControl">
+            <summary>
+             Show TakeControl toolbar
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions.MonitorBaseline">
+            <summary>
+            Show Monitor Baseline toolbar
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions.MonitorBaselinePreferences">
+            <summary>
+            Show Monitor Baseline toolbar with Preferences menu option
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions.Command">
+            <summary>
+            Show Command toolbar
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions.CommandGroup">
+            <summary>
+            The Command group of toolbar items
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions.Detach">
+            <summary>
+            Show Detach toolbar
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions.PanelSet">
+            <summary>
+            Show  Panel Set toolbar
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions.PanelSetGroup">
+            <summary>
+            The Panel Set group of toolbar items
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions.Consumables">
+            <summary>
+            Show the Consumables toolbar
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions.Troubleshooting">
+            <summary>
+            Show the troubleshooting and diagnostics toolbar
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions.FluidicDescription">
+            <summary>
+            Show the Fluidic Description toolbar
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibilityOptions.All">
+            <summary>
+            Show all tool bars
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl"/> class.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.InstrumentUri">
+            <summary>
+            Gets or sets the unique instrument application uri for this control
+            </summary>
+            <value>
+            The instrument application uri.
+            </value>
+        </member>
+        <member name="P:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.TabVisibility">
+            <summary>
+            Gets or sets a value which tabs should be visible in the control
+            </summary>
+            <value>
+            The definition which tabs are visible in the control.
+            </value>
+        </member>
+        <member name="P:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.ToolbarVisibility">
+            <summary>
+            Gets or sets the toolbar visibility
+            </summary>
+            <value>
+            The toolbar visibility
+            </value>
+        </member>
+        <member name="F:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.Instruments.InstrumentViewControl.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.SdkControls.ModuleInitializer">
+            <summary>
+            Class containing module initialization code
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.ModuleInitializer.Run">
+            <summary>
+            Initializes the module
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.SdkControls.UserControlHelpers.InitializeSdkUserControl(System.Boolean)">
+            <summary>
+            Initializes a SDk user control.
+            It ensures that an item cache is present if the control isn't in the design mode.
+            </summary>
+            <param name="needInstrumentAccess">
+            True if the control needs instrument access
+            </param>
+        </member>
+    </members>
+</doc>

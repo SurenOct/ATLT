@@ -1,0 +1,2488 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Thermo.Chromeleon.Sdk.Implementation</name>
+    </assembly>
+    <members>
+        <member name="T:Thermo.Chromeleon.Sdk.AddinServiceRegistrationModule">
+            <summary>
+            Registers services that need to run in a SDK add-in host. Currently this is only Chromeleon.exe.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.AddinServiceRegistrationModule.Register(Dionex.Chromeleon.Common.IServiceRegistration)">
+            <summary>
+            Called to register services.
+            </summary>
+            <param name="serviceRegistration"></param>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Common.AdapterItem`1">
+            <summary>
+            The adapter class which is used to store the internal Chromeleon object.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Common.AdapterItem`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Common.AdapterItem`1"/> class.
+            </summary>
+            <param name="adaptee">The corresponding adaptee.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Common.AdapterItem`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Common.AdapterItem`1"/> class.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Common.AdapterItem`1.Adaptee">
+            <summary>
+            Gets the internal Chromeleon object.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Common.AdapterList`3">
+            <summary>
+            A list of adapter objects that is associated and mapped to a list of
+            adaptees with the only requirement that the list is a simple enumerable
+            </summary>
+            <typeparam name="TAdaptee"></typeparam>
+            <typeparam name="TAdapter"></typeparam>
+            <typeparam name="TAdapteeList"></typeparam>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Common.CachingObjectMapper`2">
+            <summary>
+            An object mapper that caches created objects in an ItemCache.
+            Offers also the possibility to apply a filter.
+            </summary>
+            <typeparam name="TAdaptee"></typeparam>
+            <typeparam name="TAdapter"></typeparam>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Common.CachingObjectMapper`2.#ctor(System.Func{`0,`1})">
+            <summary>
+            Mapper for script elements
+            </summary>
+            <param name="elementFactory"></param>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Common.CachingObjectMapper`2.AdapteeFilter">
+            <summary>
+            Gets / sets a filter
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Common.CachingObjectMapper`2.GetAdapter``1(`0)">
+             <summary>
+             Returns the adapter object of a given adaptee (typed version).
+            
+             Returns null, if the object is filtered out.
+             Returns null, if node is null.
+             </summary>
+             <param name="adaptee">Adaptee. Can be null.</param>
+             <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Common.CachingObjectMapper`2.GetAdaptee``1(`1)">
+            <summary>
+            Returns the adaptee of a given adapter object (typed version).
+            </summary>
+            <param name="adapter">Adapter object. Can be null.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Common.CachingObjectMapper`2.AddItem(`0,`1)">
+            <summary>
+            Add a new item which is not reachable by the object factory.
+            This is usually the case if the user provides an unconnected item.
+            </summary>
+            <param name="adaptee">Adaptee</param>
+            <param name="adapter">Adapter</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Common.CachingObjectMapper`2.RemoveItem(`0)">
+            <summary>
+            Removes an item from the cache.
+            </summary>
+            <param name="adaptee">Adaptee</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Common.CmServiceLocatorScope.Dispose(System.Boolean)">
+            <summary>
+            disposes each contained service that implements IDisposable.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Common.CmServiceLocatorScope.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, 
+            releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Common.Collections.ListChangingType">
+            <summary>
+            Specifies how the list will be changed.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Common.Collections.ListChangingType.Reset">
+            <summary>
+            Much of the list will be changed.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Common.Collections.ListChangingType.ItemAdding">
+            <summary>
+            An item will be added to the list. Index contains the index of the item that will be added.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Common.Collections.ListChangingType.ItemDeleting">
+            <summary>
+            An item will be deleted from the list. Index contains the index of the item that will be deleted.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Common.Collections.ListChangingType.ItemMoving">
+            <summary>
+            An item will be moved within the list. Index contains the index off the affected item.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Common.Collections.ListChangingType.ItemChanging">
+            <summary>
+            An item will be changed in the list. Index contains the index of the item that is affected.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Common.IDiscoveryAccess.Source">
+            <summary>
+            Gets the source from which discovery information is retrieved and to which it is published.
+            </summary>
+            <value>
+            The source.
+            </value>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Common.IObjectMapper`2">
+            <summary>
+            Defines the mapping of an adapter to the corresponding adaptee and vice versa
+            </summary>
+            <typeparam name="TAdaptee">Type of adaptee.</typeparam>
+            <typeparam name="TAdapter">Type of adapter</typeparam>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Common.IObjectMapper`2.GetAdapter(`0)">
+            <summary>
+            Returns an adapter for an adaptee.
+            May return null if the adapter is filtered out.
+            </summary>
+            <param name="adaptee"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Common.IObjectMapper`2.GetAdaptee(`1)">
+            <summary>
+            Returns an adaptee for an adapter.
+            Shouldn't return null, because there should always be an adaptee for an adapter object.
+            </summary>
+            <param name="adapter"></param>
+            <returns></returns>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Common.ItemCache`2.CleanUpIntervalSeconds">
+            <summary>
+            The clean up interval in seconds
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Common.ItemCache`2.GetOrCreateItem(`0,System.Func{`1})">
+            <summary>
+            Tries to return an alive item from the cache.
+            If no such item is found, a new item will be registered by using a given 
+            creation function.
+            </summary>
+            <param name="key">Key of item</param>
+            <param name="creationFunc">Creation function.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Common.NotificationAdapterItem`1">
+            <summary>
+            Base implementation for all non-cached Chromeleon SDK items
+            that support notifications for property changing and property changed.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Common.NotificationAdapterItem`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Common.NotificationAdapterItem`1"/> class.
+            </summary>
+            <param name="adaptee">The corresponding adaptee.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Common.NotificationAdapterItem`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Common.NotificationAdapterItem`1"/> class.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Common.SdkRollingFileAppender">
+             <summary>
+             this Appender automatically puts the log output in %Appdata%/Dionex/Chromeleon/Log.
+             It therefore expects a plain log file name in the config, without relative path specifications.
+            
+             Alternatively, an absolute path for the log file can be specified.
+             </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Common.SdkRollingFileAppender.#cctor">
+            <summary>
+            as we are not using the source code of log4net anymore, I moved our custom properties from
+            GlobalContext constructor to here. This class is a good place because it is guaranteed to be executed
+            regardless of the process. at least official Chromeleon processes all use this appender here.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Common.SdkRollingFileAppender.File">
+            <summary>
+            The path of the log file.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Common.StandaloneServiceRegistrationModule">
+            <summary>
+            Registers Chromeleon services that are required if the SDK is running in stand-alone mode (not in a Chromeleon process like Console, AdminConsole, etc..).
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Common.StandaloneServiceRegistrationModule.#ctor(Thermo.Chromeleon.Sdk.Common.CmServiceSetup)">
+            <summary>
+            Initializes a new instance.
+            </summary>
+            <param name="cmServiceSetup">Service setup passed by external modules (SII). Can be null.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Common.StandaloneServiceRegistrationModule.Register(Dionex.Chromeleon.Common.IServiceRegistration)">
+            <summary>
+            Called to register services.
+            </summary>
+            <param name="serviceRegistration">Service Registration</param>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Common.WeakReference`1">
+            <summary>
+            Represents a weak reference, which references an object while still allowing
+            that object to be reclaimed by garbage collection.
+            </summary>
+            <typeparam name="T">The type of the object that is referenced.</typeparam>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Common.WeakReference`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the WeakReference{T} class, referencing
+            the specified object.
+            </summary>
+            <param name="target">The object to reference.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Common.WeakReference`1.#ctor(`0,System.Boolean)">
+            <summary>
+            Initializes a new instance of the WeakReference{T} class, referencing
+            the specified object and using the specified resurrection tracking.
+            </summary>
+            <param name="target">An object to track.</param>
+            <param name="trackResurrection">Indicates when to stop tracking the object. 
+            If true, the object is tracked
+            after finalization; if false, the object is only tracked 
+            until finalization.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Common.WeakReference`1.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Common.WeakReference`1"/> class.
+            </summary>
+            <param name="info">An object that holds all the data needed to serialize or deserialize the current <see cref="T:System.WeakReference"/> object.</param>
+            <param name="context">(Reserved) Describes the source and destination of the serialized stream specified by <paramref name="info"/>.</param>
+            <exception cref="T:System.ArgumentNullException">
+              <paramref name="info"/> is null.
+              </exception>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Common.WeakReference`1.Target">
+            <summary>
+            Gets or sets the object (the target) referenced by the 
+            current WeakReference{T} object.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.Cell">
+            <summary>
+            A cell in a Reporting 1.0 Template
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.Cell2">
+            <summary>
+            A cell in a Reporting 2.0 Template
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Cell2.Text">
+            <inheritdoc />
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Cell2.Value">
+            <inheritdoc />
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Cell2.ValueType">
+            <inheritdoc />
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Cell2.Formula">
+            <inheritdoc />
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Cell2.FormulaType">
+            <inheritdoc />
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Cell2.Address">
+            <inheritdoc />
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.Collections.CellCollection">
+            <summary>
+            A collection of <see cref="T:Thermo.Chromeleon.Sdk.Data.Cell"/>s.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.Collections.CellCollection2">
+            <summary>
+            A collection of <see cref="T:Thermo.Chromeleon.Sdk.Data.Cell2"/>s.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Collections.ChildCollection.NotifyObserverListChanging(System.Type,Thermo.Chromeleon.Sdk.Data.ObserverNotification,System.Int32)">
+            <summary>
+            Notifies the observer that the list is going to change.
+            </summary>
+            <param name="itemType">Type of the item (should be derived from Dionex.Chromeleon.IDataItem).</param>
+            <param name="notificationType">Type of the notification.</param>
+            <param name="affectedIndex">Index of the affected item.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Collections.ChildCollection.NotifyObserverListChanged(System.Type,Thermo.Chromeleon.Sdk.Data.ObserverNotification,System.Int32)">
+            <summary>
+            Notifies the observer that the list was changed.
+            </summary>
+            <param name="itemType">Type of the item (should be derived from Dionex.Chromeleon.IDataItem).</param>
+            <param name="notificationType">Type of the notification.</param>
+            <param name="affectedIndex">Index of the affected item.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Collections.ChildCollection.CountBeforeCollection(System.Type)">
+            <summary>
+            Counts the items before the collection of the specified type. The type should be a Chromeleon 
+            internal type (e.g. Dionex.Chromeleon.Data.IInjection).
+            </summary>
+            <param name="type">The type.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Collections.ChildCollection.CountCollection(System.Type)">
+            <summary>
+            Counts the items of a specific item type.
+            </summary>
+            <param name="type">The type.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.Collections.DataItemListChangedEventArgs">
+            <summary>
+            A special version of the <see cref="T:System.ComponentModel.ListChangedEventArgs"/> used for 
+            notifications of <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.Data.IDataItem"/> lists.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Collections.DataItemListChangedEventArgs.#ctor(System.ComponentModel.ListChangedType,System.Int32,Thermo.Chromeleon.Sdk.Interfaces.Data.IDataItem)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.ComponentModel.ListChangedEventArgs"/> class.
+            </summary>
+            <param name="listChangedType">Type of the list changed.</param>
+            <param name="index">The new index.</param>
+            <param name="affectedItem">The affected item.</param>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.Collections.DataItemListChangingEventArgs">
+            <summary>
+            A special version of the <see cref="T:Thermo.Chromeleon.Sdk.Data.Collections.ListChangingEventArgs"/> used for 
+            notifications of <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.Data.IDataItem"/> lists.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Collections.DataItemListChangingEventArgs.#ctor(Thermo.Chromeleon.Sdk.Common.Collections.ListChangingType,System.Int32,Thermo.Chromeleon.Sdk.Interfaces.Data.IDataItem)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Data.Collections.ListChangingEventArgs"/> class.
+            </summary>
+            <param name="listChangingType">Type of the list changing.</param>
+            <param name="index">The new index.</param>
+            <param name="affectedItem">The affected item.</param>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Collections.InjectionList.CustomFieldDefinitions">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.Collections.IInjectionList.CustomFieldDefinitions"/>.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Collections.InjectionList.Dispose(System.Boolean)">
+            <summary>
+            disposes each contained service that implements IDisposable.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Collections.InjectionList.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.Collections.ListChangingEventArgs">
+            <summary>
+            Provides data for the ListChanging event.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Collections.ListChangingEventArgs.#ctor(Thermo.Chromeleon.Sdk.Common.Collections.ListChangingType,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Data.Collections.ListChangingEventArgs"/> class.
+            </summary>
+            <param name="listChangingType">Type of the list changing.</param>
+            <param name="index">The new index.</param>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Collections.ListChangingEventArgs.ListChangingType">
+            <summary>
+            Gets the type of the change.
+            </summary>
+            <value>
+            The type of the change.
+            </value>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Collections.ListChangingEventArgs.Index">
+            <summary>
+            Gets the index of the item affected by the change.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.Collections.SheetCollection">
+            <summary>
+            A collection of <see cref="T:Thermo.Chromeleon.Sdk.Data.Sheet"/>s.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.Collections.SheetCollection2">
+            <summary>
+            A collection of <see cref="T:Thermo.Chromeleon.Sdk.Data.Sheet2"/>s.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Collections.SheetCollection2.GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Collections.SheetCollection2.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc />
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Collections.WorkflowInjectionList.Dispose(System.Boolean)">
+            <summary>
+            disposes each contained service that implements IDisposable.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Collections.WorkflowInjectionList.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.Component">
+            <summary>
+            Implementation of <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.Data.IComponent"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Component.CustomFields">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IComponent.CustomFields"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Component.ConcentrationLevels">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IComponent.ConcentrationLevels"/>.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.DataItem`1">
+            <summary>
+            Base implementation for all Chromeleon SDK data items.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.DataItem`1.IsTemporary">
+            <summary>
+            Determines whether this instance is temporary and never belongs to a data vault before.
+            </summary>
+            <returns>
+              <c>true</c> if this instance is temporary; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.DataItem`1.Initialize(`0)">
+            <summary>
+            Initializes the data item adapter.
+            </summary>
+            <param name="adaptee">The adaptee.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.DataItem`1.Dispose(System.Boolean)">
+            <summary>
+            disposes each contained service that implements IDisposable.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.DataItem`1.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.ElectronicReport">
+            <summary>
+            The SDK Wrapper for a <see cref="T:Dionex.Chromeleon.Data.IElectronicReport"/> that uses Reporting 1.0 (<see cref="P:Dionex.Chromeleon.Data.ReportDefinitionDataFormatVersions.Version10"/>)
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.ElectronicReport2">
+            <summary>
+            The SDK Wrapper for a <see cref="T:Dionex.Chromeleon.Data.IElectronicReport"/> that uses Reporting 2.0 (<see cref="P:Dionex.Chromeleon.Data.ReportDefinitionDataFormatVersions.Version20"/>)
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.ExportFormat">
+            <summary>
+            Formats used by <see cref="T:Thermo.Chromeleon.Sdk.Data.ReportTemplate"/> and <see cref="T:Thermo.Chromeleon.Sdk.Data.ReportTemplate2"/>
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.Folder">
+            <summary>
+            The SDK <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.Data.IFolder"/> implementation.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Folder.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Data.Folder"/> class.
+            </summary>
+            <param name="name">The new folder name.</param>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.Injection">
+            <summary>
+            The SDK <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection"/> implementation
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.InjectionLockWrapper(System.Func{Dionex.Chromeleon.Data.ISequence,System.Boolean})">
+            <summary>
+            Used as a wrapper to avoid duplicate code for <see cref="M:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.Lock(Thermo.Chromeleon.Sdk.Interfaces.Data.IInjectionLockContext)"/> and <see cref="M:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.Unlock(Thermo.Chromeleon.Sdk.Interfaces.Data.IInjectionLockContext)"/>
+            </summary>
+            <param name="method">The method to wrap. i.e.: <see cref="T:Dionex.Chromeleon.UserInterface.VisualComponents.DataPresentation.Frame.Transactions.InjectionLockExtensions"/></param>
+            <returns>The return value of <paramref name="method"/></returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="method"/> is <c>null</c></exception>
+            <exception cref="T:System.InvalidOperationException">If the injection does not have a parent sequence.</exception>
+            <exception cref="T:Thermo.Chromeleon.Sdk.Interfaces.Common.SdkException">If <paramref name="method"/> throws an <see cref="T:Dionex.Chromeleon.UserInterface.VisualComponents.DataPresentation.Frame.Transactions.InjectionLockFailedException"/></exception>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.CustomFields">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.CustomFields"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.InjectionVolume">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.InjectionVolume"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.DilutionFactor">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.DilutionFactor"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.IstdAmount">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.IstdAmount"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.Weight">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.Weight"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.InjectionType">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.InjectionType"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.Status">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.Status"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.InjectTime">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.InjectTime"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.Guid">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.Guid"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.Identification">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.Identification"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.ReplicateId">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.ReplicateId"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.SpikeGroup">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.SpikeGroup"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.Category">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.Category"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.Comment">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.Comment"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.ConcentrationLevel">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.ConcentrationLevel"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.Position">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.Position"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.IsLocked">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.IsLocked"/>.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.Lock(Thermo.Chromeleon.Sdk.Interfaces.Data.IInjectionLockContext)">
+            <summary>
+            Default SDK implementation of <see cref="M:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.Lock(Thermo.Chromeleon.Sdk.Interfaces.Data.IInjectionLockContext)"/>.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.Unlock(Thermo.Chromeleon.Sdk.Interfaces.Data.IInjectionLockContext)">
+            <summary>
+            Default SDK implementation of <see cref="M:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.Unlock(Thermo.Chromeleon.Sdk.Interfaces.Data.IInjectionLockContext)"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.InstrumentMethod">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.InstrumentMethod"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.InstrumentMethodName">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.InstrumentMethodName"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.ProcessingMethod">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.ProcessingMethod"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.ProcessingMethodName">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.ProcessingMethodName"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.Signals">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.Signals"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.SpectralFields">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.SpectralFields"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.MsRawItems">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.MsRawItems"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.LockLogEntry">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.LockLogEntry"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InjectionBase`1.AuditTrail">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection.AuditTrail"/>.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.InjectionLockContext">
+            <inheritdoc cref="T:Thermo.Chromeleon.Sdk.Interfaces.Data.IInjectionLockContext"/>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.InjectionLockContext.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Data.InjectionLockContext"/> class.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.InstrumentMethod.UpdateInstrumentSymbols(System.Xml.XmlReader)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.ScriptAdapterItem`1.#ctor(Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.ScriptContext,`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Common.AdapterItem`1"/> class.
+            </summary>
+            <param name="context">Script context</param>
+            <param name="adaptee">The corresponding adaptee.</param>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.ScriptAdapterItem`1.Context">
+            <summary>
+            Returns that script editing context
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.ScriptAdapterItem`1.PerformScriptAction(System.Action)">
+            <summary>
+            Does all the necessary checks and Exception handling
+            to perform an action that modifies the script.
+            </summary>
+            <param name="action"></param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.ScriptAdapterItem`1.PerformExpressionAction(System.Action)">
+            <summary>
+            Does all the necessary checks and Exception handling
+            to perform an action that modifies an expression.
+            </summary>
+            <param name="action"></param>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.ScriptContext">
+            <summary>
+            An object that manages script elements in a script context.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.ScriptContext.#ctor(Dionex.Chromeleon.InstrumentMethod.Interfaces.IMethod,System.Action)">
+            <summary>
+            Constructs a context object from a host method
+            </summary>
+            <param name="cmMethod"></param>
+            <param name="privilegeCheckCallback"></param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.ScriptContext.#ctor(Thermo.Chromeleon.Sdk.Interfaces.Data.InstrumentMethodScript.ScriptType,Thermo.Chromeleon.Sdk.Instruments.Symbols.ClientSymbols,System.Action)">
+            <summary>
+            Creates a script context for a new instrument method.
+            </summary>
+            <param name="scriptType"></param>
+            <param name="clientSymbols"></param>
+            <param name="privilegeCheckCallback"></param>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.ScriptContext.Symbols">
+            <summary>
+            Returns an object representing the client symbol tree.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.ScriptContext.PrivilegeCheckCallback">
+            <summary>
+            Returns a callback that should check that script modification is allowed.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.ScriptContext.ElementMapper">
+            <summary>
+            Returns a mapper object that can be used to map host syntax nodes to SDK script elements
+            and vice versa.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.ScriptContext.StepParameterMapper">
+            <summary>
+            Returns a mapper object that can be used to map host command step parameters to SDK step parameter
+            and vice versa.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.ScriptContext.ElementFactory">
+            <summary>
+            Returns a factory object that can be used to create new script elements
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.ScriptContext.RootElement">
+            <summary>
+            Returns the root element of the script.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.ScriptContext.CmMethod">
+            <summary>
+            Returns the instrument's root symbol.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.ScriptContext.EditContext">
+            <summary>
+            A context used to create and edit objects in the hosted method.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.ScriptContext.PerformScriptAction(System.Action)">
+            <summary>
+            Must be called to perform any action that modifies the script
+            </summary>
+            <param name="action"></param>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.ScriptElementFactory">
+            <summary>
+            A factory object that can be used to create new script elements
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.ScriptElementFactory.CreateElement(Dionex.Chromeleon.InstrumentMethod.Interfaces.ISyntaxNode)">
+            <summary>
+            Creates a SDK element from a host syntax node
+            </summary>
+            <param name="cmNode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.ScriptElementFactory.CreateStepParameter(Dionex.Chromeleon.InstrumentMethod.Interfaces.ICommandStepParameter)">
+            <summary>
+            Creates a step parameter
+            </summary>
+            <param name="adaptee"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.Step.Steps">
+            <summary>
+            Returns the list of all child steps contained in step including conditional commands.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.Step.ParameterValidationState">
+            <summary>
+            The validation state of the current expression.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.InstrumentMethodScript.StepParameter">
+            <summary>
+            An object representing a step parameter with an expression.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.PrivilegedOperation">
+            <summary>
+            Common operations requiring privileges
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Data.PrivilegedOperation.Create">
+            <summary>
+            Create
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Data.PrivilegedOperation.Copy">
+            <summary>
+            Copy
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Data.PrivilegedOperation.Move">
+            <summary>
+            Move
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Data.PrivilegedOperation.Delete">
+            <summary>
+            Delete
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Data.PrivilegedOperation.Rename">
+            <summary>
+            Rename
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Data.PrivilegedOperation.Lock">
+            <summary>
+            Lock
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Data.PrivilegedOperation.Unlock">
+            <summary>
+            Unlock
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Data.PrivilegedOperation.Modify">
+            <summary>
+            Modify
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.ISupportCheckPrivileges.GetPrivilegeIds(Thermo.Chromeleon.Sdk.Data.PrivilegedOperation)">
+            <summary>
+            Gets the privilege id for common privileged operations.
+            </summary>
+            <param name="operation">The privileged operation.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.ItemFactory.#ctor(Thermo.Chromeleon.Sdk.Common.IDiscoveryAccess,Thermo.Chromeleon.Sdk.Interfaces.UserManagement.ILogon)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Data.ItemFactory"/> class.
+            </summary>
+            <param name="access">The discovery access -
+            used for the dependency injection auto wiring.</param>
+            <param name="logon">The logon information.</param>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.LogItem">
+            <summary>
+            A kind of log entry which contains information about an event (e.g. sequence creation etc.).
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.LogItem.#ctor(Thermo.Chromeleon.Sdk.Interfaces.Data.LogLevel,System.String)">
+            <summary>
+            Constructs a <see cref="T:Thermo.Chromeleon.Sdk.Data.LogItem"/>.
+            </summary>
+            <param name="level"></param>
+            <param name="info"></param>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.MassSpectrum">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.MsRawItem.Metadata">
+            <inheritdoc />
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.MsRawItem.RetrieveFilePathAsync">
+            <inheritdoc />
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.MsRawItem.FileHeader">
+            <inheritdoc />
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.MsRawItem.GetSpectrum(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.MsRawItem.WriteBinaryDataTo(System.IO.BinaryWriter)">
+            <inheritdoc />
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.PageSetup">
+            <summary>
+            Implementation of <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.IPageSetup"/> for a Reporting 1.0.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.PageSetup2">
+            <summary>
+            Implementation of <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.IPageSetup"/> for a Reporting 2.0.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.ParentItem`1">
+            <summary>
+            The base implementation for a data item which can contain child data items.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.ParentItem`1.Children">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IParentItem.Children"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.ProcessingMethod.Components">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IProcessingMethod.Components"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.ProcessingMethod.Description">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.IProcessingMethod.Description"/>.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.ReportTemplate">
+            <summary>
+            The SDK Wrapper for a <see cref="T:Dionex.Chromeleon.Data.IReportDefinition"/> that uses Reporting 1.0 (<see cref="P:Dionex.Chromeleon.Data.ReportDefinitionDataFormatVersions.Version10"/>)
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.ReportTemplate.ExportToGaml(System.Collections.Generic.IEnumerable{Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection},System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.ReportTemplate.ExportToAndi(System.Collections.Generic.IEnumerable{Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection},System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.ReportTemplate.ExportToRaw(System.Collections.Generic.IEnumerable{Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection},System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.ReportTemplate.ExportToCmbx(System.Collections.Generic.IEnumerable{Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection},System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.ReportTemplate.ExportToAdf(System.Collections.Generic.IEnumerable{Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection},System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.ReportTemplate.CheckPrintExportUnsavedDataPrivilege(System.Collections.Generic.IEnumerable{Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection})">
+            <summary>
+            Checks whether the sequences of the injections are modified if the "PrintExportUnsavedData" privilege is missing.
+            </summary>
+            <param name="injections"></param>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.ReportTemplate2">
+            <summary>
+            The SDK Wrapper for a <see cref="T:Dionex.Chromeleon.Data.IReportDefinition"/> that uses Reporting 2.0 (<see cref="P:Dionex.Chromeleon.Data.ReportDefinitionDataFormatVersions.Version20"/>)
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.ReportTemplate2.OnGetPrivilegeIds(Thermo.Chromeleon.Sdk.Data.PrivilegedOperation)">
+            <inheritdoc />
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.ReportTemplate2.ResetAdapters">
+            <inheritdoc />
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.ReportTemplate2.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.ReportTemplate2.Sheets">
+            <inheritdoc />
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.ReportTemplate2.CheckPrintExportUnsavedDataPrivilege(System.Collections.Generic.IEnumerable{Thermo.Chromeleon.Sdk.Interfaces.Data.IInjection})">
+            <summary>
+            Checks whether the sequences of the injections are modified if the "PrintExportUnsavedData" privilege is missing.
+            </summary>
+            <param name="injections"></param>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.RetentionTimeSettings">
+            <summary>
+            Base implementation of <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.Data.IRetentionTimeSettings"/>.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.Sequence">
+            <summary>
+            The SDK <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.Data.ISequence"/> implementation.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Sequence.#ctor(Dionex.Chromeleon.Data.ISequence)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Data.Sequence"/> class.
+            </summary>
+            <param name="adaptee">The adaptee.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Sequence.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Data.Sequence"/> class.
+            </summary>
+            <param name="name">The name of the new sequence.</param>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Sequence.Description">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.ISequence.Description"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Sequence.CustomFields">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.ISequence.CustomFields"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Sequence.Server">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.ISequence.Server"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Sequence.Injections">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.ISequence.Injections"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Sequence.ReportTemplates">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.ISequence.ReportTemplates"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Sequence.DefaultChannel">
+            <summary>
+            Gets or sets the default channel.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Sequence.ExportToGaml(Thermo.Chromeleon.Sdk.Interfaces.Data.IReportTemplate,System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Sequence.ExportToAndi(Thermo.Chromeleon.Sdk.Interfaces.Data.IReportTemplate,System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Sequence.ExportToRaw(Thermo.Chromeleon.Sdk.Interfaces.Data.IReportTemplate,System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Sequence.ExportToCmbx(Thermo.Chromeleon.Sdk.Interfaces.Data.IReportTemplate,System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Sequence.ExportToAdf(Thermo.Chromeleon.Sdk.Interfaces.Data.IReportTemplate,System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.SequenceCreationContext">
+            <summary>
+            See <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.Data.ISequenceCreationContext"/> for a detailed description
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.SequenceCreationContext.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Data.SequenceCreationContext"/> class.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.SequenceCreationContext.DataPresentationLayout">
+            <summary>
+            See <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.ISequenceCreationContext.DataPresentationLayout"/>
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.SequenceCreationContext.InjectDeviceName">
+            <summary>
+            See <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.ISequenceCreationContext.InjectDeviceName"/>
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.SequenceCreationContext.Instrument">
+            <summary>
+            See <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.ISequenceCreationContext.Instrument"/>
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.SequenceCreationContext.InstrumentMethod">
+            <summary>
+            See <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.ISequenceCreationContext.InstrumentMethod"/>
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.SequenceCreationContext.NumberOfSamples">
+            <summary>
+            See <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.ISequenceCreationContext.NumberOfSamples"/>
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.SequenceCreationContext.ProcessingMethod">
+            <summary>
+            See <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.ISequenceCreationContext.ProcessingMethod"/>
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.SequenceCreationContext.ReportTemplate">
+            <summary>
+            See <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.ISequenceCreationContext.ReportTemplate"/>
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.SequenceCreationContext.SequenceDescription">
+            <summary>
+            See <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.ISequenceCreationContext.SequenceDescription"/>
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.SequenceCreationContext.SequenceLocation">
+            <summary>
+            See <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.ISequenceCreationContext.SequenceLocation"/>
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.SequenceCreationContext.SequenceName">
+            <summary>
+            See <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.ISequenceCreationContext.SequenceName"/>
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.SequenceCreationContext.StartPosition">
+            <summary>
+            See <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.ISequenceCreationContext.StartPosition"/>
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.SequenceCreationContext.RackPositions">
+            <summary>
+            See <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.ISequenceCreationContext.RackPositions"/>
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.SequenceCreationContext.AvailableRackPositions">
+            <summary>
+            See <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Data.ISequenceCreationContext.AvailableRackPositions"/>
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.SequenceDefinition.#ctor(Dionex.Chromeleon.Data.ISequenceDefinition)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Data.Sequence"/> class.
+            </summary>
+            <param name="adaptee">The adaptee.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.SequenceLayout.#ctor(Dionex.Chromeleon.Data.ISequenceLayout)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Data.SequenceLayout"/> class.
+            </summary>
+            <param name="adaptee">The adaptee.</param>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.Sheet">
+            <summary>
+            An SDK Wrapper for a Reporting 1.0 <see cref="T:Dionex.Chromeleon.UserInterface.VisualComponents.ReportDefinition.ISheetDescription"/>.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Sheet.SelectSheet">
+            <summary>
+            Ensures that the sheet is selected.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Sheet.IsModified">
+            <summary>
+            Gets a value indicating whether the sheet is modified.
+            </summary>
+            <value>
+            	<c>true</c> if the sheet is modified; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Sheet.IsProtected">
+            <summary>
+            Gets a value indicating whether the sheet is protected.
+            </summary>
+            <value>
+                <c>true</c> if the sheet is protected; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Sheet.Name">
+            <summary>
+            Gets the name of the sheet.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Sheet.LastRowIndex">
+            <summary>
+            Gets the index of the last occupied row.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Sheet.LastColumnIndex">
+            <summary>
+            Gets the index of the last occupied column.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Sheet.Cells">
+            <summary>
+            Returns an instance of <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.Data.Collections.ICellCollection"/> 
+            which provides access to the cells of the sheet. 
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Sheet.PageSetup">
+            <summary>
+            Gets the page setup object for a sheet.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Data.Sheet2">
+            <summary>
+            An SDK Wrapper for a Reporting 2.0 <see cref="T:ThermoFisher.Ardia.Reporting.Interfaces.Layout.Model.ISheetDefinition"/>.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Sheet2.SelectSheet">
+            <summary>
+            Ensures that the sheet is selected.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Sheet2.IsModified">
+            <inheritdoc />
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Sheet2.IsProtected">
+            <inheritdoc />
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Sheet2.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Sheet2.LastRowIndex">
+            <inheritdoc />
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Sheet2.LastColumnIndex">
+            <inheritdoc />
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Sheet2.Cells">
+            <inheritdoc />
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Data.Sheet2.PageSetup">
+            <inheritdoc />
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.SingleInjection.#ctor(Dionex.Chromeleon.Data.ISingleInjection)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Data.SingleInjection"/> class.
+            </summary>
+            <param name="adaptee">The adaptee.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Data.Workflow.TryCreateInternalContext(Thermo.Chromeleon.Sdk.Data.SequenceCreationResult,Thermo.Chromeleon.Sdk.Interfaces.Data.ISequenceCreationContext,Dionex.Chromeleon.VisualComponents.Procedures.SequenceCreationContext@)">
+            <summary>
+            Tries to create the internal sequence creation context which is required for the eWorkflow run.
+            </summary>
+            <param name="sdkCreationResult">The creation result.</param>
+            <param name="context">The context.</param>
+            <param name="internalContext">The internal context.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Evaluation.EvaluationContext">
+            <summary>
+            A context which can be used during the Chromeleon formula evaluation.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Evaluation.EvaluationContext.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Evaluation.EvaluationContext"/> class.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Evaluation.EvaluationContext.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Evaluation.EvaluationContext"/> class.
+            </summary>
+            <param name="channelName">Name of the channel which should be used during the formula evaluation.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Evaluation.EvaluationContext.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Evaluation.EvaluationContext"/> class.
+            </summary>
+            <param name="channelName">Name of the channel which should be used during the formula evaluation.</param>
+            <param name="peakName">Name of the peak which should be used during the formula evaluation.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Evaluation.EvaluationContext.#ctor(System.String,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Evaluation.EvaluationContext"/> class.
+            </summary>
+            <param name="channelName">Name of the channel which should be used during the formula evaluation.</param>
+            <param name="peakIndex">Index of the peak which should be used during the formula evaluation.</param>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Evaluation.EvaluationContext.ChannelName">
+            <summary>
+            Gets or sets the name of the channel which should be used for the formula evaluation.
+            </summary>
+            <value>
+            The name of the channel. The value can be <c>null</c>.
+            </value>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Evaluation.EvaluationContext.PeakIndex">
+            <summary>
+            Gets or sets the index of the peak which should be used for the formula evaluation.
+            </summary>
+            <value>
+            The index of the peak. The value can be <c>null</c>.
+            </value>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Evaluation.EvaluationContext.PeakName">
+            <summary>
+            Gets or sets the name of the peak which should be used for the formula evaluation.
+            </summary>
+            <value>
+            The name of the peak. The value can be <c>null</c>.
+            </value>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Evaluation.EvaluationContext.ParserLocalization">
+            <summary>
+            Gets the parser localization used during the formula evaluation.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Instruments.IInstrumentAccessHelper.GetOrCreateInstrument(System.Uri)">
+            <summary>
+            Gets the instrument if it exists, creates it if not.
+            </summary>
+            <param name="address">The address.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Instruments.Instrument.WcfInstrument">
+            <summary>
+            Provides access to the WCF instrument (mainly used by the DxCtrl implementation).
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Instruments.Instrument.SetDxControlOperationMode(System.Boolean)">
+            <summary>
+            Sets DxControl operation mode
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Instruments.Instrument.PauseQueueRunAfterEachInjection(System.Boolean)">
+            <summary>
+            If the parameter is true then the current or next sequence queue run is paused after
+            each injection. <see cref="M:Thermo.Chromeleon.Sdk.Instruments.Instrument.ContinueToNextInjection"/> can be used to continue the run.
+            This special pause mode is terminated after a single sequence queue run.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Instruments.Instrument.ContinueToNextStage">
+            <summary>
+            Continues to next stage
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Instruments.Instrument.ContinueToNextInjection">
+            <summary>
+            Continues to next injection
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Instruments.Instrument.PauseAfterInjection">
+            <summary>
+            Pauses the process after the current injection completes
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Instruments.Instrument.OnlineValuesReady">
+            <summary>
+            Indicates whether online values are currently available for the instrument.
+            When connecting to an instrument it takes a short amount of time until online values are actually available. 
+            Use this property to in conjunction with the <see cref="E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> event 
+            to ensure that properties are already available when you access them.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Instruments.Instrument.Dispose(System.Boolean)">
+            <summary>
+            disposes each contained service that implements IDisposable.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Instruments.Instrument.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, 
+            releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Instruments.InstrumentAccess.#ctor(Thermo.Chromeleon.Sdk.Common.IDiscoveryAccess)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Instruments.InstrumentAccess"/> class.
+            </summary>
+            <param name="discoveryAccess">The discovery access.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Instruments.InstrumentAccess.Invoke``1(System.Func{``0})">
+            <inheritdoc cref="M:Thermo.Chromeleon.Sdk.Instruments.InstrumentAccess.Invoke(System.Action)"/>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Instruments.InstrumentAccess.Invoke(System.Action)">
+            <summary>
+            Wrap internal method calls to ensure thread safety and proper initialization.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Instruments.InstrumentAccess.Dispose(System.Boolean)">
+            <summary>
+            disposes each contained service that implements IDisposable.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Instruments.InstrumentAccess.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing,
+            releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Instruments.InstrumentUriHelper">
+            <summary>
+            Class for constructing and parsing instrument Uris
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Instruments.InstrumentUriHelper.ApplicationUriFromNames(System.String,System.String)">
+            <summary>
+            Gets an application URI from names.
+            </summary>
+            <param name="serverName">Name of the server.</param>
+            <param name="instrumentName">Name of the instrument.</param>
+            <returns></returns>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Instruments.Queue.QueueControl.QueueOperationTimeoutSeconds">
+            <summary>
+            The queue operation timeout in seconds.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Instruments.Queue.QueueControl.PollIntervalSeconds">
+            <summary>
+            Poll interval in seconds
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Instruments.RackPosition.ToString">
+            <summary>
+            Formats the tray position.
+            </summary>
+            <returns>The tray position. It may be only a tube/vial name, 
+            or a tray and tube/vial name separates by a colon.</returns>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Instruments.Symbols.Channel.EvaluationType">
+            <summary>
+            Returns the evaluation type of the channel.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Instruments.Symbols.ClientSymbols">
+            <summary>
+            An object that manages clients symbols.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Instruments.Symbols.ClientSymbols.#ctor(Dionex.Chromeleon.Common.Symbols.Interfaces.ISymbolTable)">
+            <summary>
+            Constructs a new object from a host symbol table
+            </summary>
+            <param name="cmSymbolTable"></param>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Instruments.Symbols.ClientSymbols.RootSymbol">
+            <summary>
+            Returns the instrument's root symbol.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Instruments.Symbols.ClientSymbols.SymbolFilter">
+            <summary>
+            Gets / sets a symbol filter.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Instruments.Symbols.ClientSymbols.GetSymbolAdapter(Dionex.Chromeleon.Common.Symbols.Interfaces.ISymbol)">
+            <summary>
+            Returns the adapter object of a given host symbol.
+            </summary>
+            <param name="cmSymbol">Host symbol. Can be null.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Instruments.Symbols.ClientSymbols.GetSymbolAdapter``1(Dionex.Chromeleon.Common.Symbols.Interfaces.ISymbol)">
+            <summary>
+            Returns the adapter object of a given host symbol (typed version).
+            
+            Returns null, if the symbol is filtered out (i.e. ServiceLevel symbols)
+            Returns null, if cmSymbol is null.
+            </summary>
+            <param name="cmSymbol">Host symbol. Can be null.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Instruments.Symbols.ClientSymbols.GetSymbolAdaptee(Thermo.Chromeleon.Sdk.Interfaces.Instruments.Symbols.ISymbol)">
+            <summary>
+            Returns the adapted host object of a given symbol
+            </summary>
+            <param name="cmSymbol">Host object. Can be null.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Instruments.Symbols.ClientSymbols.GetSymbolAdaptee``1(Thermo.Chromeleon.Sdk.Interfaces.Instruments.Symbols.ISymbol)">
+            <summary>
+            Returns the adapted host object of a given symbol (typed version).
+            </summary>
+            <param name="cmSymbol">Host object. Can be null.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Instruments.Symbols.IInternalNumericProperty">
+            <summary>
+            Internal interface for numeric properties.
+            Don't make it public.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Instruments.Symbols.IInternalNumericProperty.OfflineValue">
+            <summary>
+            Returns the property value that is set up statically by the instrument controller.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Instruments.Symbols.IInternalStringProperty">
+            <summary>
+            Internal interface for numeric properties.
+            Don't make it public.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Instruments.Symbols.IInternalStringProperty.OfflineValue">
+            <summary>
+            Returns the property value that is set up statically by the instrument controller.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Licensing.LicenseClient">
+            <summary>
+            Implementation of the SDK License Client used to access the CM7 licensing system.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Licensing.LicenseClient.#ctor">
+            <summary>
+            Constructor of the SDK License Client
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Licensing.LicenseClient.InternalLicenseClient">
+            <summary>
+            Lazy initialization of a Chromeleon 7 License Client im non-tool-mode; otherwise this client would not 
+            consume a CM7 license.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Licensing.LicenseClient.ConsumeLicense(System.Collections.Generic.IList{System.String})">
+            <summary>
+            Based on the given license id list a new <see cref="T:Thermo.Chromeleon.Common.LicenseManagement.FeatureSet">
+            FeatureSet </see>  is created which is later on passed to the internal 
+            <see cref="T:Thermo.Chromeleon.Common.LicenseManagement.LicenseClient">
+            CM7 license client</see> to get a license. 
+            Additionally a <see cref="T:Thermo.Chromeleon.Common.LicenseManagement.LicenseUserIdentification">
+            user identification</see> is created to identify this <see cref="T:Thermo.Chromeleon.Sdk.Licensing.LicenseClient"/> in the CM7 licensing system.
+            <param name="licenseIdList"></param>
+            <returns>Returns a <see cref="T:Thermo.Chromeleon.Sdk.Licensing.LicenseInfo"/></returns>
+            <remarks>If required a new internal <see cref="T:Thermo.Chromeleon.Common.LicenseManagement.LicenseClient"> 
+            CM7 license client </see> is created on demand (Lazy Initialization).
+            </remarks>
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Licensing.LicenseClient.TryReleaseLicense">
+            <summary>
+            Any license that has been requested by this instance will be released by
+            disposing the internal <see cref="T:Thermo.Chromeleon.Common.LicenseManagement.LicenseClient">
+            CM7 license client</see>.
+            </summary>
+            <returns>Returns [true] when there is either nothing to release or licenses could be properly released; 
+            otherwise it returns [false]</returns>
+            <remarks>Any exception that occurred will be logged into the common CM7 Sdk log file.</remarks>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Properties.ImplResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.AddQueueItemAlreadyExists">
+            <summary>
+              Looks up a localized string similar to The sequence is already in this queue.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.AssemblyLoadException">
+            <summary>
+              Looks up a localized string similar to Failed to load a required assembly. Is Chromeleon properly installed?.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.CopyAllVersionsTemporaryItem">
+            <summary>
+              Looks up a localized string similar to It is not possible to use the &quot;All Versions&quot; option for a temporary data item which didn&apos;t never belong to a data vault.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.CustomFieldNameInUse">
+            <summary>
+              Looks up a localized string similar to A custom variable with the name &apos;{0}&apos; already exists..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.CustomFieldNotFoundInDataVault">
+            <summary>
+              Looks up a localized string similar to Custom variable: &apos;{0}&apos; not found in data vault..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.CustomFieldNotFoundInSequence">
+            <summary>
+              Looks up a localized string similar to Custom variable: &apos;{0}&apos; not found in sequence..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.CustomFieldTypeNotSupported">
+            <summary>
+              Looks up a localized string similar to The custom variable type is not supported.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.CustomFieldUpdateDifferentType">
+            <summary>
+              Looks up a localized string similar to Found custom variable with the same name but different type.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.CustomStringVariableLengthViolation">
+            <summary>
+              Looks up a localized string similar to Violation of allowed string length. Chromeleon currently limits the string length for string custom variables to {0} character..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.DeleteAcquisitionApprovalRequested">
+            <summary>
+              Looks up a localized string similar to Acquisition Approval has been requested for the Sequence. Delete is not allowed..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.DeleteSignedSequence">
+            <summary>
+              Looks up a localized string similar to The sequence is signed. Delete operation is not allowed..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ElectronicReportCreationFailedNoDefaultReportTemplate">
+            <summary>
+              Looks up a localized string similar to Failed to create an electronic report. The sequence has no default report template defined..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ElectronicReportRenameFailedInsideSequence">
+            <summary>
+              Looks up a localized string similar to The name of the Electronic Report cannot be changed since the Electronic Report is inside a sequence..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ExecuteMethodWrongScriptType">
+            <summary>
+              Looks up a localized string similar to Only instrument methods with script type &quot;OnlineControl&quot; can be executed..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ExportFailedNoDefaultReportTemplate">
+            <summary>
+              Looks up a localized string similar to Failed to export the sequence. The sequence has no default report template defined..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.FailedImportDestinationUrl">
+            <summary>
+              Looks up a localized string similar to Failed to retrieve destination url.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.FailedToAddQueueItemTimeout">
+            <summary>
+              Looks up a localized string similar to Failed to add new queue item within the defined timeout: {0}.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.FailedToChangeCellValueProtectedSheet">
+            <summary>
+              Looks up a localized string similar to Failed to change the cell value. The sheet is protected..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.FailedToExportInstrumentMethod">
+            <summary>
+              Looks up a localized string similar to Writing of instrument method {0} failed. Details: {1}..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.FailedToMoveQueueItemIndexRange">
+            <summary>
+              Looks up a localized string similar to Failed to move the queue item. The index was out of range..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.FailedToMoveQueueItemNotAvailable">
+            <summary>
+              Looks up a localized string similar to Failed to move the sequence queue item. The item is no longer available..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.FailedToMoveQueueItemTimeout">
+            <summary>
+              Looks up a localized string similar to Failed to move the queue item within the defined timeout: {0}.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.FailedToRemoveQueueItemIndexRange">
+            <summary>
+              Looks up a localized string similar to Failed to remove the queue item. The index was out of range..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.FailedToRemoveQueueItemTimeout">
+            <summary>
+              Looks up a localized string similar to Failed to remove the queue item within the defined timeout: {0}.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.FailedToSetCompletionOperationTimeout">
+            <summary>
+              Looks up a localized string similar to Failed to set the completion operation within the defined timeout: {0}.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.FailedToSetEmergencyMethodTimeout">
+            <summary>
+              Looks up a localized string similar to Failed to set the emergency method within the defined timeout: {0}.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.FailedToStopQueueTimeout">
+            <summary>
+              Looks up a localized string similar to Failed to stop the sequence queue within the defined timeout: {0}.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.InjectionLockErrorNoSequence">
+            <summary>
+              Looks up a localized string similar to The injection cannot be locked/unlocked because it is not part of a sequence..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.InstrumentAccessDisposed">
+            <summary>
+              Looks up a localized string similar to The instrument access has already been disposed. A new CmSdkScope needs to be created..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.InstrumentAccessInitializationFailed">
+            <summary>
+              Looks up a localized string similar to Failed to initialize the instrument access within the defined timeout: {0}.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.InstrumentConnectNoInstrumentUri">
+            <summary>
+              Looks up a localized string similar to No valid InstrumentUri..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.InstrumentConnectNoSymbols">
+            <summary>
+              Looks up a localized string similar to Cannot connect: instrument &apos;{0}&apos; has no valid symbols..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.InstrumentConnectTimeout">
+            <summary>
+              Looks up a localized string similar to Failed to connect the instrument: {0} within the defined timeout: {1}.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.InstrumentNotAvailable">
+            <summary>
+              Looks up a localized string similar to The instrument {0} is not available..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.InternalError">
+            <summary>
+              Looks up a localized string similar to An internal error occurred..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.InvalidBinPath">
+            <summary>
+              Looks up a localized string similar to Failed to retrieve the Chromeleon bin path.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.InvalidCommand">
+            <summary>
+              Looks up a localized string similar to Invalid command..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.InvalidFieldDefinitionContext">
+            <summary>
+              Looks up a localized string similar to Invalid field definition context.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.InvalidFilterType">
+            <summary>
+              Looks up a localized string similar to The provided type cannot be used as a filter..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.InvalidInjectionListForReporting">
+            <summary>
+              Looks up a localized string similar to The injection list contains injections from multiple sequences. This is not supported..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.InvalidInstrumentReference">
+            <summary>
+              Looks up a localized string similar to The instrument method has no valid Chromeleon 7 instrument assigned..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.InvalidNfpBackupsFolderOperation">
+            <summary>
+              Looks up a localized string similar to It is not possible to &apos;{0}&apos; the Continuity folder..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.InvalidRecycleBinOperation">
+            <summary>
+              Looks up a localized string similar to It is not possible to &apos;{0}&apos; the recycle bin..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.InvalidReportingVersion">
+            <summary>
+              Looks up a localized string similar to {0} has an invalid reporting version {1} .
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.InvalidToken">
+            <summary>
+              Looks up a localized string similar to Failed to read the logon token.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.InvalidWritableProperty">
+            <summary>
+              Looks up a localized string similar to Not a valid writable property..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ItemCopy">
+            <summary>
+              Looks up a localized string similar to copy.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ItemDelete">
+            <summary>
+              Looks up a localized string similar to delete.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ItemMove">
+            <summary>
+              Looks up a localized string similar to move.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ItemOperationError">
+            <summary>
+              Looks up a localized string similar to Failed to {0} the data item..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ItemRename">
+            <summary>
+              Looks up a localized string similar to rename.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.LogonFailed">
+            <summary>
+              Looks up a localized string similar to Logon failed..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.LogonFailedRoleNotFound">
+            <summary>
+              Looks up a localized string similar to Logon failed. The specified role does not exist..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.MissingLicenseException">
+            <summary>
+              Looks up a localized string similar to The operation requires a valid &quot;{0}&quot; license which is currently not available.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.MissingPrivilege">
+            <summary>
+              Looks up a localized string similar to The privilege &quot;{0}&quot; is missing..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ModificationOfProtectedSheetIsNotAllowed">
+            <summary>
+              Looks up a localized string similar to Modification of this sheet is not allowed. The sheet is protected..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ModifyAcquisitionApprovalRequested">
+            <summary>
+              Looks up a localized string similar to Acquisition Approval has been requested for the Sequence. Modification is not allowed..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ModifyReadOnlyDataItem">
+            <summary>
+              Looks up a localized string similar to The data item is read-only. Modifications are not allowed..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ModifySignedSequence">
+            <summary>
+              Looks up a localized string similar to The sequence is signed. Modifications are not allowed..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.MoveQueueItemFailedStatusRunning">
+            <summary>
+              Looks up a localized string similar to Moving running queue items is not allowed. .
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.MSFormulaMissingPeakName">
+            <summary>
+              Looks up a localized string similar to MS formula evaluation requires &apos;PeakName&apos; parameter which is missing..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.MsRawItemLoadFailed">
+            <summary>
+              Looks up a localized string similar to Failed to load MS raw item.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.NoImportPluginFound">
+            <summary>
+              Looks up a localized string similar to No import plugin found which can handle the import data.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.NoInjectDeviceAvailable">
+            <summary>
+              Looks up a localized string similar to No inject device available..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.NoInjectDeviceName">
+            <summary>
+              Looks up a localized string similar to No inject device with corresponding name found..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.NoRoleMember">
+            <summary>
+              Looks up a localized string similar to The user is not member of the logon role {0}.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.PrintFailedNoDefaultReportTemplate">
+            <summary>
+              Looks up a localized string similar to Failed to print the sequence. The sequence has no default report template defined..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.QueryNotInDataVault">
+            <summary>
+              Looks up a localized string similar to Query execution failed. The injection query doesn&apos;t belong to a valid data vault..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.QueueItemUploadFailed">
+            <summary>
+              Looks up a localized string similar to Upload failed for: {0}.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ReadyCheckExtensionException">
+            <summary>
+              Looks up a localized string similar to Failed to execute ready check extension.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ReportingVersionNotSupported">
+            <summary>
+              Looks up a localized string similar to Reporting {0} is not supported in the SDK..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ReportNoProcessingMethod">
+            <summary>
+              Looks up a localized string similar to No processing method in context..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ReportTemplateNotFound">
+            <summary>
+              Looks up a localized string similar to The sequence doesn&apos;t contain the report template &apos;{0}&apos;.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ResetQueueItemFailedItemState">
+            <summary>
+              Looks up a localized string similar to Failed to reset the sequence queue item, because of the item state..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ResetQueueItemFailedNotAvailable">
+            <summary>
+              Looks up a localized string similar to Failed to reset the sequence queue item. The item is no longer available..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ResetQueueItemFailedTimeout">
+            <summary>
+              Looks up a localized string similar to Failed to reset the queue item within the defined timeout: {0}.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ScriptErrorCannotImportElementFromOtherScript">
+            <summary>
+              Looks up a localized string similar to Script elements cannot be imported from other scripts..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ScriptErrorCannotSetValue">
+            <summary>
+              Looks up a localized string similar to Cannot set a value for this step type..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ScriptErrorGeneral">
+            <summary>
+              Looks up a localized string similar to A script error occurred..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ScriptErrorUnsupportedScriptType">
+            <summary>
+              Looks up a localized string similar to Unsupported scriptType.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.StringErrorNoParameter">
+            <summary>
+              Looks up a localized string similar to The command step has no parameter..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.SymbolTableNotReady">
+            <summary>
+              Looks up a localized string similar to Symbol table not ready..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.UnknownImportError">
+            <summary>
+              Looks up a localized string similar to Unknown import error occurred.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.UpdateQueueItemFailedItemState">
+            <summary>
+              Looks up a localized string similar to Failed to update the sequence queue item, because of the item state..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.UpdateQueueItemFailedNotAvailable">
+            <summary>
+              Looks up a localized string similar to Failed to update the sequence queue item. The item is no longer available..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.UpdateQueueItemFailedTimeout">
+            <summary>
+              Looks up a localized string similar to Failed to update the sequence queue item within the defined timeout: {0}.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ValidationUnknownError">
+            <summary>
+              Looks up a localized string similar to Unknown error occurred.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.ValueOutOfRange">
+            <summary>
+              Looks up a localized string similar to Value out of range.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.WorkflowSequenceCreationNoInjectDevice">
+            <summary>
+              Looks up a localized string similar to No inject device available. The sequence creation requires a valid inject device..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.WorkflowSequenceCreationNoInstrument">
+            <summary>
+              Looks up a localized string similar to No instrument available. The sequence creation requires a connected instrument..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.WorklistFileMissing">
+            <summary>
+              Looks up a localized string similar to The worklist file: {0} does not exist.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.WrongChromeleonVersion">
+            <summary>
+              Looks up a localized string similar to The installed Chromeleon version is not compatible with the used Sdk release..
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Properties.ImplResources.WrongImportDestinationUrl">
+            <summary>
+              Looks up a localized string similar to Destination url has to be a folder or a data vault.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.RawData.MsRawMetadata.#ctor(Dionex.Chromeleon.RawData.IMSRawMetadata)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.RawData.MsRawMetadata"/> class.
+            </summary>
+            <param name="metadata">The metadata.</param>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Types.Collections.DiscreteValueCollection`1">
+            <summary>
+            Default SDK implementation of <see cref="T:Dionex.Chromeleon.Common.DataTypes.IDiscreteValueCollection`1"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Types.Collections.DiscreteValueCollection`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Types.Collections.DiscreteValueCollection`1"/> class.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Types.Collections.DiscreteValueCollection`1.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection.
+            </summary>
+            <returns>
+            A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Types.Collections.ParentCustomFieldCollection.CheckShortName(System.String)">
+            <summary>
+            Throws an <see cref="T:System.InvalidOperationException"/> if <paramref name="name"/> is already in use.
+            </summary>
+            <param name="name">The short name of the new custom variable.</param>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Types.IdentityComparer">
+            <summary>
+            Enforce object identity
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Types.NotificationSettings.NotificationsEnabled">
+            <summary>
+            Whether email notifications feature are enabled for this item
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Types.NotificationSettings.NotifySequenceFinished">
+            <summary>
+            Whether the email notification feature is enabled for this sequence when it finishes
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Types.NotificationSettings.NotifySequenceAborted">
+            <summary>
+            Whether the email notification feature is enabled for this sequence when it is aborted
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Types.NotificationSettings.NotifySequenceCancelled">
+            <summary>
+            Whether the email notification feature is enabled for this sequence when it is cancelled
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Types.NotificationSettings.NotifyFinishedRecipient">
+            <summary>
+            The email addresses or usernames to be notified when a sequence finishes
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Types.NotificationSettings.NotifyAbortedRecipient">
+            <summary>
+            The email addresses or usernames to be notified when a sequence is aborted
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Types.NotificationSettings.NotifyCancelledRecipient">
+            <summary>
+            The email addresses or usernames to be notified when a sequence is cancelled
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Types.NotificationSettings.EmailSubject">
+            <summary>
+            The subject field of the email
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Types.NotificationSettings.EmailBody">
+            <summary>
+            The body field of the email
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Types.NotificationSettings.IncludeQueueStarter">
+            <summary>
+            Whether to include the user who started the instrument queue
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Types.NotificationSettings.IncludeCanceller">
+            <summary>
+            Whether to include the user who cancelled the queue
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Types.NotificationSettings.IncludeCreator">
+            <summary>
+            Whether to include the user who created the sequence
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Types.Range`1">
+            <summary>
+            Default SDK implementation of <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.Types.IRange`1"/>.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Types.Range`1.#ctor(Dionex.Chromeleon.Common.DataTypes.IRange{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Types.Range`1"/> class.
+            </summary>
+            <param name="adaptee">The corresponding adaptee.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Types.Range`1.#ctor(`0,`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Types.Range`1"/> class.
+            </summary>
+            <param name="minimum">The minimum value of the new range.</param>
+            <param name="maximum">The maximum value of the new range.</param>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Types.Range`1.Minimum">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Types.IRange`1.Minimum"/>
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Types.Range`1.Maximum">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Types.IRange`1.Maximum"/>
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Types.TypeDateTime.#ctor(Dionex.Chromeleon.Common.DataTypes.ITypeDateTime)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Types.TypeDateTime"/> class.
+            </summary>
+            <param name="adaptee">The corresponding adaptee.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Types.TypeDateTime.#ctor(System.Nullable{System.DateTime},Thermo.Chromeleon.Sdk.Interfaces.Types.IRange{System.DateTime},System.Collections.Generic.IEnumerable{Thermo.Chromeleon.Sdk.Interfaces.Types.IDiscreteValue{System.DateTime}})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Types.TypeDateTimeOffset"/> class.
+            </summary>
+            <param name="defaultValue">The default value of the date time type.</param>
+            <param name="range">The range of the date time type (may be <c>null</c>).</param>
+            <param name="discreteValues">The discrete values of the date time type.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Types.TypeDateTime.#ctor(System.Nullable{System.DateTime},Thermo.Chromeleon.Sdk.Interfaces.Types.IRange{System.DateTime})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Types.TypeDateTime"/> class.
+            </summary>
+            <param name="defaultValue">The default value.</param>
+            <param name="range">The range.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Types.TypeDateTimeOffset.#ctor(Dionex.Chromeleon.Common.DataTypes.ITypeDateTimeOffset)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Types.TypeDateTimeOffset"/> class.
+            </summary>
+            <param name="adaptee">The corresponding adaptee.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Types.TypeDateTimeOffset.#ctor(System.Nullable{System.DateTimeOffset},Thermo.Chromeleon.Sdk.Interfaces.Types.IRange{System.DateTimeOffset},System.Collections.Generic.IEnumerable{Thermo.Chromeleon.Sdk.Interfaces.Types.IDiscreteValue{System.DateTimeOffset}})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Types.TypeDateTimeOffset"/> class.
+            </summary>
+            <param name="defaultValue">The default value of the date time offset type.</param>
+            <param name="range">The range of the date time offset type (may be <c>null</c>).</param>
+            <param name="discreteValues">The discrete values of the date time offset type.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Types.TypeDateTimeOffset.#ctor(System.Nullable{System.DateTimeOffset},Thermo.Chromeleon.Sdk.Interfaces.Types.IRange{System.DateTimeOffset})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Types.TypeDateTimeOffset"/> class.
+            </summary>
+            <param name="defaultValue">The default value.</param>
+            <param name="range">The range.</param>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Types.TypeNumeric">
+            <summary>
+            Default SDK implementation of <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.Types.ITypeNumeric"/>.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Types.TypeNumeric.#ctor(Dionex.Chromeleon.Common.DataTypes.ITypeNumeric)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Types.TypeNumeric"/> class.
+            </summary>
+            <param name="adaptee">The corresponding adaptee.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Types.TypeNumeric.#ctor(System.Int32,System.String,System.Nullable{System.Double},Thermo.Chromeleon.Sdk.Interfaces.Types.IRange{System.Double},System.Collections.Generic.IEnumerable{Thermo.Chromeleon.Sdk.Interfaces.Types.IDiscreteValue{System.Double}})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Types.TypeNumeric"/> class.
+            </summary>
+            <param name="digits">The digits of the numeric type.</param>
+            <param name="unit">The unit of the numeric type.</param>
+            <param name="defaultValue">The default value of the numeric type.</param>
+            <param name="range">The range of the numeric type (may be <c>null</c>).</param>
+            <param name="discreteValues">The discrete values of the numeric type.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Types.TypeNumeric.#ctor(System.Int32,System.String,System.Nullable{System.Double},Thermo.Chromeleon.Sdk.Interfaces.Types.IRange{System.Double})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Types.TypeNumeric"/> class.
+            </summary>
+            <param name="digits">The digits.</param>
+            <param name="unit">The unit.</param>
+            <param name="defaultValue">The default value.</param>
+            <param name="range">The range.</param>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Types.TypeNumeric.Digits">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Types.ITypeNumeric.Digits"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Types.TypeNumeric.Unit">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Types.ITypeNumeric.Unit"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Types.TypeNumeric.Default">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Types.ITypeNumeric.Default"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Types.TypeNumeric.Range">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Types.ITypeNumeric.Range"/>.
+            </summary>
+        </member>
+        <member name="P:Thermo.Chromeleon.Sdk.Types.TypeNumeric.DiscreteValues">
+            <summary>
+            Default SDK implementation of <see cref="P:Thermo.Chromeleon.Sdk.Interfaces.Types.ITypeNumeric.DiscreteValues"/>.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Types.TypeString.#ctor(System.Int32,System.String,System.Collections.Generic.IEnumerable{Thermo.Chromeleon.Sdk.Interfaces.Types.IDiscreteValue{System.String}})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Types.TypeString"/> class.
+            </summary>
+            <param name="maxLength">The maximal length of the string.</param>
+            <param name="defaultValue">The default value of the type.</param>
+            <param name="discreteValues">The discrete values of the type.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Types.TypeString.#ctor(System.Int32,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.Types.TypeString"/> class.
+            </summary>
+            <param name="maxLength">The maximal length of the string.</param>
+            <param name="defaultValue">The default value of the type.</param>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.UserInterface.ElectronicReportDialog">
+            <summary>
+            Default implementation of <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.UserInterface.IElectronicReportDialog"/>.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserInterface.ElectronicReportDialog.#ctor(Thermo.Chromeleon.Sdk.Interfaces.Data.ISequence)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.UserInterface.ElectronicReportDialog"/> class.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.UserInterface.ExportDialog">
+            <summary>
+            Default implementation of <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.UserInterface.IExportDialog"/>.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserInterface.ExportDialog.#ctor(Thermo.Chromeleon.Sdk.Interfaces.Data.ISequence)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.UserInterface.ExportDialog"/> class that will
+            export using the specified settings when closed.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserInterface.ExportDialog.#ctor(Thermo.Chromeleon.Sdk.Interfaces.Data.ISequence,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.UserInterface.ExportDialog" /> class.
+            </summary>
+            <param name="sequence">The sequence.</param>
+            <param name="exportOnClose">if set to <c>true</c> export on close.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserInterface.ExportDialog.Dispose(System.Boolean)">
+            <summary>
+            disposes each contained service that implements IDisposable.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserInterface.ExportDialog.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserInterface.ExportImportProgressDialog.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserInterface.ExportImportProgressDialog.Dispose(System.Boolean)">
+            <summary>
+            disposes each contained service that implements IDisposable.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.UserInterface.InstrumentCommandDialog">
+            <summary>
+            Default implementation of <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.UserInterface.IInstrumentCommandDialog"/>.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserInterface.InstrumentCommandDialog.Dispose(System.Boolean)">
+            <summary>
+            disposes each contained service that implements IDisposable.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserInterface.InstrumentCommandDialog.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.UserInterface.InstrumentSelectorDialog">
+            <summary>
+            Default implementation of <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.UserInterface.IInstrumentSelectorDialog"/>.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserInterface.InstrumentSelectorDialog.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.UserInterface.InstrumentSelectorDialog"/> class.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserInterface.InstrumentSelectorDialog.Dispose(System.Boolean)">
+            <summary>
+            disposes each contained service that implements IDisposable.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserInterface.InstrumentSelectorDialog.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.UserInterface.ObjectPickerDialog">
+            <summary>
+            Default implementation of <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.UserInterface.IObjectPickerDialog"/>.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserInterface.ObjectPickerDialog.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.UserInterface.ObjectPickerDialog"/> class.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserInterface.ObjectPickerDialog.Dispose(System.Boolean)">
+            <summary>
+            disposes each contained service that implements IDisposable.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserInterface.ObjectPickerDialog.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.UserInterface.PrintDialog">
+            <summary>
+            Default implementation of <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.UserInterface.IPrintDialog"/>.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserInterface.PrintDialog.#ctor(Thermo.Chromeleon.Sdk.Interfaces.Data.ISequence)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.UserInterface.PrintDialog"/> class that will
+            print using the specified settings when closed.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserInterface.PrintDialog.#ctor(Thermo.Chromeleon.Sdk.Interfaces.Data.ISequence,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.UserInterface.PrintDialog"/> class.
+            </summary>
+            <param name="sequence">The sequence.</param>
+            <param name="printOnClose">if set to <c>true</c> then print on close.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserInterface.PrintDialog.Dispose(System.Boolean)">
+            <summary>
+            disposes each contained service that implements IDisposable.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserInterface.PrintDialog.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.UserInterface.UserInterfaceFactory">
+            <summary>
+            Factory class to create the Chromeleon user interfaces which are supported by the SDK.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserInterface.UserInterfaceFactory.#ctor(Thermo.Chromeleon.Sdk.Interfaces.Data.IItemFactory)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Thermo.Chromeleon.Sdk.UserInterface.UserInterfaceFactory"/> class.
+            </summary>
+            <param name="factory">The item factory - used for the dependency injection auto wiring. This parameter is used
+            because the object picker control requires a valid item cache which will be initialized with creation of the
+            SDK item factory.</param>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.UserManagement.UserManagementHelper.CreateException(System.String)">
+            <summary>
+            Creates the exception with a corresponding message based on the provided privilege id.
+            </summary>
+            <param name="privilegeId">The privilege id.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Utilities.ColumnVisibilityReader">
+            <summary>
+            Column visibility information is stored in different fields and in different formats depending on which view in
+            the user interface we a talking about. The fields all contain an xml serialization of some object which is
+            defined in the user interface layer so not ideally suited to be shared with the SDK. However, all these
+            fields do contain a collection of IColumnVisibilityManagement which is what we need
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Utilities.DataItemImplExtensions">
+            <summary>
+            Provides a set of useful data item extensions
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Utilities.DataItemImplExtensions.CheckComplianceLicense(Thermo.Chromeleon.Common.LicenseManagement.ILicenseInfo)">
+            <summary>
+            Checks the compliance license. If the license is not available a <see cref="T:Thermo.Chromeleon.Sdk.Interfaces.Common.LicenseViolationException"/> 
+            will be thrown.
+            </summary>
+            <param name="info">The current license information.</param>
+            <exception cref="T:Thermo.Chromeleon.Sdk.Interfaces.Common.LicenseViolationException">
+            Thrown if the compliance license is not available.
+            </exception>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Utilities.DataItemImplExtensions.GetSdkWrapper(Dionex.Chromeleon.Data.IDataItem)">
+            <summary>
+            Gets the SDK wrapper for an internal data item. If the item is already contained in the 
+            SDK item cache, the existing item will be returned. Otherwise a new wrapper will be created.
+            </summary>
+            <param name="item">The SDK wrapper item.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Utilities.ExportingSideBySideActivationContextScope">
+            <summary>
+                A scope for access the exporting stuff like GAML or AnDI
+            </summary>
+            <remarks>
+                It is possible to access COM components (like the Formula One, GAML or AnDI) on Windows XP/Vista as so called "Side by Side
+                assemblies" with the Activation Context API (see MSDN). <br/>
+                
+                This allows to use multiple instances of a COM component in an "XCOPY" manner without globally registering it with regsvr32. 
+                This means that the COM dll can simply be copied to the executable path of an application without affecting any 
+                other applications. <br/>
+                
+                This works by an "Application Manifest" for the executable that is started and a "Component Manifest" that exposes 
+                the COM component as a set of registration free interfaces, more specific: the application has an application manifest
+                that references a component manifest for the side by side proxy of the SDK that points to the corresponding COM dll. <br/>
+                
+                To avoid providing application manifests for each application (including test-harnesses) the application manifest that 
+                configures the activation context of the application when it is started by Windows is replaced by an application manifest 
+                that configures a "virtual" activation context that is created dynamically. 
+            </remarks>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Utilities.ExportingSideBySideActivationContextScope.DynamicActivationContextManifestName">
+            <summary>
+                Path of the manifest that is used to initialize the dynamic activation context relative to 
+                the location of the Dionex.Controls assembly dll file.
+            </summary>
+        </member>
+        <member name="F:Thermo.Chromeleon.Sdk.Utilities.ExportingSideBySideActivationContextScope.s_ActivationContext">
+            <summary>
+                Handle to the activation context of the CM6 SDK, may be <see cref="F:System.IntPtr.Zero"/> if a registered
+                SDK is used instead.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Utilities.ExportingSideBySideActivationContextScope.GetDynamicActivationContextManifestPath">
+            <summary>
+                Gets the full path to the manifest for the dynamic activation context. Computed from the 
+                assembly location and the string in <see cref="F:Thermo.Chromeleon.Sdk.Utilities.ExportingSideBySideActivationContextScope.DynamicActivationContextManifestName"/>.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Utilities.ExportingSideBySideActivationContextScope.#ctor">
+            <summary>
+                Constructs a <see cref="T:Thermo.Chromeleon.Sdk.Utilities.ExportingSideBySideActivationContextScope"/>.
+            </summary>
+        </member>
+        <member name="M:Thermo.Chromeleon.Sdk.Utilities.ExportingSideBySideActivationContextScope.Dispose">
+            <summary>
+                Implementation of <see cref="M:System.IDisposable.Dispose"/>.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Utilities.NotificationHelper">
+            <summary>
+            Helper which can be used to hookup child property notification (property changed/changing and list changed/changing) 
+            in order to fire the corresponding property changed/changing in the parent class.
+            </summary>
+        </member>
+        <member name="T:Thermo.Chromeleon.Sdk.Utilities.ReportDefinitionReportContext">
+            <summary>
+            Provides wrapper over standard PeakReportContext to include unhandled cases from it
+            </summary>
+        </member>
+    </members>
+</doc>

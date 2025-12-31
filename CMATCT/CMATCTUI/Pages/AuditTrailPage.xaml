@@ -4,17 +4,13 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:CMATCTUI.Pages"
-      xmlns:local1="clr-namespace:CMATCTUI"
       mc:Ignorable="d" 
         xmlns:vm="clr-namespace:CMATCTUI.ViewModels"
-       xmlns:converters="clr-namespace:CMATCTUI.Converter"
         Title="Errors">
     <Page.DataContext>
         <vm:ErrorsViewModel></vm:ErrorsViewModel>
     </Page.DataContext>
-    <Page.Resources>
-        <converters:SeverityToImageConverter x:Key="SeverityToImageConverter"/>
-    </Page.Resources>
+
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -29,16 +25,11 @@
 
         <!-- ================= HEADER + FILTERS ================= -->
         <StackPanel Grid.Row="0">
-            
             <TextBlock Text="Audit Trail"
                        FontSize="24"
                        FontWeight="Bold"/>
 
             <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
-                <TextBlock Text="Instrument Details:" Margin="10,0,0,0" VerticalAlignment="Center"/>
-                <ComboBox Width="80" ItemsSource="{Binding InstrumentsDetails}" 
-                  SelectedItem="{Binding SelectedInstrument, Mode=TwoWay}" 
-                  Margin="0,0,0,0"/>
                 <TextBlock Text="From Date" VerticalAlignment="Center"/>
                 <DatePicker SelectedDate="{Binding FromDate}"
                             Width="150"
@@ -51,7 +42,10 @@
                             Width="150"
                             Margin="10,0,0,0"/>
 
-                <Button  Content="Create Ticket" Width="100"  Margin="20,0,0,0"  Command="{Binding CreateTicketCommand}"/>
+                <Button Content="Create Ticket"
+                        Width="100"
+                        Margin="20,0,0,0"
+                        Click="Button_Click"/>
             </StackPanel>
         </StackPanel>
 
@@ -59,22 +53,14 @@
         <DataGrid Grid.Row="1"
                   ItemsSource="{Binding ErrorsView}"
                   AutoGenerateColumns="False"
-                  IsReadOnly="True" Height="250px" VerticalScrollBarVisibility="Auto" 
-              vm:DataGridSelectedItemsBehavior.BindableSelectedItems="{Binding SelectedAuditLogs}">
+                  IsReadOnly="True" Height="250px" VerticalScrollBarVisibility="Auto">
+
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="" Width="20" >
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Image Width="auto" Height="20"
-                            Source="{Binding Category , Converter={StaticResource SeverityToImageConverter}}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Date" Binding="{Binding Date}" />
                 <DataGridTextColumn Header="Time" Binding="{Binding Time}" />
                 <DataGridTextColumn Header="Retention Time" Binding="{Binding RetentionTime}" />
-                <DataGridTextColumn Header="Device" Binding="{Binding Device}" />
-                <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="2*" />
+                <DataGridTextColumn Header="Device" Binding="{Binding Instrument}" />
+                <DataGridTextColumn Header="Message" Binding="{Binding Summary}" Width="2*" />
                 <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
             </DataGrid.Columns>
         </DataGrid>
@@ -93,20 +79,11 @@
                   IsReadOnly="True" Height="200" VerticalScrollBarVisibility="Auto">
 
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="" Width="20" >
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <!--<Image Source="{Binding Severity}" Width="auto" Height="15"/>-->
-                            <Image Width="auto" Height="20"
-                  Source="{Binding Severity , Converter={StaticResource SeverityToImageConverter}}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Date" Binding="{Binding Date}" />
                 <DataGridTextColumn Header="Time" Binding="{Binding Time}" />
                 <DataGridTextColumn Header="Retention Time" Binding="{Binding RetentionTime}" />
-                <DataGridTextColumn Header="Device" Binding="{Binding Device}" />
-                <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="2*" />
+                <DataGridTextColumn Header="Device" Binding="{Binding Instrument}" />
+                <DataGridTextColumn Header="Message" Binding="{Binding Summary}" Width="2*" />
                 <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
             </DataGrid.Columns>
         </DataGrid>

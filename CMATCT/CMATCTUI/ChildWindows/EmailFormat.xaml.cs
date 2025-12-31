@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using CMATCTUI.ViewModels;
 using Microsoft.Win32;
 
 namespace CMATCTUI.ChildWindows
@@ -12,11 +11,6 @@ namespace CMATCTUI.ChildWindows
         public EmailFormat()
         {
             InitializeComponent();
-        }
-        public EmailViewModel ViewModel
-        {
-            get => DataContext as EmailViewModel;
-            set => DataContext = value;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

@@ -13,10 +13,10 @@ namespace CMATCTUI.Pages
             InitializeComponent();
         }
 
-        //private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
-        //{
-        //    EmailFormat emailFormatWindow = new EmailFormat();
-        //    emailFormatWindow.Show();
-        //}
+        private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            EmailFormat emailFormatWindow = new EmailFormat();
+            emailFormatWindow.Show();
+        }
     }
 }

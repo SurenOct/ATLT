@@ -10,7 +10,7 @@
        xmlns:converters="clr-namespace:CMATCTUI.Converter"
         Title="Errors">
     <Page.DataContext>
-        <vm:ErrorsViewModel></vm:ErrorsViewModel>
+        <vm:AuditTrailViewModel></vm:AuditTrailViewModel>
     </Page.DataContext>
     <Page.Resources>
         <converters:SeverityToImageConverter x:Key="SeverityToImageConverter"/>

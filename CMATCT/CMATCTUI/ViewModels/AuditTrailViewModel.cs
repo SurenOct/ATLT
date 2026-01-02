@@ -140,7 +140,12 @@ namespace CMATCTUI.ViewModels
                 var items = File.ReadAllText(path);
                 // Deserialize JSON string to object
                 Errors = JsonConvert.DeserializeObject<ObservableCollection<AuditLogItem>>(jsonString);
-
+                DateTimeOffset dto = DateTimeOffset.Parse(Errors[0].Time);
+                 foreach(var db in Errors)
+                {
+                    db.Date = DateTimeOffset.Parse(db.Time).Date.ToString("yyyy-MM-dd");
+                    db.Time = DateTimeOffset.Parse(db.Time).Date.ToString(@"hh\:mm\:ss");
+                }
                 Errors.ToList().ForEach(a => a.Status = "New");
 
                 AuditCompletedErrors = JsonConvert.DeserializeObject<ObservableCollection<AuditLogItem>>(jsonString);

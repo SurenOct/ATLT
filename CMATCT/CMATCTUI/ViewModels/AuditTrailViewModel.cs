@@ -21,8 +21,6 @@ namespace CMATCTUI.ViewModels
 {
     public class AuditTrailViewModel : INotifyPropertyChanged
     {
-
-
         public ObservableCollection<AuditLogItem> Errors { get; set; }
         public ObservableCollection<AuditLogItem> AuditCompletedErrors { get; set; }
         public ICollectionView ErrorsView { get; set; }
@@ -35,52 +33,16 @@ namespace CMATCTUI.ViewModels
             {
                 if (_selectedAuditLogs != value)
                 {
-                    //if (_selectedAuditLogs != null)
-                    //    _selectedAuditLogs.CollectionChanged -= SelectedAuditLogs_CollectionChanged;
-
                     _selectedAuditLogs = value;
 
-                    //if (_selectedAuditLogs != null)
-                    //    _selectedAuditLogs.CollectionChanged += SelectedAuditLogs_CollectionChanged;
-
                     OnPropertyChanged(nameof(SelectedAuditLogs));
-                 //   OnPropertyChanged(nameof(IsButtonEnabled));
                 }
             }
 
         }
 
-
-        public ObservableCollection<string> Items { get; } = new ObservableCollection<string>
-        {
-            "Item 1", "Item 2", "Item 3"
-        };
-
-        private string _selectedItem;
-        public string SelectedItem
-        {
-            get => _selectedItem;
-            set
-            {
-                if (_selectedItem != value)
-                {
-                    _selectedItem = value;
-                    OnPropertyChanged(nameof(SelectedItem));
-                    OnPropertyChanged(nameof(IsRowSelected));
-                }
-            }
-        }
-
-        public bool IsRowSelected => SelectedItem != null;
-
-      
-         
-        private void SelectedAuditLogs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            IsButtonEnabled = true;
-            OnPropertyChanged(nameof(IsButtonEnabled));
-
-        }        
+       
+          
         private ObservableCollection<string> _instrumentsDetails;
         public ObservableCollection<string> InstrumentsDetails
         {
@@ -105,6 +67,20 @@ namespace CMATCTUI.ViewModels
                 }
             }
         }
+        private bool _isFilterStackEnabled = false;
+        public bool IsFilterStackEnabled
+        {
+            get => _isFilterStackEnabled;
+            set
+            {
+                if (_isFilterStackEnabled != value)
+                {
+                    _isFilterStackEnabled = value;
+                    OnPropertyChanged(nameof(IsFilterStackEnabled));
+                }
+            }
+        }
+        
 
 
         private DateTime? _fromDate;
@@ -141,19 +117,17 @@ namespace CMATCTUI.ViewModels
             string destinationFolder = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
                 "CMATCTData", "Data");
-            //if (!Directory.Exists(destinationFolder))
-            //{
-            //    MessageBox.Show("No Local Database available");
-            //    return;
-            //}
+             
             string[] files = Directory.GetFiles(destinationFolder);
 
             if (files.Length <= 0)
             {
+                IsFilterStackEnabled = false;
                 MessageBox.Show("Data is Not Available in Database ");
             }
             else
             {
+                IsFilterStackEnabled = true;
                 List<string> fileList = files.ToList();
                 foreach (var file in files)
                 {
@@ -169,44 +143,8 @@ namespace CMATCTUI.ViewModels
 
                 Errors.ToList().ForEach(a => a.Status = "New");
 
-
-
-
                 AuditCompletedErrors = JsonConvert.DeserializeObject<ObservableCollection<AuditLogItem>>(jsonString);
-
-                //Errors.ToList().ForEach(a => a.Status = "Completed");
-
-                //for (int i = 0; i < 50; i++)
-                //{
-                //    Errors.Add(new AuditLogItem
-                //    {
-                //        Date = DateTime.Now.AddDays(-1),
-                //        Time = DateTime.Now.Date.ToString("10:05:12"),
-                //        RetentionTime = Convert.ToDateTime("2025-12-04 10:05:12"),
-                //        SequenceName = "Seq_ICS5000_RoutineRun_001",
-                //        Instrument = "ICS-5000",
-                //        Summary = "Chromeleon reported communication timeout during sequence execution.",
-                //        Severity = "Critical",
-                //        Status = "New"
-                //    });
-
-                //}
-                //for (int i = 0; i < 50; i++)
-                //{
-                //    Errors.Add(new ErrorItem
-                //    {
-                //        Date = DateTime.Now.AddDays(-1),
-                //        Time = DateTime.Now.Date.ToString("10:05:12"),
-                //        RetentionTime = Convert.ToDateTime("2025-12-04 10:05:12"),
-                //        SequenceName = "Seq_ICS5000_RoutineRun_001",
-                //        Instrument = "ICS-5000",
-                //        Summary = "Chromeleon reported communication timeout during sequence execution.",
-                //        Severity = "Critical",
-                //        Status = "Completed"
-                //    });
-
-                //}
-
+                
                 ErrorsView = CollectionViewSource.GetDefaultView(Errors.Where(x => x.Status != "Completed").ToList());
                 // AuditCompletedErrors = new ObservableCollection<AuditLogItem>(Errors.Where(x => x.Status == "Completed").ToList());
                 var item = Errors.Take(5).ToList();
@@ -224,15 +162,7 @@ namespace CMATCTUI.ViewModels
             var childWindow = new EmailFormat();
             childWindow.ViewModel = new EmailViewModel(new ObservableCollection<AuditLogItem>(SelectedAuditLogs));
             childWindow.Show();
-
-
-            //var viewModel = new EmailViewModel(new ObservableCollection<AuditLogItem>(SelectedAuditLogs));
-            //var childWindow = new EmailFormat
-            //{
-            //    DataContext = viewModel
-            //};
-            //childWindow.Show();
-
+ 
 
         }
         private bool FilterErrors(object obj)

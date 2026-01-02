@@ -1,9 +1,4 @@
-﻿using CMATCTUI.ChildWindows;
-using CMATCTUI.Commands;
-using CMATCTUI.Models;
-using CMATCTUI.Pages;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,17 +6,20 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using CMATCTUI.ChildWindows;
+using CMATCTUI.Commands;
+using CMATCTUI.Models;
+using Newtonsoft.Json;
 
 //Test Commit
 namespace CMATCTUI.ViewModels
 {
-    public class ErrorsViewModel
+    public class AuditTrailViewModel
     {
 
         public ObservableCollection<AuditLogItem> Errors { get; set; }
@@ -109,78 +107,88 @@ namespace CMATCTUI.ViewModels
 
         public ICommand CreateTicketCommand { get; }
 
-        public ErrorsViewModel()
+        public AuditTrailViewModel()
         {
             SelectedAuditLogs = new ObservableCollection<AuditLogItem>();
-            InstrumentsDetails= new ObservableCollection<string>();
+            InstrumentsDetails = new ObservableCollection<string>();
             CreateTicketCommand = new RelayCommand(CreateTicket);
             string destinationFolder = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-            "CMATCTData", "Data");
-            string[] files = Directory.GetFiles(destinationFolder);
-            List<string> fileList = files.ToList();
-            foreach (var file in files)
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                "CMATCTData", "Data");
+            if (!Directory.Exists(destinationFolder))
             {
-                InstrumentsDetails.Add(file.ToString().Split('\\').Last().Split('_').First().ToString());
+                Directory.CreateDirectory(destinationFolder);
             }
-            InstrumentsDetails= new ObservableCollection<string>(InstrumentsDetails.Distinct());
-            // var jsonString = File.ReadAllText(@"C:\\CM_AT_Tool\\CMATCT\\CMATCTUI\\FileData\\backup_2025-12-24_114803.json");
-            string path = files[0].ToString();
-            var jsonString = File.ReadAllText(files[0].ToString());
-            var items = File.ReadAllText(path);
-            // Deserialize JSON string to object
-            Errors = JsonConvert.DeserializeObject<ObservableCollection<AuditLogItem>>(jsonString);
+            string[] files = Directory.GetFiles(destinationFolder);
 
-            Errors.ToList().ForEach(a => a.Status = "New");
+            if (files.Length <= 0)
+            {
+                MessageBox.Show("No Local Database available");
+            }
+            else
+            {
+                List<string> fileList = files.ToList();
+                foreach (var file in files)
+                {
+                    InstrumentsDetails.Add(file.ToString().Split('\\').Last().Split('_').First().ToString());
+                }
+                InstrumentsDetails = new ObservableCollection<string>(InstrumentsDetails.Distinct());
+                // var jsonString = File.ReadAllText(@"C:\\CM_AT_Tool\\CMATCT\\CMATCTUI\\FileData\\backup_2025-12-24_114803.json");
+                string path = files[0].ToString();
+                var jsonString = File.ReadAllText(files[0].ToString());
+                var items = File.ReadAllText(path);
+                // Deserialize JSON string to object
+                Errors = JsonConvert.DeserializeObject<ObservableCollection<AuditLogItem>>(jsonString);
+
+                Errors.ToList().ForEach(a => a.Status = "New");
 
 
-           
 
-            AuditCompletedErrors = JsonConvert.DeserializeObject<ObservableCollection<AuditLogItem>>(jsonString);
 
-            //Errors.ToList().ForEach(a => a.Status = "Completed");
+                AuditCompletedErrors = JsonConvert.DeserializeObject<ObservableCollection<AuditLogItem>>(jsonString);
 
-            //for (int i = 0; i < 50; i++)
-            //{
-            //    Errors.Add(new AuditLogItem
-            //    {
-            //        Date = DateTime.Now.AddDays(-1),
-            //        Time = DateTime.Now.Date.ToString("10:05:12"),
-            //        RetentionTime = Convert.ToDateTime("2025-12-04 10:05:12"),
-            //        SequenceName = "Seq_ICS5000_RoutineRun_001",
-            //        Instrument = "ICS-5000",
-            //        Summary = "Chromeleon reported communication timeout during sequence execution.",
-            //        Severity = "Critical",
-            //        Status = "New"
-            //    });
+                //Errors.ToList().ForEach(a => a.Status = "Completed");
 
-            //}
-            //for (int i = 0; i < 50; i++)
-            //{
-            //    Errors.Add(new ErrorItem
-            //    {
-            //        Date = DateTime.Now.AddDays(-1),
-            //        Time = DateTime.Now.Date.ToString("10:05:12"),
-            //        RetentionTime = Convert.ToDateTime("2025-12-04 10:05:12"),
-            //        SequenceName = "Seq_ICS5000_RoutineRun_001",
-            //        Instrument = "ICS-5000",
-            //        Summary = "Chromeleon reported communication timeout during sequence execution.",
-            //        Severity = "Critical",
-            //        Status = "Completed"
-            //    });
+                //for (int i = 0; i < 50; i++)
+                //{
+                //    Errors.Add(new AuditLogItem
+                //    {
+                //        Date = DateTime.Now.AddDays(-1),
+                //        Time = DateTime.Now.Date.ToString("10:05:12"),
+                //        RetentionTime = Convert.ToDateTime("2025-12-04 10:05:12"),
+                //        SequenceName = "Seq_ICS5000_RoutineRun_001",
+                //        Instrument = "ICS-5000",
+                //        Summary = "Chromeleon reported communication timeout during sequence execution.",
+                //        Severity = "Critical",
+                //        Status = "New"
+                //    });
 
-            //}
+                //}
+                //for (int i = 0; i < 50; i++)
+                //{
+                //    Errors.Add(new ErrorItem
+                //    {
+                //        Date = DateTime.Now.AddDays(-1),
+                //        Time = DateTime.Now.Date.ToString("10:05:12"),
+                //        RetentionTime = Convert.ToDateTime("2025-12-04 10:05:12"),
+                //        SequenceName = "Seq_ICS5000_RoutineRun_001",
+                //        Instrument = "ICS-5000",
+                //        Summary = "Chromeleon reported communication timeout during sequence execution.",
+                //        Severity = "Critical",
+                //        Status = "Completed"
+                //    });
 
-            ErrorsView = CollectionViewSource.GetDefaultView(Errors.Where(x => x.Status != "Completed").ToList());
-            // AuditCompletedErrors = new ObservableCollection<AuditLogItem>(Errors.Where(x => x.Status == "Completed").ToList());
-            var item = Errors.Take(5).ToList();
-            AuditCompletedErrors = new ObservableCollection<AuditLogItem>(item);
-            AuditCompletedErrors.ToList().ForEach(a => a.Status = "Completed");
+                //}
+
+                ErrorsView = CollectionViewSource.GetDefaultView(Errors.Where(x => x.Status != "Completed").ToList());
+                // AuditCompletedErrors = new ObservableCollection<AuditLogItem>(Errors.Where(x => x.Status == "Completed").ToList());
+                var item = Errors.Take(5).ToList();
+                AuditCompletedErrors = new ObservableCollection<AuditLogItem>(item);
+                AuditCompletedErrors.ToList().ForEach(a => a.Status = "Completed");
 
             ErrorsView.Filter = FilterErrors;
             FromDate = null;
             ToDate = null;
-            
         }
 
         private void CreateTicket()

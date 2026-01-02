@@ -76,7 +76,7 @@
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\EmailViewModel.cs" />
-    <Compile Include="ViewModels\ErrorsViewModel.cs" />
+    <Compile Include="ViewModels\AuditTrailViewModel.cs" />
     <Compile Include="ViewModels\SidePanelViewModel.cs" />
     <Page Include="ChildWindows\EmailFormat.xaml">
       <SubType>Designer</SubType>

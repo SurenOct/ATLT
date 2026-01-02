@@ -1,17 +1,14 @@
-﻿using CMATCTLoger;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
-using System.Data;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using CMATCTLoger;
+using Newtonsoft.Json;
 using Thermo.Chromeleon.Sdk.Common;
 using Thermo.Chromeleon.Sdk.Interfaces.Instruments;
 using Thermo.Chromeleon.Sdk.Interfaces.Instruments.Collections;
@@ -22,14 +19,14 @@ namespace CMATCTService
     {
         int schedularTime = Convert.ToInt32(ConfigurationManager.AppSettings["ThreadTime"]);
 
-        private string serviceLogPath;
-        private Thread logThread;
-        private bool keepRunning = true;
-        private Thread workerThread;
-        private bool stopRequested = false;
-        string msiPath;
-        string installLogDirectory;
-        string installLogPath;
+        //private string serviceLogPath;
+        //private Thread logThread;
+        //private bool keepRunning = true;
+        //private Thread workerThread;
+        //private bool stopRequested = false;
+        //string msiPath;
+        //string installLogDirectory;
+        //string installLogPath;
         private Timer _timer;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
         public CmSdkScope cmSdkScope { get; private set; }
@@ -96,49 +93,49 @@ namespace CMATCTService
                 CmSdk.Logon.DoLogon();
                 if (CmSdk.Logon.IsLoggedOn)
                 {
-             
-            LogLibrary.LogService("================Service started==================" + DateTime.Now);
-            // LogLibrary.WriteErrorLog("log writing : " + DateTime.Now.ToString());
 
-            try
-            {
-                foreach (IInstrument instr in GetInstrument())
-                {
-                    LogLibrary.LogService("Instruments Loop Entered." + DateTime.Now);
-                    //iinstrument instr = (iinstrument)getinstrument();
-                    IInstrument selectedinstument = instr;
+                    LogLibrary.LogService("================Service started==================" + DateTime.Now);
+                    // LogLibrary.WriteErrorLog("log writing : " + DateTime.Now.ToString());
+
                     try
                     {
-                        LogLibrary.LogService("Selected Instrument is :" + selectedinstument + "and Date is:" + DateTime.Now);
-                        bool result = await ConnectingToInstumentasync(selectedinstument);
-                        LogLibrary.LogService("Instrument Status :" + result + "and Date is:" + DateTime.Now);
-                        if (result)
+                        foreach (IInstrument instr in GetInstrument())
                         {
-                            LogLibrary.LogService("Instrument Status :" + result + "and Date is:" + DateTime.Now);
-                            //messagebox.show("connected successfully to " + selectedinstument.name);
-                            LogLibrary.LogService("Ready to Fetching AuditTrails Data :" + DateTime.Now);
-                            FetchOnlineAuditrailsData(selectedinstument, selectedinstument.Name);
-                        }
-                        else
-                        {
-                            // messagebox.show("failed to connect to " + selectedinstument.name);
-                        }
+                            LogLibrary.LogService("Instruments Loop Entered." + DateTime.Now);
+                            //iinstrument instr = (iinstrument)getinstrument();
+                            IInstrument selectedinstument = instr;
+                            try
+                            {
+                                LogLibrary.LogService("Selected Instrument is :" + selectedinstument + "and Date is:" + DateTime.Now);
+                                bool result = await ConnectingToInstumentasync(selectedinstument);
+                                LogLibrary.LogService("Instrument Status :" + result + "and Date is:" + DateTime.Now);
+                                if (result)
+                                {
+                                    LogLibrary.LogService("Instrument Status :" + result + "and Date is:" + DateTime.Now);
+                                    //messagebox.show("connected successfully to " + selectedinstument.name);
+                                    LogLibrary.LogService("Ready to Fetching AuditTrails Data :" + DateTime.Now);
+                                    FetchOnlineAuditrailsData(selectedinstument, selectedinstument.Name);
+                                }
+                                else
+                                {
+                                    // messagebox.show("failed to connect to " + selectedinstument.name);
+                                }
 
+                            }
+                            catch (Exception ex)
+                            {
+                                //messagebox.show(ex.message);
+                            }
+
+                        }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        //messagebox.show(ex.message);
+
+
                     }
 
-                }
-            }
-            catch (Exception)
-            {
 
-
-            }
-
-                    
                 }
             }
             // Your logic here
@@ -164,7 +161,7 @@ namespace CMATCTService
 
             // Create the folder (creates all parent folders if missing)
             Directory.CreateDirectory(destinationFolder);
-            
+
             //string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
             //string backupFile = Path.Combine(destinationFolder, $"{instrName + "_" + timestamp}.json");
 
@@ -212,16 +209,16 @@ namespace CMATCTService
         {
             //using (new CmSdkScope())
             //{
-                //CmSdk.Logon.DoLogon();
-                //if (CmSdk.Logon.IsLoggedOn)
-                //{
-                    LogLibrary.LogService("Connecting To Instrument:" + selectedinstument + "and Date is:" + DateTime.Now);
-                    Progress result = await selectedinstument.ConnectAsync();
-                    LogLibrary.LogService("Instrument Status is:" + result + "and Date is:" + DateTime.Now);
-                    return result == Progress.Completed;
-               // }
-           // }
-           // return false;
+            //CmSdk.Logon.DoLogon();
+            //if (CmSdk.Logon.IsLoggedOn)
+            //{
+            LogLibrary.LogService("Connecting To Instrument:" + selectedinstument + "and Date is:" + DateTime.Now);
+            Progress result = await selectedinstument.ConnectAsync();
+            LogLibrary.LogService("Instrument Status is:" + result + "and Date is:" + DateTime.Now);
+            return result == Progress.Completed;
+            // }
+            // }
+            // return false;
         }
 
         /// <summary>
@@ -232,14 +229,14 @@ namespace CMATCTService
         {
             //using (new CmSdkScope())
             //{
-                //CmSdk.Logon.DoLogon();
-                //if (CmSdk.Logon.IsLoggedOn)
-                //{
-                    LogLibrary.LogService("Fetching Instruments Details : " + DateTime.Now);
-                    var items = Thermo.Chromeleon.Sdk.Common.CmSdk.GetInstrumentAccess();
-                    LogLibrary.LogService("Fetched Instruments Details count is: " + items.Instruments.Count() + " and Date is:" + DateTime.Now);
-                    return items.Instruments;
-               // }
+            //CmSdk.Logon.DoLogon();
+            //if (CmSdk.Logon.IsLoggedOn)
+            //{
+            LogLibrary.LogService("Fetching Instruments Details : " + DateTime.Now);
+            var items = Thermo.Chromeleon.Sdk.Common.CmSdk.GetInstrumentAccess();
+            LogLibrary.LogService("Fetched Instruments Details count is: " + items.Instruments.Count() + " and Date is:" + DateTime.Now);
+            return items.Instruments;
+            // }
             //}
             return Enumerable.Empty<IInstrument>();
         }

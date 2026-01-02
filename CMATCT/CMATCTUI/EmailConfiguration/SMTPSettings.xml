@@ -3,6 +3,6 @@
   <Server>smtp.office365.com</Server>
   <Port>587</Port>
   <Encryption>STARTTLS</Encryption>
-  <Username>mahesh.kulkarni@thermofisher.com</Username>
-  <Password>YOUR_PASSWORD_OR_APP_PASSWORD</Password>
+  <Username>chaitanyakumar.svs@thermofisher.com</Username>
+  <Password>Sivaya$123</Password>
 </SmtpSettings>

@@ -19,8 +19,9 @@ using Newtonsoft.Json;
 //Test Commit
 namespace CMATCTUI.ViewModels
 {
-    public class AuditTrailViewModel
+    public class AuditTrailViewModel : INotifyPropertyChanged
     {
+
 
         public ObservableCollection<AuditLogItem> Errors { get; set; }
         public ObservableCollection<AuditLogItem> AuditCompletedErrors { get; set; }
@@ -34,21 +35,46 @@ namespace CMATCTUI.ViewModels
             {
                 if (_selectedAuditLogs != value)
                 {
-                    if (_selectedAuditLogs != null)
-                        _selectedAuditLogs.CollectionChanged -= SelectedAuditLogs_CollectionChanged;
+                    //if (_selectedAuditLogs != null)
+                    //    _selectedAuditLogs.CollectionChanged -= SelectedAuditLogs_CollectionChanged;
 
                     _selectedAuditLogs = value;
 
-                    if (_selectedAuditLogs != null)
-                        _selectedAuditLogs.CollectionChanged += SelectedAuditLogs_CollectionChanged;
+                    //if (_selectedAuditLogs != null)
+                    //    _selectedAuditLogs.CollectionChanged += SelectedAuditLogs_CollectionChanged;
 
                     OnPropertyChanged(nameof(SelectedAuditLogs));
-                    OnPropertyChanged(nameof(IsButtonEnabled));
+                 //   OnPropertyChanged(nameof(IsButtonEnabled));
                 }
             }
 
         }
 
+
+        public ObservableCollection<string> Items { get; } = new ObservableCollection<string>
+        {
+            "Item 1", "Item 2", "Item 3"
+        };
+
+        private string _selectedItem;
+        public string SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                if (_selectedItem != value)
+                {
+                    _selectedItem = value;
+                    OnPropertyChanged(nameof(SelectedItem));
+                    OnPropertyChanged(nameof(IsRowSelected));
+                }
+            }
+        }
+
+        public bool IsRowSelected => SelectedItem != null;
+
+      
+         
         private void SelectedAuditLogs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             IsButtonEnabled = true;
@@ -115,15 +141,16 @@ namespace CMATCTUI.ViewModels
             string destinationFolder = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
                 "CMATCTData", "Data");
-            if (!Directory.Exists(destinationFolder))
-            {
-                Directory.CreateDirectory(destinationFolder);
-            }
+            //if (!Directory.Exists(destinationFolder))
+            //{
+            //    MessageBox.Show("No Local Database available");
+            //    return;
+            //}
             string[] files = Directory.GetFiles(destinationFolder);
 
             if (files.Length <= 0)
             {
-                MessageBox.Show("No Local Database available");
+                MessageBox.Show("Data is Not Available in Database ");
             }
             else
             {
@@ -186,9 +213,10 @@ namespace CMATCTUI.ViewModels
                 AuditCompletedErrors = new ObservableCollection<AuditLogItem>(item);
                 AuditCompletedErrors.ToList().ForEach(a => a.Status = "Completed");
 
-            ErrorsView.Filter = FilterErrors;
-            FromDate = null;
-            ToDate = null;
+                ErrorsView.Filter = FilterErrors;
+                FromDate = null;
+                ToDate = null;
+            }
         }
 
         private void CreateTicket()
@@ -196,6 +224,14 @@ namespace CMATCTUI.ViewModels
             var childWindow = new EmailFormat();
             childWindow.ViewModel = new EmailViewModel(new ObservableCollection<AuditLogItem>(SelectedAuditLogs));
             childWindow.Show();
+
+
+            //var viewModel = new EmailViewModel(new ObservableCollection<AuditLogItem>(SelectedAuditLogs));
+            //var childWindow = new EmailFormat
+            //{
+            //    DataContext = viewModel
+            //};
+            //childWindow.Show();
 
 
         }
@@ -247,9 +283,8 @@ namespace CMATCTUI.ViewModels
                     foreach (var item in grid.SelectedItems)
                         bindable?.Add(item);
 
-                    if (grid.DataContext is ErrorsViewModel vm)
+                    if (grid.DataContext is AuditTrailViewModel vm)
                     {
-                         
                         vm.IsButtonEnabled = grid.SelectedItems.Count > 0;
                     }
                 };

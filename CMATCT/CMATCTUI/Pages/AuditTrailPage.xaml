@@ -81,6 +81,8 @@
             </DataGrid.Columns>
         </DataGrid>
 
+        
+
         <!-- ================= SECOND HEADER ================= -->
         <TextBlock Grid.Row="2"
                    Text="Completed Audit Trail"

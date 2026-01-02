@@ -1,9 +1,12 @@
-﻿using System.ComponentModel;
+﻿using CMATCTUI.Commands;
+using CMATCTUI.Pages;
+using System;
+using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using CMATCTUI.Commands;
-using CMATCTUI.Pages;
 
 //Test Comment
 namespace CMATCTUI.ViewModels
@@ -46,6 +49,16 @@ namespace CMATCTUI.ViewModels
 
         private void NavigateToAuditTrailPage()
         {
+            string destinationFolder = Path.Combine(
+               Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+               "CMATCTData", "Data");
+            if (!Directory.Exists(destinationFolder))
+            {
+                MessageBox.Show("No Local Database available");
+                return;
+            }
+
+
             if (auditTrailPage == null)
                 auditTrailPage = new AuditTrailPage();
             CurrentPage = auditTrailPage;

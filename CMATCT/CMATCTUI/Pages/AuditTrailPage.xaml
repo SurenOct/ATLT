@@ -59,10 +59,10 @@
 
         <!-- ================= FIRST GRID ================= -->
         <DataGrid Grid.Row="1" 
-                  ItemsSource="{Binding ErrorsView}"
+                  ItemsSource="{Binding AuditErrors,Mode=TwoWay}"
                   AutoGenerateColumns="False" 
                   IsReadOnly="True" Height="250px" VerticalScrollBarVisibility="Auto" 
-              vm:DataGridSelectedItemsBehavior.BindableSelectedItems="{Binding SelectedAuditLogs}">
+             >
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="" Width="20" >
                     <DataGridTemplateColumn.CellTemplate>
@@ -92,7 +92,7 @@
 
         <!-- ================= SECOND GRID ================= -->
         <DataGrid Grid.Row="3"
-                  ItemsSource="{Binding AuditCompletedErrors}"
+                  ItemsSource="{Binding AuditCompletedErrors,Mode=TwoWay}"
                   AutoGenerateColumns="False"
                   IsReadOnly="True" Height="200" VerticalScrollBarVisibility="Auto">
 

@@ -124,6 +124,9 @@ namespace CMATCTUI.ViewModels
             if (ConnectingSMTPServer(mailClient, smtpSettings))
             {
                 var message = new MimeMessage();
+
+              
+
                 message.From.Add(new MailboxAddress("Mahesh Kulkarni",smtpSettings.Username));
                 message.To.Add(MailboxAddress.Parse("recipient@company.com"));
                 message.Subject = "Test Email using XML Configuration";

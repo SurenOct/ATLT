@@ -1,4 +1,8 @@
-﻿using System;
+﻿using CMATCTUI.ChildWindows;
+using CMATCTUI.Commands;
+using CMATCTUI.Models;
+using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,18 +15,50 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using CMATCTUI.ChildWindows;
-using CMATCTUI.Commands;
-using CMATCTUI.Models;
-using Newtonsoft.Json;
+using System.Windows.Shapes;
+using static System.Net.WebRequestMethods;
 
 //Test Commit
 namespace CMATCTUI.ViewModels
 {
     public class AuditTrailViewModel : INotifyPropertyChanged
     {
-        public ObservableCollection<AuditLogItem> Errors { get; set; }
-        public ObservableCollection<AuditLogItem> AuditCompletedErrors { get; set; }
+
+
+        private ObservableCollection<AuditLogItem> _auditErrors;
+        public ObservableCollection<AuditLogItem> AuditErrors
+        {
+            get => _auditErrors;
+            set
+            {
+                if (_auditErrors != value)
+                {
+                    _auditErrors = value;
+
+                    OnPropertyChanged(nameof(AuditErrors));
+                }
+            }
+
+        }
+        private ObservableCollection<AuditLogItem> _auditCompletedErrors;
+        public ObservableCollection<AuditLogItem> AuditCompletedErrors
+        {
+            get => _auditCompletedErrors;
+            set
+            {
+                if (_auditCompletedErrors != value)
+                {
+                    _auditCompletedErrors = value;
+
+                    OnPropertyChanged(nameof(AuditCompletedErrors));
+                }
+            }
+
+        }
+
+
+
+       // public ObservableCollection<AuditLogItem> AuditCompletedErrors { get; set; }
         public ICollectionView ErrorsView { get; set; }
 
         private ObservableCollection<AuditLogItem> _selectedAuditLogs;
@@ -41,8 +77,8 @@ namespace CMATCTUI.ViewModels
 
         }
 
-       
-          
+
+
         private ObservableCollection<string> _instrumentsDetails;
         public ObservableCollection<string> InstrumentsDetails
         {
@@ -80,8 +116,20 @@ namespace CMATCTUI.ViewModels
                 }
             }
         }
-        
-
+        private string _selectedInstrument;
+        public string SelectedInstrument
+        {
+            get => _selectedInstrument;
+            set
+            {
+                if (_selectedInstrument != value)
+                {
+                    _selectedInstrument = value;
+                    OnPropertyChanged(nameof(SelectedInstrument));
+                    OnInstrumentChanged(value);
+                }
+            }
+        }
 
         private DateTime? _fromDate;
         public DateTime? FromDate
@@ -108,17 +156,18 @@ namespace CMATCTUI.ViewModels
         }
 
         public ICommand CreateTicketCommand { get; }
+        public string[] files = null;
 
         public AuditTrailViewModel()
         {
-            SelectedAuditLogs = new ObservableCollection<AuditLogItem>();
-            InstrumentsDetails = new ObservableCollection<string>();
+            //SelectedAuditLogs = new ObservableCollection<AuditLogItem>();
+            //InstrumentsDetails = new ObservableCollection<string>();
             CreateTicketCommand = new RelayCommand(CreateTicket);
-            string destinationFolder = Path.Combine(
+            string destinationFolder = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
                 "CMATCTData", "Data");
-             
-            string[] files = Directory.GetFiles(destinationFolder);
+
+            files = Directory.GetFiles(destinationFolder);
 
             if (files.Length <= 0)
             {
@@ -129,36 +178,76 @@ namespace CMATCTUI.ViewModels
             {
                 IsFilterStackEnabled = true;
                 List<string> fileList = files.ToList();
+                InstrumentsDetails = new ObservableCollection<string>();
                 foreach (var file in files)
                 {
                     InstrumentsDetails.Add(file.ToString().Split('\\').Last().Split('_').First().ToString());
                 }
                 InstrumentsDetails = new ObservableCollection<string>(InstrumentsDetails.Distinct());
-                // var jsonString = File.ReadAllText(@"C:\\CM_AT_Tool\\CMATCT\\CMATCTUI\\FileData\\backup_2025-12-24_114803.json");
-                string path = files[0].ToString();
-                var jsonString = File.ReadAllText(files[0].ToString());
-                var items = File.ReadAllText(path);
-                // Deserialize JSON string to object
-                Errors = JsonConvert.DeserializeObject<ObservableCollection<AuditLogItem>>(jsonString);
-                DateTimeOffset dto = DateTimeOffset.Parse(Errors[0].Time);
-                 foreach(var db in Errors)
-                {
-                    db.Date = DateTimeOffset.Parse(db.Time).Date.ToString("yyyy-MM-dd");
-                    db.Time = DateTimeOffset.Parse(db.Time).Date.ToString(@"hh\:mm\:ss");
-                }
-                Errors.ToList().ForEach(a => a.Status = "New");
+                SelectedInstrument= InstrumentsDetails[0];
+                //string path = files[0].ToString();
+                //var jsonString = File.ReadAllText(files[0].ToString());
 
-                AuditCompletedErrors = JsonConvert.DeserializeObject<ObservableCollection<AuditLogItem>>(jsonString);
-                
-                ErrorsView = CollectionViewSource.GetDefaultView(Errors.Where(x => x.Status != "Completed").ToList());
-                // AuditCompletedErrors = new ObservableCollection<AuditLogItem>(Errors.Where(x => x.Status == "Completed").ToList());
-                var item = Errors.Take(5).ToList();
-                AuditCompletedErrors = new ObservableCollection<AuditLogItem>(item);
-                AuditCompletedErrors.ToList().ForEach(a => a.Status = "Completed");
+                //string path = files.FirstOrDefault();
 
-                ErrorsView.Filter = FilterErrors;
-                FromDate = null;
-                ToDate = null;
+                ////DynamicJsonFileLoading(InstrumentsDetails, SelectedInstrument);
+                //var jsonString = System.IO.File.ReadAllText(files.LastOrDefault());
+
+                //var items = System.IO.File.ReadAllText(path);
+                //Errors = JsonConvert.DeserializeObject<ObservableCollection<AuditLogItem>>(jsonString);
+                //DateTimeOffset dto = DateTimeOffset.Parse(Errors[0].Time);
+                //foreach (var db in Errors)
+                //{
+                //    db.Date = DateTimeOffset.Parse(db.Time).Date.ToString("yyyy-MM-dd");
+                //    db.Time = DateTimeOffset.Parse(db.Time).Date.ToString(@"hh\:mm\:ss");
+                //}
+                //Errors.ToList().ForEach(a => a.Status = "New");
+
+                ////AuditCompletedErrors = JsonConvert.DeserializeObject<ObservableCollection<AuditLogItem>>(jsonString);
+
+                //ErrorsView = CollectionViewSource.GetDefaultView(Errors.Where(x => x.Status != "Completed").ToList());
+                ////var item = Errors.Take(5).ToList();
+                ////AuditCompletedErrors = new ObservableCollection<AuditLogItem>(item);
+                ////AuditCompletedErrors.ToList().ForEach(a => a.Status = "Completed");
+
+                //ErrorsView.Filter = FilterErrors;
+                //FromDate = null;
+                //ToDate = null;
+            }
+
+        }
+
+        private void OnInstrumentChanged(string instrumentName)
+        {
+            var instrumentsDetails = this.files.Where(a => a.ToString().Split('\\').Last().Split('_').First().ToString() == instrumentName).ToList();
+            DynamicJsonFileLoading(instrumentsDetails.First(), instrumentName);
+        }
+
+
+        public void DynamicJsonFileLoading(string instrumentsFilePath, string selectedInstrument)
+        {
+            AuditErrors = new ObservableCollection<AuditLogItem>();
+            LoadJsonData(instrumentsFilePath);
+
+            ErrorsView = CollectionViewSource.GetDefaultView(AuditErrors);
+            //var item = Errors.Take(5).ToList();
+            //AuditCompletedErrors = new ObservableCollection<AuditLogItem>(item);
+            //AuditCompletedErrors.ToList().ForEach(a => a.Status = "Completed");
+
+            ErrorsView.Filter = FilterErrors;
+            FromDate = null;
+            ToDate = null;
+        }
+
+
+        private void LoadJsonData(string filePath)
+        {
+            var jsonString = System.IO.File.ReadAllText(filePath);
+            AuditErrors = JsonConvert.DeserializeObject<ObservableCollection<AuditLogItem>>(jsonString);
+            foreach (var db in AuditErrors)
+            {
+                db.Date = DateTimeOffset.Parse(db.Time).Date.ToString("yyyy-MM-dd");
+                db.Time = DateTimeOffset.Parse(db.Time).Date.ToString(@"hh\:mm\:ss");
             }
         }
 
@@ -167,7 +256,7 @@ namespace CMATCTUI.ViewModels
             var childWindow = new EmailFormat();
             childWindow.ViewModel = new EmailViewModel(new ObservableCollection<AuditLogItem>(SelectedAuditLogs));
             childWindow.Show();
- 
+
 
         }
         private bool FilterErrors(object obj)

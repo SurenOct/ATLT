@@ -96,6 +96,7 @@
     </Compile>
     <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converter\SeverityToImageConverter.cs" />
+    <Compile Include="Generic\GenericXmlLoader.cs" />
     <Compile Include="Models\ATCTEmailer.cs" />
     <Compile Include="Models\SmtpConfigLoader.cs" />
     <Compile Include="Models\SmtpSettings.cs" />
@@ -190,7 +191,10 @@
     <Resource Include="Images\Warning.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="EmailConfiguration\SMTPSettings.xml" />
+    <Resource Include="XMLConfiguration\SMTPSettings.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="XMLConfiguration\IncidentsSettings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

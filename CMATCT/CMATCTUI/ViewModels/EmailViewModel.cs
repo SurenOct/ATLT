@@ -1,4 +1,5 @@
 ﻿using CMATCTUI.Commands;
+using CMATCTUI.Generic;
 using CMATCTUI.Models;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -12,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Xml.Linq;
 
 namespace CMATCTUI.ViewModels
 {
@@ -27,6 +29,18 @@ namespace CMATCTUI.ViewModels
                 OnPropertyChanged(nameof(Items));
             }
         }
+        private List<string> _incidentsItems;
+        public List<string> IncidentsItems
+        {
+            get => _incidentsItems;
+            set
+            {
+                _incidentsItems = value;
+                OnPropertyChanged(nameof(IncidentsItems));
+            }
+        }
+
+
         private string _incidentDescription;
         public string IncidentDescription
         {
@@ -37,26 +51,70 @@ namespace CMATCTUI.ViewModels
                 OnPropertyChanged(nameof(IncidentDescription));
             }
         }
-
+        private string _selectedIncidentType;
+        public string SelectedIncidentType
+        {
+            get => _selectedIncidentType;
+            set
+            {
+                if (_selectedIncidentType != value)
+                {
+                    _selectedIncidentType = value;
+                    OnPropertyChanged(nameof(SelectedIncidentType));
+                }
+            }
+        }
 
         public ICommand SendEmailCommand { get; }
         public EmailViewModel(ObservableCollection<AuditLogItem> itemsFromParent)
         {
             SendEmailCommand = new RelayCommand(SendEmail);
+           
+
             // Make a copy if you don't want parent and child to modify the same collection
             Items = new ObservableCollection<AuditLogItem>(itemsFromParent);
             StringBuilder incedentMsg = new StringBuilder();
             foreach (var item in Items)
             {
                 incedentMsg.AppendLine(item.Message);
-                //        incedentMsg.AppendLine("\n");
+                
             }
             this.IncidentDescription = incedentMsg.ToString();
+
+            LoadIncedents();
         }
+        public void LoadIncedents()
+        {
+            XDocument doc = GenericXmlLoader.LoadingXML("IncidentsSettings.xml", "XMLConfiguration");
+            IncidentsItems = new List<string>();
+            XElement  root= doc.Element("IncedentsSetting");
+            if (root != null)
+            {
+                foreach (XElement item in root.Elements("IncedentType"))
+                {
+                    IncidentsItems.Add(item.Value);
+                }    
+            }
+        }
+     
 
         public void SendEmail()
         {
-            var smtpSettings = SmtpConfigLoader.Load("SMTPSettings.xml");
+            XDocument doc = GenericXmlLoader.LoadingXML("SMTPSettings.xml", "XMLConfiguration");
+            SmtpSettings smtpSettings = null;
+            if (doc != null)
+            {
+                var root = doc.Element("SmtpSettings");
+
+                smtpSettings =new SmtpSettings
+                {
+                    Server = root.Element("Server")?.Value,
+                    Port = int.Parse(root.Element("Port")?.Value ?? "0"),
+                    Encryption = root.Element("Encryption")?.Value,
+                    Username = root.Element("Username")?.Value,
+                    Password = root.Element("Password")?.Value
+                };
+            }
             if(smtpSettings==null)
             {
                 MessageBox.Show("Mail is not Configured Properly. Please contact Administrator.");

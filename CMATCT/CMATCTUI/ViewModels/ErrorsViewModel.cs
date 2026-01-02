@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -33,10 +34,29 @@ namespace CMATCTUI.ViewModels
             get => _selectedAuditLogs;
             set
             {
-                _selectedAuditLogs = value;
-                OnPropertyChanged(nameof(SelectedAuditLogs));
+                if (_selectedAuditLogs != value)
+                {
+                    if (_selectedAuditLogs != null)
+                        _selectedAuditLogs.CollectionChanged -= SelectedAuditLogs_CollectionChanged;
+
+                    _selectedAuditLogs = value;
+
+                    if (_selectedAuditLogs != null)
+                        _selectedAuditLogs.CollectionChanged += SelectedAuditLogs_CollectionChanged;
+
+                    OnPropertyChanged(nameof(SelectedAuditLogs));
+                    OnPropertyChanged(nameof(IsButtonEnabled));
+                }
             }
+
         }
+
+        private void SelectedAuditLogs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            IsButtonEnabled = true;
+            OnPropertyChanged(nameof(IsButtonEnabled));
+
+        }        
         private ObservableCollection<string> _instrumentsDetails;
         public ObservableCollection<string> InstrumentsDetails
         {
@@ -45,6 +65,20 @@ namespace CMATCTUI.ViewModels
             {
                 _instrumentsDetails = value;
                 OnPropertyChanged(nameof(InstrumentsDetails));
+            }
+        }
+
+        private bool _isButtonEnabled = false;
+        public bool IsButtonEnabled
+        {
+            get => _isButtonEnabled;
+            set
+            {
+                if (_isButtonEnabled != value)
+                {
+                    _isButtonEnabled = value;
+                    OnPropertyChanged(nameof(IsButtonEnabled));
+                }
             }
         }
 
@@ -146,6 +180,7 @@ namespace CMATCTUI.ViewModels
             ErrorsView.Filter = FilterErrors;
             FromDate = null;
             ToDate = null;
+            
         }
 
         private void CreateTicket()
@@ -198,10 +233,17 @@ namespace CMATCTUI.ViewModels
             {
                 grid.SelectionChanged += (s, ev) =>
                 {
+
                     var bindable = GetBindableSelectedItems(grid);
                     bindable?.Clear();
                     foreach (var item in grid.SelectedItems)
                         bindable?.Add(item);
+
+                    if (grid.DataContext is ErrorsViewModel vm)
+                    {
+                         
+                        vm.IsButtonEnabled = grid.SelectedItems.Count > 0;
+                    }
                 };
             }
         }

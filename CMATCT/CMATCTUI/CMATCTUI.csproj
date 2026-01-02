@@ -61,6 +61,7 @@
     <Compile Include="ChildWindows\EmailFormat.xaml.cs">
       <DependentUpon>EmailFormat.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converter\SeverityToImageConverter.cs" />
     <Compile Include="Pages\AboutPage.xaml.cs">
       <DependentUpon>AboutPage.xaml</DependentUpon>

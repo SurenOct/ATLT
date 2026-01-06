@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <IncedentsSetting>
-  <IncedentType>Other</IncedentType>
-  <IncedentType>Chromeleon Not Responding</IncedentType>
-  <IncedentType>Chromeleon Crash</IncedentType>
-  <IncedentType>Sequence Aborted</IncedentType>
-  <IncedentType>Sequence Failed</IncedentType>
-  <IncedentType>Chromeleon Not Responding</IncedentType>
-  <IncedentType>Instrument Configuration Not Responding</IncedentType>
+	<IncedentType>Other</IncedentType>
+	<IncedentType>Chromeleon Not Responding</IncedentType>
+	<IncedentType>Chromeleon Crash</IncedentType>
+	<IncedentType>Sequence Aborted</IncedentType>
+	<IncedentType>Sequence Failed</IncedentType>
+	<IncedentType>Chromeleon Not Responding</IncedentType>
+	<IncedentType>Instrument Configuration Not Responding</IncedentType>
 </IncedentsSetting>

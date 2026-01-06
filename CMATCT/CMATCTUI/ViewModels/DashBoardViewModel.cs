@@ -158,11 +158,6 @@ namespace CMATCTUI.ViewModels
 
                 NumberOfInstruments = files.Count();
             }
-            else
-            {
-
-            }
-
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

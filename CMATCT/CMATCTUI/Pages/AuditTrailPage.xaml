@@ -62,7 +62,7 @@
                   ItemsSource="{Binding AuditErrors,Mode=TwoWay}"
                   AutoGenerateColumns="False" 
                   IsReadOnly="True" Height="250px" VerticalScrollBarVisibility="Auto" 
-             >
+               vm:DataGridSelectedItemsBehavior.BindableSelectedItems="{Binding SelectedAuditLogs}">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="" Width="20" >
                     <DataGridTemplateColumn.CellTemplate>

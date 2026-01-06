@@ -160,7 +160,7 @@ namespace CMATCTUI.ViewModels
 
         public AuditTrailViewModel()
         {
-            //SelectedAuditLogs = new ObservableCollection<AuditLogItem>();
+            SelectedAuditLogs = new ObservableCollection<AuditLogItem>();
             //InstrumentsDetails = new ObservableCollection<string>();
             CreateTicketCommand = new RelayCommand(CreateTicket);
             string destinationFolder = System.IO.Path.Combine(
@@ -226,6 +226,7 @@ namespace CMATCTUI.ViewModels
 
         public void DynamicJsonFileLoading(string instrumentsFilePath, string selectedInstrument)
         {
+            SelectedAuditLogs = new ObservableCollection<AuditLogItem>();
             AuditErrors = new ObservableCollection<AuditLogItem>();
             LoadJsonData(instrumentsFilePath);
 

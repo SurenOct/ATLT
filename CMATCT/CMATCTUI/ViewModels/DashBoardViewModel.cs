@@ -70,6 +70,20 @@ namespace CMATCTUI.ViewModels
                 }
             }
         }
+        private int _TotalAuditTrailsCount;
+        public int TotalAuditTrailsCount
+        {
+            get => _TotalAuditTrailsCount;
+            set
+            {
+                if (_TotalAuditTrailsCount != value)
+                {
+                    _TotalAuditTrailsCount = value;
+                    OnPropertyChanged(nameof(TotalAuditTrailsCount));
+                }
+            }
+        }
+
         private string _lastUpdatedFileDateAndTime;
         public string LastUpdatedFileDateAndTime
         {
@@ -128,35 +142,49 @@ namespace CMATCTUI.ViewModels
               Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
               "CMATCTData", "Logs");
 
-            string[] files = Directory.GetFiles(destinationFolder);
+          //  string[] files = Directory.GetFiles(destinationFolder);
             string[] logFiles = Directory.GetFiles(logFolder);
-            var filesWithDate = Directory.GetFiles(logFolder)
-                        .Select(filePath => new FileInfo(filePath))
-                        .Select(f => new
-                        {
-                            FileName = f.Name,
-                            FullPath = f.FullName,
-                            CreatedOn = f.CreationTime
-                        })
-                        .OrderByDescending(f => f.CreatedOn)
-                             .ToList();
+            //var filesWithDate = Directory.GetFiles(logFolder)
+            //            .Select(filePath => new FileInfo(filePath))
+            //            .Select(f => new
+            //            {
+            //                FileName = f.Name,
+            //                FullPath = f.FullName,
+            //                CreatedOn = f.CreationTime
+            //            })
+            //            .OrderByDescending(f => f.CreatedOn)
+            //                 .ToList();
+            
+                var filesWithDate = Directory.GetFiles(destinationFolder)
+                    .Select(filePath => new FileInfo(filePath))
+                    .Where(f => f.CreationTime.Date == DateTime.Today)
+                    .Select(f => new
+                    {
+                        FileName = f.Name,
+                        FullPath = f.FullName,
+                        CreatedOn = f.CreationTime
+                    })
+                    .ToList();
+                if (filesWithDate.Count() > 0)
+                {
+                    LastUpdatedFileDateAndTime = "  |  Last updated:" + filesWithDate.First().CreatedOn.ToString();
+
+                }
+           
+            
             if (filesWithDate.Count() > 0)
             {
-               LastUpdatedFileDateAndTime= "  |  Last updated:"+ filesWithDate.First().CreatedOn.ToString();
-
-            }
-            if (files.Count() > 0)
-            {
-                foreach (var filepath in files)
+                foreach (var filepath in filesWithDate)
                 {
-                    var jsonString = System.IO.File.ReadAllText(filepath);
+                    var jsonString = System.IO.File.ReadAllText(filepath.FullPath);
+
                     var criticalWarnings = JsonConvert.DeserializeObject<ObservableCollection<AuditLogItem>>(jsonString);
                     NumberOfInformations = NumberOfInformations + criticalWarnings.Where(a => a.Category.ToString().Contains("Information")).Count();
                     NumberOfWarnings = NumberOfWarnings + criticalWarnings.Where(a => a.Category.Contains("Warnings")).Count();
                     NumberOfErrors = NumberOfErrors + criticalWarnings.Where(a => a.Category.Contains("Errors")).Count();
                 }
-
-                NumberOfInstruments = files.Count();
+                TotalAuditTrailsCount= NumberOfInformations+NumberOfWarnings+ NumberOfErrors;
+                NumberOfInstruments = filesWithDate.Count();
             }
         }
 

@@ -115,6 +115,7 @@
     <Compile Include="ViewModels\DashBoardViewModel.cs" />
     <Compile Include="ViewModels\EmailViewModel.cs" />
     <Compile Include="ViewModels\AuditTrailViewModel.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SidePanelViewModel.cs" />
     <Page Include="ChildWindows\EmailFormat.xaml">
       <SubType>Designer</SubType>
@@ -196,6 +197,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="XMLConfiguration\IncidentsSettings.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="XMLConfiguration\TimeConfigFile.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

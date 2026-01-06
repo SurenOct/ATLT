@@ -61,6 +61,11 @@
                 <StackPanel>
                     <!--<TextBlock Text="Audit Trail" FontWeight="Bold"/>
                     <TextBlock Text="Last 24h: 5" Margin="0 5 0 0"/>-->
+                    
+                    <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
+                        <TextBlock Text="Total AuditTrails Entry Today's Count:"></TextBlock>
+                        <TextBlock Margin="58,0,0,0" FontWeight="Bold" Text="{Binding TotalAuditTrailsCount}"></TextBlock>
+                    </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
                         <TextBlock Text="Total Information:"></TextBlock>
                         <TextBlock Margin="58,0,0,0" FontWeight="Bold" Text="{Binding NumberOfInformations}"></TextBlock>

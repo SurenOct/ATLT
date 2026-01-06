@@ -11,7 +11,8 @@ namespace CMATCTUI.Models
         public string Category { get; set; }
         public string Date { get; set; }
         public string Time { get; set; }
-        public DateTime? RetentionTime { get; set; }
+        public double? RetentionTime { get; set; }
+        //public DateTime? RetentionTime { get; set; }
         public string Device { get; set; }
         public string Message { get; set; }
         public string Status { get; set; }

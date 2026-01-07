@@ -8,6 +8,7 @@ namespace CMATCTUI.Models
 {
     public class AuditLogItem
     {
+        public string ID { get; set; }
         public string Category { get; set; }
         public string Date { get; set; }
         public string Time { get; set; }

@@ -96,17 +96,35 @@ namespace CMATCTUI.ViewModels
                 }    
             }
         }
-     
+        public bool isMailSent{get;set;}
 
         public void SendEmail()
         {
+            isMailSent = true;
+
+            //if (IsMailSent())
+            //{
+            //    isMailSent = true;
+            //    MessageBox.Show("Email sent successfully.");
+
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Failed to send email.");
+            //    isMailSent = false;
+            //}
+
+        }
+        public bool IsMailSent()
+        {
+            bool IsConnect = false;
             XDocument doc = GenericXmlLoader.LoadingXML("SMTPSettings.xml", "XMLConfiguration");
             SmtpSettings smtpSettings = null;
             if (doc != null)
             {
                 var root = doc.Element("SmtpSettings");
 
-                smtpSettings =new SmtpSettings
+                smtpSettings = new SmtpSettings
                 {
                     Server = root.Element("Server")?.Value,
                     Port = int.Parse(root.Element("Port")?.Value ?? "0"),
@@ -115,19 +133,18 @@ namespace CMATCTUI.ViewModels
                     Password = root.Element("Password")?.Value
                 };
             }
-            if(smtpSettings==null)
+            if (smtpSettings == null)
             {
                 MessageBox.Show("Mail is not Configured Properly. Please contact Administrator.");
-                return;
-            }
-            SmtpClient mailClient = new SmtpClient();
+             }
+             SmtpClient mailClient = new SmtpClient();
             if (ConnectingSMTPServer(mailClient, smtpSettings))
             {
                 var message = new MimeMessage();
 
-              
 
-                message.From.Add(new MailboxAddress("Mahesh Kulkarni",smtpSettings.Username));
+
+                message.From.Add(new MailboxAddress("Mahesh Kulkarni", smtpSettings.Username));
                 message.To.Add(MailboxAddress.Parse("recipient@company.com"));
                 message.Subject = "Test Email using XML Configuration";
                 message.Body = new TextPart("plain")
@@ -136,11 +153,13 @@ namespace CMATCTUI.ViewModels
                 };
                 mailClient.Send(message);
                 mailClient.Disconnect(true);
+                IsConnect = true;
             }
             else
             {
                 MessageBox.Show("Unable to connect to SMTP Server. Please check the configuration.");
             }
+            return IsConnect;
         }
 
         public bool ConnectingSMTPServer(SmtpClient client, SmtpSettings smtpSettings)

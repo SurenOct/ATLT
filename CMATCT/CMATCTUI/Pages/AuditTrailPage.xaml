@@ -64,6 +64,7 @@
                   IsReadOnly="True" Height="250px" VerticalScrollBarVisibility="Auto" 
                vm:DataGridSelectedItemsBehavior.BindableSelectedItems="{Binding SelectedAuditLogs}">
             <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="10"  Visibility="Collapsed" />
                 <DataGridTemplateColumn Header="" Width="20" >
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -97,12 +98,13 @@
                   IsReadOnly="True" Height="200" VerticalScrollBarVisibility="Auto">
 
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="" Width="20" >
+                <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="10" Visibility="Collapsed"  />
+                <DataGridTemplateColumn Header="" Width="30" >
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <!--<Image Source="{Binding Severity}" Width="auto" Height="15"/>-->
                             <Image Width="auto" Height="20"
-                  Source="{Binding Severity , Converter={StaticResource SeverityToImageConverter}}"/>
+                  Source="{Binding Category , Converter={StaticResource SeverityToImageConverter}}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

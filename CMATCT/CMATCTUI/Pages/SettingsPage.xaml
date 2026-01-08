@@ -91,30 +91,24 @@
                           Grid.Row="0" Grid.Column="1"
                           Margin="0 5 0 5"
                           Text="C:\ProgramData\Dionex\Chromeleon\" />
-
-                    <!-- SDK usage -->
+                    <!-- Agilent Instruments Path -->
                     <TextBlock Grid.Row="1" Grid.Column="0"
-                            Text="SSR Source:"
-                            VerticalAlignment="Top" Margin="0 5 0 0" />
-                    <StackPanel Grid.Row="1" Grid.Column="1"
-                             Margin="0 5 0 5">
-                        <CheckBox x:Name="ChkUseSdk"
-                               Content="Use Chromeleon SDK to fetch SSR logs (recommended)"
-                               IsChecked="True" Margin="0 0 0 5"/>
-                        <CheckBox x:Name="ChkBackupFolders"
-                               Content="Backup folders on each scan (InstrumentConfigurationReports, IQ, Log)"
-                               IsChecked="True" />
-                    </StackPanel>
+                         Text="Agilent Instruments Path:"
+                         VerticalAlignment="Center" />
+                                    <TextBox x:Name="TxtChromeleonPath1"
+                       Grid.Row="1" Grid.Column="1"
+                       Margin="0 5 0 5"
+                       Text="C:/ProgramData/Agilent Technologies/Instrument Control Framework folder/" />
+                    <!-- Waters Instruments Path -->
+                    <TextBlock Grid.Row="2" Grid.Column="0"
+                     Text="Waters Instruments Path:"
+                     VerticalAlignment="Center" />
+                                    <TextBox x:Name="TxtChromeleonPath2"
+                   Grid.Row="2" Grid.Column="1"
+                   Margin="0 5 0 5"
+                   Text="C:/Program Files (x86)/Waters Instruments/Logs/" />
 
-                    <!-- Retention -->
-                    <!--<TextBlock Grid.Row="2" Grid.Column="0"
-                            Text="Backup retention (days):"
-                            VerticalAlignment="Center" Margin="0 5 0 0"/>
-                 <TextBox x:Name="TxtRetentionDays"
-                          Grid.Row="2" Grid.Column="1"
-                          Margin="0 5 0 0"
-                          Width="50"
-                          Text="30" />-->
+
                 </Grid>
             </GroupBox>
 

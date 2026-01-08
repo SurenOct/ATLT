@@ -180,7 +180,7 @@ namespace CMATCTUI.ViewModels
 
                     var criticalWarnings = JsonConvert.DeserializeObject<ObservableCollection<AuditLogItem>>(jsonString);
                     NumberOfInformations = NumberOfInformations + criticalWarnings.Where(a => a.Category.ToString().Contains("Information")).Count();
-                    NumberOfWarnings = NumberOfWarnings + criticalWarnings.Where(a => a.Category.Contains("Warnings")).Count();
+                    NumberOfWarnings = NumberOfWarnings + criticalWarnings.Where(a => a.Category.Contains("Warning")).Count();
                     NumberOfErrors = NumberOfErrors + criticalWarnings.Where(a => a.Category.Contains("Errors")).Count();
                 }
                 TotalAuditTrailsCount= NumberOfInformations+NumberOfWarnings+ NumberOfErrors;

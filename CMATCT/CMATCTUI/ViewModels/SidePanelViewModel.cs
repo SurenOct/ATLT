@@ -34,6 +34,7 @@ namespace CMATCTUI.ViewModels
         private AboutPage _aboutPage;
         public SidePanelViewModel()
         {
+            DeleteFilesInFolder();
             //_serialService = SerialPortInstance.Instance;
             //_serialService.OpenPort();
             NavigateToAuditTrailPageCommand = new RelayCommand(NavigateToAuditTrailPage);
@@ -44,7 +45,43 @@ namespace CMATCTUI.ViewModels
             _dashBoardPage = new DashBoardPage();
             CurrentPage = _dashBoardPage;
             // CurrentPage = new FatAnalyzer { DataContext = new FatAnalyzerViewModel() };
+          
+        }
+        /// <summary>
+        /// Deletes all files and subdirectories in the specified folder.
+        /// </summary>
+        /// <param name="folderPath"></param>
+        private void DeleteFilesInFolder()
+        {
+                string folderPath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+        "CMATCTData", "Data");
 
+
+            if (!Directory.Exists(folderPath))
+                return;
+
+            var files = Directory.GetFiles(folderPath);
+
+            foreach (var file in files)
+            {
+                FileInfo fileInfo = new FileInfo(file);
+
+                // Check if file is older than 30 days
+                if (fileInfo.CreationTime < DateTime.Now.AddDays(-30))
+                {
+                    try
+                    {
+                        MessageBox.Show($"Deleting file: {fileInfo.Name}");
+                        fileInfo.Delete();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log exception if needed
+                        Console.WriteLine($"Failed to delete {fileInfo.Name}: {ex.Message}");
+                    }
+                }
+            }
         }
 
         private void NavigateToAuditTrailPage()

@@ -254,11 +254,15 @@ namespace CMATCTUI.ViewModels
         {
             var jsonString = System.IO.File.ReadAllText(filePath);
             AuditErrors = JsonConvert.DeserializeObject<ObservableCollection<AuditLogItem>>(jsonString);
+            var items = AuditErrors.Where(a => a.Category == "Warning" || a.Category == "Errors" || a.Category == "abort");
+            
+            AuditErrors = new ObservableCollection<AuditLogItem>(items);
             foreach (var db in AuditErrors)
             {
                 db.Date = DateTimeOffset.Parse(db.Time).Date.ToString("yyyy-MM-dd");
                 db.Time = DateTimeOffset.Parse(db.Time).Date.ToString(@"hh\:mm\:ss");
             }
+
         }
 
         private void CreateTicket()

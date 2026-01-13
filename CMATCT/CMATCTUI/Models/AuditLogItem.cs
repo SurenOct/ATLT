@@ -17,6 +17,7 @@ namespace CMATCTUI.Models
         public string Device { get; set; }
         public string Message { get; set; }
         public string Status { get; set; }
+        public string InstrumentName { get; set; }
         //public string SequenceName { get; set; }
         //public string Instrument { get; set; }
         //public string Summary { get; set; }

@@ -132,6 +132,19 @@ namespace CMATCTUI.ViewModels
                 }
             }
         }
+        private DateTime _minDate;
+        public DateTime MinDate
+        {
+            get => _minDate;
+            set
+            {
+                if (_minDate != value)
+                {
+                    _minDate = value;
+                    OnPropertyChanged(nameof(MinDate));
+                }
+            }
+        }
 
         private DateTime? _fromDate;
         public DateTime? FromDate
@@ -141,8 +154,40 @@ namespace CMATCTUI.ViewModels
             {
                 _fromDate = value;
                 OnPropertyChanged(nameof(FromDate));
-                ErrorsView.Refresh();
+                // ErrorsView.Refresh();
+                UpdateDataBasedonDateAndInstrument();
             }
+        }
+
+        private void UpdateDataBasedonDateAndInstrument()
+        {
+            if(this.FromDate!=null)
+            {
+                filesWithDate = Directory.GetFiles(destinationFolder)
+                 .Where(f => System.IO.File.GetCreationTime(f).Date == FromDate)
+                  .ToList();
+                var instrumentsDetails = this.filesWithDate.Where(a => a.ToString().Split('\\').Last().Split('_').First().ToString() == SelectedInstrument).ToList();
+                if (instrumentsDetails.Count() > 0)
+                {
+                    DynamicJsonFileLoading(instrumentsDetails.First(), SelectedInstrument);
+                    ReadCompletedAuditTrailLogs();
+                }
+                else if (SelectedInstrument == "--ALL--") //Need to Load All Files Data
+                {
+                    SelectedAuditLogs = new ObservableCollection<AuditLogItem>();
+                    AuditErrors = new ObservableCollection<AuditLogItem>();
+                    foreach (var file in filesWithDate)
+                    {
+                        LoadAllJsonData(file);
+                    }
+                    //ErrorsView = CollectionViewSource.GetDefaultView(AuditErrors);
+                     
+                    //ErrorsView.Filter = FilterErrors;
+                 
+                    ReadCompletedAuditTrailLogs();
+                }
+            }
+
         }
 
         private DateTime? _toDate;
@@ -160,20 +205,23 @@ namespace CMATCTUI.ViewModels
         public ICommand CreateTicketCommand { get; }
         //public string[] files = null;
         public List<string> filesWithDate;
+        public string destinationFolder;
         public AuditTrailViewModel()
         {
 
             SelectedAuditLogs = new ObservableCollection<AuditLogItem>();
             //InstrumentsDetails = new ObservableCollection<string>();
             CreateTicketCommand = new RelayCommand(CreateTicket);
-            string destinationFolder = System.IO.Path.Combine(
+            destinationFolder = System.IO.Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
                 "CMATCTData", "Data");
 
             filesWithDate = Directory.GetFiles(destinationFolder)
                  .Where(f => System.IO.File.GetCreationTime(f).Date == DateTime.Today)
                   .ToList();
-
+            this.FromDate= DateTime.Now.Date;
+            MinDate = DateTime.Today.AddDays(-30).Date;
+           
             // files = Directory.GetFiles(destinationFolder);
 
             if (filesWithDate.Count() <= 0)
@@ -242,13 +290,11 @@ namespace CMATCTUI.ViewModels
                 {
                     LoadAllJsonData(file);
                 }
-                ErrorsView = CollectionViewSource.GetDefaultView(AuditErrors);
-                //var item = Errors.Take(5).ToList();
-                //AuditCompletedErrors = new ObservableCollection<AuditLogItem>(item);
-                //AuditCompletedErrors.ToList().ForEach(a => a.Status = "Completed");
-                ErrorsView.Filter = FilterErrors;
-                FromDate = null;
-                ToDate = null;
+                //ErrorsView = CollectionViewSource.GetDefaultView(AuditErrors);
+                
+                //ErrorsView.Filter = FilterErrors;
+                //FromDate = null;
+                //ToDate = null;
                 ReadCompletedAuditTrailLogs();
             }
             
@@ -266,9 +312,9 @@ namespace CMATCTUI.ViewModels
             //AuditCompletedErrors = new ObservableCollection<AuditLogItem>(item);
             //AuditCompletedErrors.ToList().ForEach(a => a.Status = "Completed");
 
-            ErrorsView.Filter = FilterErrors;
-            FromDate = null;
-            ToDate = null;
+            //ErrorsView.Filter = FilterErrors;
+            //FromDate = null;
+            //ToDate = null;
         }
 
 
@@ -283,6 +329,7 @@ namespace CMATCTUI.ViewModels
             {
                 db.Date = DateTimeOffset.Parse(db.Time).Date.ToString("yyyy-MM-dd");
                 db.Time = DateTimeOffset.Parse(db.Time).Date.ToString(@"hh\:mm\:ss");
+                db.InstrumentName = filePath.ToString().Split('\\').Last().Split('_').First().ToString();
             }
 
         }
@@ -298,6 +345,8 @@ namespace CMATCTUI.ViewModels
             {
                 db.Date = DateTimeOffset.Parse(db.Time).Date.ToString("yyyy-MM-dd");
                 db.Time = DateTimeOffset.Parse(db.Time).Date.ToString(@"hh\:mm\:ss");
+
+                db.InstrumentName = filePath.ToString().Split('\\').Last().Split('_').First().ToString();
             }
             foreach (var db in auditErrors)
             {
@@ -545,11 +594,12 @@ namespace CMATCTUI.ViewModels
 
             if (FromDate != null && date < FromDate.Value.Date)
                 return false;
-
-            if (ToDate != null && date > ToDate.Value.Date)
+            else if (FromDate != null && date > FromDate.Value.Date)
                 return false;
+                //if (ToDate != null && date > ToDate.Value.Date)
+                //    return false;
 
-            return true;
+                return true;
         }
 
 

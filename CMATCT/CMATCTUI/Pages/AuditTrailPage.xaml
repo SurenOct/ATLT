@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:CMATCTUI.Pages"
       xmlns:local1="clr-namespace:CMATCTUI"
       mc:Ignorable="d" 
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:vm="clr-namespace:CMATCTUI.ViewModels"
        xmlns:converters="clr-namespace:CMATCTUI.Converter"
         Title="Errors">
@@ -43,7 +44,7 @@
                   SelectedItem="{Binding SelectedInstrument, Mode=TwoWay}" 
                   Margin="0,0,0,0"/>
                 <TextBlock Text="From Date" VerticalAlignment="Center"/>
-                <DatePicker SelectedDate="{Binding FromDate}"
+                <DatePicker SelectedDate="{Binding FromDate,Mode=TwoWay}" DisplayDateStart="{Binding MinDate,Mode=TwoWay}" DisplayDateEnd="{x:Static sys:DateTime.Today}" 
                             Width="150"
                             Margin="10,0,0,0"/>
 
@@ -70,6 +71,12 @@
                   AutoGenerateColumns="False" 
                   IsReadOnly="True" Height="250px" VerticalScrollBarVisibility="Auto" 
                vm:DataGridSelectedItemsBehavior.BindableSelectedItems="{Binding SelectedAuditLogs}">
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="ToolTip"
+                    Value="{Binding InstrumentName}" />
+                </Style>
+            </DataGrid.RowStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="10"  Visibility="Collapsed" />
                 <DataGridTemplateColumn Header="" Width="20" >

@@ -186,6 +186,7 @@ namespace CMATCTUI.ViewModels
                 IsFilterStackEnabled = true;
                 List<string> fileList = filesWithDate.ToList();
                 InstrumentsDetails = new ObservableCollection<string>();
+                InstrumentsDetails.Add("--ALL--");
                 foreach (var file in filesWithDate)
                 {
                     InstrumentsDetails.Add(file.ToString().Split('\\').Last().Split('_').First().ToString());
@@ -227,9 +228,30 @@ namespace CMATCTUI.ViewModels
         private void OnInstrumentChanged(string instrumentName)
         {
             var instrumentsDetails = this.filesWithDate.Where(a => a.ToString().Split('\\').Last().Split('_').First().ToString() == instrumentName).ToList();
-            DynamicJsonFileLoading(instrumentsDetails.First(), instrumentName);
+            if (instrumentsDetails.Count() > 0)
+            {
+                DynamicJsonFileLoading(instrumentsDetails.First(), instrumentName);
 
-            ReadCompletedAuditTrailLogs();
+                ReadCompletedAuditTrailLogs();
+            }
+            else if(instrumentName=="--ALL--") //Need to Load All Files Data
+            {
+                SelectedAuditLogs = new ObservableCollection<AuditLogItem>();
+                AuditErrors = new ObservableCollection<AuditLogItem>();
+                foreach (var file in filesWithDate)
+                {
+                    LoadAllJsonData(file);
+                }
+                ErrorsView = CollectionViewSource.GetDefaultView(AuditErrors);
+                //var item = Errors.Take(5).ToList();
+                //AuditCompletedErrors = new ObservableCollection<AuditLogItem>(item);
+                //AuditCompletedErrors.ToList().ForEach(a => a.Status = "Completed");
+                ErrorsView.Filter = FilterErrors;
+                FromDate = null;
+                ToDate = null;
+                ReadCompletedAuditTrailLogs();
+            }
+            
         }
 
 
@@ -261,6 +283,25 @@ namespace CMATCTUI.ViewModels
             {
                 db.Date = DateTimeOffset.Parse(db.Time).Date.ToString("yyyy-MM-dd");
                 db.Time = DateTimeOffset.Parse(db.Time).Date.ToString(@"hh\:mm\:ss");
+            }
+
+        }
+
+        private void LoadAllJsonData(string filePath)
+        {
+            var jsonString = System.IO.File.ReadAllText(filePath);
+            var auditErrors = JsonConvert.DeserializeObject<ObservableCollection<AuditLogItem>>(jsonString);
+            var items = auditErrors.Where(a => a.Category == "Warning" || a.Category == "Errors" || a.Category == "abort");
+
+            auditErrors = new ObservableCollection<AuditLogItem>(items);
+            foreach (var db in auditErrors)
+            {
+                db.Date = DateTimeOffset.Parse(db.Time).Date.ToString("yyyy-MM-dd");
+                db.Time = DateTimeOffset.Parse(db.Time).Date.ToString(@"hh\:mm\:ss");
+            }
+            foreach (var db in auditErrors)
+            {
+                AuditErrors.Add(db);
             }
 
         }

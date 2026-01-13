@@ -97,6 +97,7 @@
     </Compile>
     <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converter\SeverityToImageConverter.cs" />
+    <Compile Include="Converter\ZeroCountToVisibilityConverter.cs" />
     <Compile Include="Generic\GenericXmlLoader.cs" />
     <Compile Include="Models\ATCTEmailer.cs" />
     <Compile Include="Models\SmtpSettings.cs" />

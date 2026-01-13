@@ -14,10 +14,12 @@
     </Page.DataContext>
     <Page.Resources>
         <converters:SeverityToImageConverter x:Key="SeverityToImageConverter"/>
-        <converters:BooleanNegationConverter x:Key="BoolToVis"/>    
+        <converters:BooleanNegationConverter x:Key="BoolToVis"/>
+        <converters:ZeroCountToVisibilityConverter x:Key="ZeroCountToVisibilityConverter"/>
     </Page.Resources>
     <Grid Margin="20">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <!-- Header -->
             <RowDefinition Height="*"/>
@@ -48,17 +50,22 @@
                 <TextBlock Text="To Date"
                            Margin="10,0,0,0"
                            VerticalAlignment="Center"/>
-                <DatePicker SelectedDate="{Binding ToDate}"
+                <!--<DatePicker SelectedDate="{Binding ToDate}"
                             Width="150"
-                            Margin="10,0,0,0"/>
+                            Margin="10,0,0,0"/>-->
                 <StackPanel Orientation="Horizontal">
                     <Button  Content="Create Ticket" Width="100"  Margin="20,0,0,0"  Command="{Binding CreateTicketCommand}"   IsEnabled="{Binding IsButtonEnabled}"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>
-
+        <TextBlock Grid.Row="1" FontWeight="Bold"  Text="Data is not available for this date"
+               FontSize="16"
+               Foreground="Gray"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"  Visibility="{Binding AuditErrors.Count,
+                            Converter={StaticResource ZeroCountToVisibilityConverter}}" />
         <!-- ================= FIRST GRID ================= -->
-        <DataGrid Grid.Row="1" 
+        <DataGrid Grid.Row="2" 
                   ItemsSource="{Binding AuditErrors,Mode=TwoWay}"
                   AutoGenerateColumns="False" 
                   IsReadOnly="True" Height="250px" VerticalScrollBarVisibility="Auto" 
@@ -85,14 +92,14 @@
         
 
         <!-- ================= SECOND HEADER ================= -->
-        <TextBlock Grid.Row="2"
+        <TextBlock Grid.Row="3"
                    Text="Completed Audit Trail"
                    FontSize="20"
                    FontWeight="Bold"
                    Margin="0,10,0,10"/>
 
         <!-- ================= SECOND GRID ================= -->
-        <DataGrid Grid.Row="3"
+        <DataGrid Grid.Row="4"
                   ItemsSource="{Binding AuditCompletedErrors,Mode=TwoWay}"
                   AutoGenerateColumns="False"
                   IsReadOnly="True" Height="200" VerticalScrollBarVisibility="Auto">

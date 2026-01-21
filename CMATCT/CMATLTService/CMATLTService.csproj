@@ -53,6 +53,18 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
+    <Reference Include="Thermo.Chromeleon.Sdk, Version=7.3.2.10759, Culture=neutral, PublicKeyToken=f1413f165c7768f2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CMSDKBin\Thermo.Chromeleon.Sdk.dll</HintPath>
+    </Reference>
+    <Reference Include="Thermo.Chromeleon.Sdk.Addins, Version=7.3.2.10759, Culture=neutral, PublicKeyToken=f1413f165c7768f2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CMSDKBin\Thermo.Chromeleon.Sdk.Addins.dll</HintPath>
+    </Reference>
+    <Reference Include="Thermo.Chromeleon.SdkControls, Version=7.3.2.10759, Culture=neutral, PublicKeyToken=f1413f165c7768f2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CMSDKBin\Thermo.Chromeleon.SdkControls.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ProjectInstaller.cs">

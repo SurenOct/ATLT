@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<SmtpSettings>
-  <Server>smtp.office365.com</Server>
-  <Port>587</Port>
-  <Encryption>STARTTLS</Encryption>
-  <Username>chaitanyakumar.svs@thermofisher.com</Username>
-  <Password>Sivaya$123</Password>
-</SmtpSettings>

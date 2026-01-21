@@ -1,0 +1,114 @@
+﻿<Page x:Class="CMATCTUI.Pages.DashBoardPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:CMATCTUI.Pages"
+      mc:Ignorable="d" 
+         xmlns:vm="clr-namespace:CMATCTUI.ViewModels"
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="DashBoardPage">
+    <Page.DataContext>
+        <vm:DashBoardViewModel></vm:DashBoardViewModel>
+    </Page.DataContext>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <DockPanel Grid.Row="0">
+            <TextBlock Text="Dashboard"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   DockPanel.Dock="Left" />
+            <StackPanel Orientation="Horizontal"
+                    DockPanel.Dock="Right">
+                <Ellipse Width="12" Height="12" Fill="Green"
+                     VerticalAlignment="Center" Margin="0 0 5 0"/>
+                <TextBlock Text="Monitoring: Last Running Status"
+                       VerticalAlignment="Center" />
+                <Ellipse Width="12" Visibility="{Binding IsServiceStatus}" Height="12" Fill="red"
+         VerticalAlignment="Center" Margin="0 0 5 0"/>
+                <TextBlock Text="Monitoring: Stopped" Visibility="{Binding IsServiceStatus}"
+           VerticalAlignment="Center" />
+                <TextBlock FontWeight="Bold" Text="{Binding LastUpdatedFileDateAndTime}"
+                       VerticalAlignment="Center" />
+            </StackPanel>
+        </DockPanel>
+
+        <!-- Status cards -->
+        <Grid Grid.Row="1" Margin="0 20 0 20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Last Scan -->
+            <!--<Border Grid.Column="0" Margin="0 0 10 0" Padding="15"
+                CornerRadius="8" BorderThickness="1" BorderBrush="#DDD">
+                <StackPanel>
+                    <TextBlock Text=" Scan" FontWeight="Bold"/>
+                    <TextBlock Text="Frequency: Every 2 hours"/>
+                </StackPanel>
+            </Border>-->
+
+            <!-- Recent AuditTrail -->
+            <Border Background="White" Grid.Column="0" Margin="5 0" Padding="15"
+                CornerRadius="8" BorderThickness="1" BorderBrush="#DDD">
+                <StackPanel>
+                    <!--<TextBlock Text="Audit Trail" FontWeight="Bold"/>
+                    <TextBlock Text="Last 24h: 5" Margin="0 5 0 0"/>-->
+                    
+                    <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
+                        <TextBlock Text="Total AuditTrails Entry Today's Count:"></TextBlock>
+                        <TextBlock Margin="58,0,0,0" FontWeight="Bold" Text="{Binding TotalAuditTrailsCount}"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
+                        <TextBlock Text="Total Information:"></TextBlock>
+                        <TextBlock Margin="58,0,0,0" FontWeight="Bold" Text="{Binding NumberOfInformations}"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
+                        <TextBlock Text="Total Warnings:"></TextBlock>
+                        <TextBlock Margin="70,0,0,0" FontWeight="Bold" Text="{Binding NumberOfWarnings}"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
+                        <TextBlock Text="Total Errors:"></TextBlock>
+                        <TextBlock Margin="90,0,0,0" FontWeight="Bold" Text="{Binding NumberOfErrors}"></TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
+                        <TextBlock Text="Number of Instruments:"></TextBlock>
+                        <TextBlock Margin="25,0,0,0" FontWeight="Bold" Text="{Binding NumberOfInstruments}"></TextBlock>
+                    </StackPanel>
+                    <!--<Button Content="View Audit Trail" Margin="0 10 0 0"
+                     HorizontalAlignment="Left" Width="120"/>-->
+                </StackPanel>
+            </Border>
+
+            <!-- Backup Status -->
+            <Border Grid.Column="1" Margin="10 0 0 0" Padding="15"
+                CornerRadius="8" BorderThickness="1" BorderBrush="#DDD">
+                <StackPanel>
+                    <TextBlock Text="Backup Status" FontWeight="Bold"/>
+                    <TextBlock Text="Last SSR Backup: Success" Margin="0 5 0 0"/>
+                    <TextBlock Text="Log Folders Backup: Success"/>
+                    <!--<TextBlock Text="Last backup: 12:46"/>-->
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Recent Activity list -->
+        <!--<GroupBox Grid.Row="2" Header="Recent Monitoring Activity">
+        <DataGrid AutoGenerateColumns="False" Margin="0 10 0 0">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Time" Binding="{Binding Time}"/>
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}"/>
+                <DataGridTextColumn Header="Errors Found" Binding="{Binding ErrorCount}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </GroupBox>-->
+    </Grid>
+</Page>

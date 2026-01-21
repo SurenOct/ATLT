@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<SmtpSettings>
+  <Server>10.123.12.27</Server>
+  <Port>25</Port>
+  <Encryption>NONE</Encryption>
+  <Username>chaitanyakumar.svs@thermofisher.com</Username>
+  <Password>Sivaya$123</Password>
+</SmtpSettings>

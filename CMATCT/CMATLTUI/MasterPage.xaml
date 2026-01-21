@@ -1,0 +1,126 @@
+﻿<Window x:Class="CMATCTUI.MasterPage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CMATCTUI"
+        mc:Ignorable="d" 
+        Height="860" Width="1240"
+        WindowStartupLocation="CenterScreen"
+        UseLayoutRounding="True"
+        xmlns:vm="clr-namespace:CMATCTUI.ViewModels"
+        Title="ATCT"  Background="#f0f4f7"  WindowState="Maximized">
+
+    <Window.Resources>
+        <!-- Button style for sidebar -->
+        <Style x:Key="SidebarButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#34495e"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Margin" Value="0,10,0,0"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                         CornerRadius="5">
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1abc9c"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#16a085"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Background" Value="#7f8c8d"/>
+                                <Setter Property="Foreground" Value="#bdc3c7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Drop shadow effect -->
+        <DropShadowEffect x:Key="DropShadowEffect" Color="#888" BlurRadius="10" ShadowDepth="4" Opacity="0.3" />
+    </Window.Resources>
+
+    <Window.DataContext>
+        <vm:SidePanelViewModel></vm:SidePanelViewModel>
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="205"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <!-- Sidebar -->
+        <StackPanel Grid.Column="0" Background="#2c3e50" Margin="1,21,0,29" >
+            <TextBlock HorizontalAlignment="Center" Text="ATCT" 
+        FontSize="26" FontWeight="Bold" 
+        Foreground="White" Margin="0,20,0,40" 
+        FontFamily="Segoe UI Semibold" />
+
+            <!-- Button template reused with icon and animations -->
+            <Button Style="{StaticResource SidebarButtonStyle}" Command="{Binding NavigateToDashBoardPageCommand}">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
+                    <!--<TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE821;" FontSize="18" Margin="0,0,12,0" Foreground="White" />-->
+                    <TextBlock Text="DashBoard View" FontSize="18" Margin="20,0,0,0"  HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+
+            <Button Style="{StaticResource SidebarButtonStyle}" Command="{Binding NavigateToAuditTrailPageCommand}">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
+                    <!--<TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE821;" FontSize="18" Margin="0,0,12,0" Foreground="White" />-->
+                    <TextBlock Text="Audit Trail" FontSize="18" Margin="20,0,0,0"  HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button Style="{StaticResource SidebarButtonStyle}" Command="{Binding NavigateToSettingsPageCommand}">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
+                    <!--<TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE821;" FontSize="18" Margin="0,0,12,0" Foreground="White" />-->
+                    <TextBlock Text="Settings" FontSize="18" Margin="20,0,0,0"  HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button Style="{StaticResource SidebarButtonStyle}" Command="{Binding NavigateToAboutPageCommand}">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
+                    <!--<TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE821;" FontSize="18" Margin="0,0,12,0" Foreground="White" />-->
+                    <TextBlock Text="About" FontSize="18" Margin="20,0,0,0"  HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+
+            <!--<Button Style="{StaticResource SidebarButtonStyle}" Command="{Binding NavigateToAcquisitionPageCommand}">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8D1;" FontSize="18" Margin="0,0,12,0" Foreground="White" />
+                    <TextBlock Text="Acquisition" FontSize="18" Foreground="White" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+
+            <Button Style="{StaticResource SidebarButtonStyle}" Command="{Binding NavigateToReportsPageCommand}">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE9D2;" FontSize="18" Margin="0,0,12,0" Foreground="White" />
+                    <TextBlock Text="Report Generation" FontSize="18" Foreground="White" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>-->
+
+        </StackPanel>
+
+        <!-- Content Area -->
+        <StackPanel Grid.Column="1" Background="White">
+            <TextBlock Text="ATCT Tool" HorizontalAlignment="Center" FontWeight="Bold" FontSize="20"></TextBlock>
+            <Border BorderThickness="0"  Margin="0" Padding="15" 
+        Effect="{StaticResource DropShadowEffect}">
+
+                <Frame Name="MainFrame" NavigationUIVisibility="Hidden" Content="{Binding CurrentPage}" />
+            </Border>
+        </StackPanel>
+
+    </Grid>
+
+</Window>

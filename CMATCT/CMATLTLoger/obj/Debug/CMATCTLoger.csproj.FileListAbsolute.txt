@@ -1,0 +1,6 @@
+C:\CM_AT_Tool\CMATCT\CMATCTLoger\bin\Debug\CMATCTLoger.dll
+C:\CM_AT_Tool\CMATCT\CMATCTLoger\bin\Debug\CMATCTLoger.pdb
+C:\CM_AT_Tool\CMATCT\CMATCTLoger\obj\Debug\CMATCTLoger.csproj.AssemblyReference.cache
+C:\CM_AT_Tool\CMATCT\CMATCTLoger\obj\Debug\CMATCTLoger.csproj.CoreCompileInputs.cache
+C:\CM_AT_Tool\CMATCT\CMATCTLoger\obj\Debug\CMATCTLoger.dll
+C:\CM_AT_Tool\CMATCT\CMATCTLoger\obj\Debug\CMATCTLoger.pdb

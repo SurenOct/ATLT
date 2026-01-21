@@ -87,11 +87,5 @@
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CMATCTLoger\CMATCTLoger.csproj">
-      <Project>{5aebff16-41b7-4559-8e4c-e88cf1df7420}</Project>
-      <Name>CMATCTLoger</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

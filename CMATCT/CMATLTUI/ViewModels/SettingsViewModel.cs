@@ -7,7 +7,10 @@ using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -72,11 +75,40 @@ namespace CMATCTUI.ViewModels
         /// <exception cref="NotImplementedException"></exception>
         private void ServiceTrigger()
         {
-            var client = new NamedPipeClientStream(".", "CMATLTService", PipeDirection.Out);
-            client.Connect(2000); // Wait max 2 sec
+            //var client = new NamedPipeClientStream(".", "CMATLTService", PipeDirection.Out);
+            //client.Connect(2000); // Wait max 2 sec
 
-            var writer = new StreamWriter(client) { AutoFlush = true };
-            writer.WriteLine("RUN_NOW");
+            //var writer = new StreamWriter(client) { AutoFlush = true };
+            //writer.WriteLine("RUN_NOW");
+            try
+            {
+                //var client = new NamedPipeClientStream(".", "CMATLTService", PipeDirection.Out);
+                //MessageBox.Show("Command sent");
+                //client.Connect(2000); // Wait max 2 sec
+                //MessageBox.Show("Command coonected");
+                //var writer = new StreamWriter(client) { AutoFlush = true };
+                //writer.WriteLine("RUN_NOW");
+
+
+                 var client = new NamedPipeClientStream(
+    ".",
+    "CMATLTService",
+    PipeDirection.InOut
+);
+                
+                client.Connect(5000);
+                
+                var writer = new StreamWriter(client) { AutoFlush = true };
+                writer.WriteLine("RUN_NOW");
+
+
+                MessageBox.Show("Command sent");
+
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Failed to send command: " + ex.Message);
+            }
 
         }
 

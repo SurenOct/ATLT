@@ -55,15 +55,19 @@
     <Reference Include="System.Xml" />
     <Reference Include="Thermo.Chromeleon.Sdk, Version=7.3.2.10759, Culture=neutral, PublicKeyToken=f1413f165c7768f2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\CMSDKBin\Thermo.Chromeleon.Sdk.dll</HintPath>
+      <HintPath>..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Thermo.Chromeleon.Sdk\v4.0_7.3.2.10759__f1413f165c7768f2\Thermo.Chromeleon.Sdk.dll</HintPath>
     </Reference>
     <Reference Include="Thermo.Chromeleon.Sdk.Addins, Version=7.3.2.10759, Culture=neutral, PublicKeyToken=f1413f165c7768f2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\CMSDKBin\Thermo.Chromeleon.Sdk.Addins.dll</HintPath>
+      <HintPath>..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Thermo.Chromeleon.Sdk.Addins\v4.0_7.3.2.10759__f1413f165c7768f2\Thermo.Chromeleon.Sdk.Addins.dll</HintPath>
+    </Reference>
+    <Reference Include="Thermo.Chromeleon.Sdk.Implementation, Version=7.3.2.10759, Culture=neutral, PublicKeyToken=f1413f165c7768f2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Thermo.Chromeleon.Sdk.Implementation\v4.0_7.3.2.10759__f1413f165c7768f2\Thermo.Chromeleon.Sdk.Implementation.dll</HintPath>
     </Reference>
     <Reference Include="Thermo.Chromeleon.SdkControls, Version=7.3.2.10759, Culture=neutral, PublicKeyToken=f1413f165c7768f2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\CMSDKBin\Thermo.Chromeleon.SdkControls.dll</HintPath>
+      <HintPath>..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Thermo.Chromeleon.SdkControls\v4.0_7.3.2.10759__f1413f165c7768f2\Thermo.Chromeleon.SdkControls.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

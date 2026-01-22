@@ -5,7 +5,11 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
+using System.Net;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading;
@@ -76,9 +80,10 @@ namespace CMATLTService
 
         private async Task ExecuteTaskAsync()
         {
-            if (!await _semaphore.WaitAsync(0))
-                return;
+            //if (!await _semaphore.WaitAsync(0))
+            //    return;
 
+            await _semaphore.WaitAsync();
             try
             {
                 await DoWorkAsync();
@@ -388,23 +393,106 @@ namespace CMATLTService
 
         private void ListenForTrigger()
         {
-             var server = new System.IO.Pipes.NamedPipeServerStream("CMATLTService", System.IO.Pipes.PipeDirection.In);
+            //var server = new System.IO.Pipes.NamedPipeServerStream("CMATLTService", System.IO.Pipes.PipeDirection.In);
+
+            //while (true)
+            //{
+            //    server.WaitForConnection();
+            //    var reader = new System.IO.StreamReader(server);
+            //    var command = reader.ReadLine();
+
+            //    if (command?.Equals("RUN_NOW", StringComparison.OrdinalIgnoreCase) == true)
+            //    {
+            //        TriggerNow(); // Call the same task on-demand
+            //    }
+
+            //    server.Disconnect();
+            //}
+
+
+            //PipeSecurity pipeSecurity = new PipeSecurity();
+
+            //// Allow ALL users (installed apps run as Interactive user)
+            //pipeSecurity.AddAccessRule(
+            //    new PipeAccessRule(
+            //        new SecurityIdentifier(WellKnownSidType.WorldSid, null),
+            //        PipeAccessRights.ReadWrite,
+            //        AccessControlType.Allow));
+
+            //var server = new NamedPipeServerStream(
+            //    "CMATLTService",
+            //    PipeDirection.InOut,
+            //    1,
+            //    PipeTransmissionMode.Message,
+            //    PipeOptions.None,
+            //    4096,
+            //    4096,
+            //    pipeSecurity);
+
+            //server.WaitForConnection();
+
+
+         
+            PipeSecurity pipeSecurity = new PipeSecurity();
+            pipeSecurity.AddAccessRule(
+                new PipeAccessRule(
+                    new SecurityIdentifier(WellKnownSidType.WorldSid, null),
+                    PipeAccessRights.ReadWrite,
+                    AccessControlType.Allow));
 
             while (true)
             {
-                server.WaitForConnection();
-                 var reader = new System.IO.StreamReader(server);
-                var command = reader.ReadLine();
-
-                if (command?.Equals("RUN_NOW", StringComparison.OrdinalIgnoreCase) == true)
+                using (var server = new NamedPipeServerStream(
+                    "CMATLTService",
+                    PipeDirection.InOut,
+                    1,
+                    PipeTransmissionMode.Message,
+                    PipeOptions.None,
+                    4096,
+                    4096,
+                    pipeSecurity))
                 {
-                    TriggerNow(); // Call the same task on-demand
-                }
+                    server.WaitForConnection();
 
-                server.Disconnect();
+                    using (var reader = new StreamReader(server))
+                    {
+                        var command = reader.ReadLine();
+
+                        if (command?.Equals("RUN_NOW", StringComparison.OrdinalIgnoreCase) == true)
+                        {
+                            TriggerNow();
+                        }
+                    }
+                }
             }
+        
+
+
+
         }
 
+        public void ListenForTrigger1()
+        {
+            HttpListener listener = new HttpListener();
+            listener.Prefixes.Add("http://localhost:5050/trigger/");
+            listener.Start();
+
+            while (true)
+            {
+                var context = listener.GetContext();
+                 var reader = new StreamReader(context.Request.InputStream);
+                var command = reader.ReadToEnd();
+
+                if (command == "RUN_NOW")
+                {
+                     
+                }
+
+                context.Response.StatusCode = 200;
+                context.Response.Close();
+            }
+
+        }
 
 
 

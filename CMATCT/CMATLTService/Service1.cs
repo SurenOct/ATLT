@@ -43,6 +43,7 @@ namespace CMATLTService
 
         protected override void OnStart(string[] args)
         {
+
             try
             {
                 // cmSdkScope = new CmSdkScope();
@@ -186,8 +187,24 @@ namespace CMATLTService
         /// Export Sequence Data
         /// </summary>
         /// <param name="sequenceUri"></param>
-        private void  ExportSequenceData(string sequenceUri, string instrName)
+    
+        private void ExportSequenceData(string sequenceUri, string instrName)
         {
+            string seqName = sequenceUri.Split('/').LastOrDefault().Split('.')[0];
+            LogLibrary.LogService("Ready to Writing Audit information to file:" + DateTime.Now);
+            string destinationFolder = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+            "CMATLTData", "CmbxFiles");
+
+            // Create the folder (creates all parent folders if missing)
+            Directory.CreateDirectory(destinationFolder);
+
+            //string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
+            //string backupFile = Path.Combine(destinationFolder, $"{instrName + "_" + timestamp}.json");
+
+            string dateString = DateTime.Now.ToString("yyyy-MM-dd");
+            string backupFile = Path.Combine(destinationFolder, $"{seqName}_{dateString}.cmbx");
+
             using (new CmSdkScope())
             {
                 CmSdk.Logon.DoLogon();
@@ -198,7 +215,8 @@ namespace CMATLTService
                     {
                         var exportEngine = CmSdk.GetExportEngine();
                         var tokenSource = new CancellationTokenSource();
-                        var targetFileName = @"C:\Demo\test.cmbx";
+                        //var targetFileName = @"C:\Demo\test.cmbx";
+                        var targetFileName = backupFile;
                         var progress = new Progress<double>();
                         var itemsToExport = new List<Uri> { new Uri(sequenceUri) };
                         // Create and start a new export task
@@ -222,22 +240,22 @@ namespace CMATLTService
                                 Exception ex = t.Exception;
                                 while (ex is AggregateException && ex.InnerException != null)
                                     ex = ex.InnerException;
-                                 
+
                             }
                             else if (t.IsCanceled)
                             {
-                                 
+
                             }
                             else
                             {
-                                
+
                             }
                         });
                     }
-                     
+
                 }
             }
-          
+
 
         }
 
@@ -462,6 +480,10 @@ namespace CMATLTService
                         {
                             TriggerNow();
                         }
+                        else if (command?.Equals("EXPORT_CMBX", StringComparison.OrdinalIgnoreCase) == true)
+                        {
+                            TriggerCmbxFile();
+                        }
                     }
                 }
             }
@@ -469,6 +491,11 @@ namespace CMATLTService
 
 
 
+        }
+
+        public void TriggerCmbxFile()
+        {
+            ExportSequenceData("chrom://tf-251216232713/ChromeleonLocal/Instrument Data/MyInuvion/SeqInuvion.seq", null);
         }
 
         public void ListenForTrigger1()

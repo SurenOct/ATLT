@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -52,6 +54,18 @@ namespace CMATCTUI.ViewModels
                 OnPropertyChanged(nameof(IncidentDescription));
             }
         }
+        private string _statusMessage;
+        public string StatusMessage
+        {
+            get => _statusMessage;
+            set
+            {
+                _statusMessage = value;
+                OnPropertyChanged(nameof(StatusMessage));
+            }
+        }
+        
+
         private string _selectedIncidentType;
         public string SelectedIncidentType
         {
@@ -87,10 +101,33 @@ namespace CMATCTUI.ViewModels
             this.IncidentDescription = incedentMsg.ToString();
 
             LoadIncedents();
+            
         }
 
         private void GenerateCmbxFile()
         {
+
+            var client = new NamedPipeClientStream(
+                                    ".",
+                                    "CMATLTService",
+                                    PipeDirection.InOut
+                                    );
+
+            client.Connect(5000);
+
+            var writer = new StreamWriter(client) { AutoFlush = true };
+            writer.WriteLine("EXPORT_CMBX");
+
+
+            MessageBox.Show("Command sent");
+
+            Task.Run(() =>
+            {
+                Thread.Sleep(5000);
+                MessageBox.Show("CMBX File Generated Successfully.");
+                LoadFileName();
+            });
+
 
             //using (new CmSdkScope())
             //{
@@ -143,9 +180,37 @@ namespace CMATCTUI.ViewModels
             //        }
             //    }
             //}
-                   
+
         }
 
+        private void LoadFileName()
+        {
+            string filePath = @"C:\Demo\test.cmbx";
+
+            if (File.Exists(filePath))
+            {
+                
+               StatusMessage = "Attached"+ LoadCmbxFile();
+                // File exists
+            }
+            else
+            {
+                // File does NOT exist
+            }
+        }
+        private string LoadCmbxFile()
+        {
+          string  destinationFolder = System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                "CMATLTData", "CmbxFiles");
+
+             var items= Directory.GetFiles(destinationFolder)
+                 .Where(f => System.IO.File.GetCreationTime(f).Date == DateTime.Today)
+                  .ToList();
+            if (items.Count > 0)
+                return items.First().ToString();
+            return string.Empty;
+        }
         public void LoadIncedents()
         {
             XDocument doc = GenericXmlLoader.LoadingXML("IncidentsSettings.xml", "XMLConfiguration");
@@ -156,7 +221,8 @@ namespace CMATCTUI.ViewModels
                 foreach (XElement item in root.Elements("IncedentType"))
                 {
                     IncidentsItems.Add(item.Value);
-                }    
+                }
+               SelectedIncidentType = IncidentsItems.FirstOrDefault();
             }
         }
         public bool isMailSent{get;set;}
@@ -209,11 +275,39 @@ namespace CMATCTUI.ViewModels
                
                 message.From.Add(new MailboxAddress("Test", smtpSettings.Username));
                 message.To.Add(MailboxAddress.Parse(smtpSettings.Username));
+
                 message.Subject = "Incedent Type:" + _selectedIncidentType;
-                message.Body = new TextPart("plain")
+                //message.Body = new TextPart("plain")
+                //{
+                //    Text = "Hello,\n\n "+ Items.First().Message + ".\n\nRegards,\nMahesh"
+                //};
+                var body = new TextPart("plain")
                 {
-                    Text = "Hello,\n\n "+ Items.First().Message + ".\n\nRegards,\nMahesh"
+                    Text = "Hello,\n\n " + this.IncidentDescription + ".\n\nRegards,\n SVS"
                 };
+                var multipart = new Multipart("mixed");
+                multipart.Add(body);
+
+                //var filePath = @"C:\Demo\test.cmbx"; // <-- change this to your file path
+                var filePath = LoadCmbxFile();
+                if (File.Exists(filePath))
+                {
+                    var attachment = new MimePart()
+                    {
+                        Content = new MimeContent(File.OpenRead(filePath)),
+                        ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+                        ContentTransferEncoding = ContentEncoding.Base64,
+                        FileName = Path.GetFileName(filePath)
+                    };
+                    multipart.Add(attachment);
+                }
+                else
+                {
+                    MessageBox.Show("Attachment file not found: " + filePath);
+                }
+
+                message.Body = multipart;
+
                 mailClient.Send(message);
                 mailClient.Disconnect(true);
                 IsConnect = true;

@@ -22,7 +22,7 @@
                 <TextBlock Text="Please Provide Additional Information for request:" FontWeight="Bold" VerticalAlignment="Center" Margin="10 0 5 0"/>
                 <TextBlock  Text="Incident Type:"  VerticalAlignment="Center" Margin="10 20 5 0"/>
                 <ComboBox  Margin="10 20 0 0" Width="400px" HorizontalAlignment="Left" ItemsSource="{Binding IncidentsItems}"
-                    SelectedItem="{Binding SelectedIncidentType, Mode=TwoWay}">
+                    SelectedItem="{Binding SelectedIncidentType, Mode=TwoWay}" >
                 </ComboBox>
 
                 <TextBlock Text="Incident Description:" FontWeight="Bold" VerticalAlignment="Center" Margin="10 30 5 0"/>
@@ -38,7 +38,7 @@
                     <Button Content="Send Email"  Width="80" Command="{Binding SendEmailCommand}" Height="30" Margin="200 40 0 0" HorizontalAlignment="Right"/>
                 </StackPanel>
 
-
+                <TextBlock Text="{Binding StatusMessage}" FontWeight="Bold" VerticalAlignment="Center" Margin="10 20 5 0" Foreground="Red"/>
                 <!--<Button Content="Create Ticket" Click="Button_Click" Margin="20,0,0,0" Width="80" />-->
             </StackPanel>
         </StackPanel>

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.IO.Compression;
 using System.IO.Pipes;
 using System.Linq;
 using System.Text;
@@ -64,7 +65,23 @@ namespace CMATCTUI.ViewModels
                 OnPropertyChanged(nameof(StatusMessage));
             }
         }
-        
+        private bool _isBusy;
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set {
+                _isBusy = value;
+                OnPropertyChanged(nameof(IsBusy));
+            }
+        }
+        private string _progressStatus;
+        public string ProgressStatus
+        {
+            get => _progressStatus;
+            set { _progressStatus = value;
+                OnPropertyChanged(nameof(ProgressStatus));
+            }
+        }
 
         private string _selectedIncidentType;
         public string SelectedIncidentType
@@ -84,11 +101,12 @@ namespace CMATCTUI.ViewModels
         public ICommand GeneratedCmbxFileCommand { get; }
         public EmailViewModel(ObservableCollection<AuditLogItem> itemsFromParent)
         {
+            IsBusy = true;
             GeneratedCmbxFileCommand = new RelayCommand(GenerateCmbxFile);
 
 
             SendEmailCommand = new RelayCommand(SendEmail);
-           
+
 
             // Make a copy if you don't want parent and child to modify the same collection
             Items = new ObservableCollection<AuditLogItem>(itemsFromParent);
@@ -96,12 +114,127 @@ namespace CMATCTUI.ViewModels
             foreach (var item in Items)
             {
                 incedentMsg.AppendLine(item.Message);
-                
+
             }
             this.IncidentDescription = incedentMsg.ToString();
 
+            AgilentWaterAuditZipUtility();
+
+
             LoadIncedents();
-            
+
+        }
+
+        private async void AgilentWaterAuditZipUtility()
+        {
+            try
+            {
+                string destinationFolder = System.IO.Path.Combine(
+                      Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                      "CMATLTData", "CmbxFilesZipFiles");
+                Directory.CreateDirectory(destinationFolder);
+                var items = Directory.GetFiles(destinationFolder);
+                ProgressStatus = "Generating CMBX File. Please wait...";
+                GenerateCmbxFile();
+                await Task.Delay(5000);
+                ProgressStatus = "Generating Agent Files. Please wait...";
+
+                var listofAglientFiles = LoadingAgilentFile();
+                await Task.Delay(1000); // simulate work
+                ProgressStatus = "Generating Water Audit Files. Please wait...";
+                var listofWaterAuditFiles = LoadingWaterAuditFile();
+                await Task.Delay(1000); // simulate work
+                ProgressStatus = "Attaching the Zip Files...";
+                var cmbxFile = LoadCmbxFile();
+                await Task.Delay(1000); // simulate work
+                ProgressStatus = "Attaching the Zip Files...";
+
+                string dateString = DateTime.Now.ToString("yyyy-MM-dd");
+                string backupFile = Path.Combine(destinationFolder, $"{dateString}.zip");
+                string zipPath = backupFile;
+                string[] filesToZip =
+                    {
+                    listofAglientFiles.FirstOrDefault(),
+                    listofWaterAuditFiles.FirstOrDefault(),
+                    cmbxFile
+                };
+                if (File.Exists(zipPath))
+                {
+                    File.Delete(zipPath);
+                  
+                    await Task.Delay(300); // let UI update
+                }
+
+                using (ZipArchive zip = ZipFile.Open(zipPath, ZipArchiveMode.Create))
+                {
+                    foreach (string file in filesToZip)
+                    {
+                        zip.CreateEntryFromFile(
+                            file,
+                            Path.GetFileName(file),
+                            CompressionLevel.Optimal
+                        );
+                    }
+                    ProgressStatus = "Zip file created successfully at: " + zipPath;
+                    await Task.Delay(1000); // simulate work
+                    IsBusy = false;
+                    StatusMessage = "Attached" +  LoadLatestZipFile();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error during zipping files: " + ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+                ProgressStatus = "Ready";
+            }
+
+        }
+
+        private List<string> LoadingAgilentFile()
+        {
+            List<string> filesWithDate = null;
+            string destinationFolder = @"C:\ProgramData\Agilent Technologies\Instrument Control Framework folder\";
+
+            if (Directory.Exists(destinationFolder))
+            {
+                filesWithDate = Directory.GetFiles(destinationFolder)
+                .Where(f => System.IO.File.GetCreationTime(f).Date == DateTime.Today)
+                 .ToList();
+                if (filesWithDate.Count > 0)
+                {
+
+                }
+            }
+            else
+            {
+                // Folder does NOT exist
+            }
+            return filesWithDate;
+        }
+        private List<string> LoadingWaterAuditFile()
+        {
+            List<string> filesWithDate = null;
+            string destinationFolder = @"C:\Program Files (x86)\Waters Instruments\Logs\";
+
+            if (Directory.Exists(destinationFolder))
+            {
+                filesWithDate = Directory.GetFiles(destinationFolder)
+               .Where(f => System.IO.File.GetCreationTime(f).Date == DateTime.Today)
+                .ToList();
+                if (filesWithDate.Count > 0)
+                {
+
+                }
+            }
+            else
+            {
+
+            }
+            return filesWithDate;
         }
 
         private void GenerateCmbxFile()
@@ -125,7 +258,7 @@ namespace CMATCTUI.ViewModels
             {
                 Thread.Sleep(5000);
                 MessageBox.Show("CMBX File Generated Successfully.");
-                LoadFileName();
+                //LoadFileName();
             });
 
 
@@ -189,8 +322,8 @@ namespace CMATCTUI.ViewModels
 
             if (File.Exists(filePath))
             {
-                
-               StatusMessage = "Attached"+ LoadCmbxFile();
+
+                StatusMessage = "Attached" + LoadCmbxFile();
                 // File exists
             }
             else
@@ -200,13 +333,25 @@ namespace CMATCTUI.ViewModels
         }
         private string LoadCmbxFile()
         {
-          string  destinationFolder = System.IO.Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-                "CMATLTData", "CmbxFiles");
+            string destinationFolder = System.IO.Path.Combine(
+                  Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                  "CMATLTData", "CmbxFiles");
 
-             var items= Directory.GetFiles(destinationFolder)
-                 .Where(f => System.IO.File.GetCreationTime(f).Date == DateTime.Today)
-                  .ToList();
+            var items = Directory.GetFiles(destinationFolder)
+                .Where(f => System.IO.File.GetCreationTime(f).Date == DateTime.Today)
+                 .ToList();
+            if (items.Count > 0)
+                return items.First().ToString();
+            return string.Empty;
+        }
+        private string LoadLatestZipFile()
+        {
+            string destinationFolder = System.IO.Path.Combine(
+                  Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                  "CMATLTData", "CmbxFilesZipFiles");
+            var items = Directory.GetFiles(destinationFolder)
+                .OrderByDescending(f => System.IO.File.GetCreationTime(f))
+                 .ToList();
             if (items.Count > 0)
                 return items.First().ToString();
             return string.Empty;
@@ -215,17 +360,17 @@ namespace CMATCTUI.ViewModels
         {
             XDocument doc = GenericXmlLoader.LoadingXML("IncidentsSettings.xml", "XMLConfiguration");
             IncidentsItems = new List<string>();
-            XElement  root= doc.Element("IncedentsSetting");
+            XElement root = doc.Element("IncedentsSetting");
             if (root != null)
             {
                 foreach (XElement item in root.Elements("IncedentType"))
                 {
                     IncidentsItems.Add(item.Value);
                 }
-               SelectedIncidentType = IncidentsItems.FirstOrDefault();
+                SelectedIncidentType = IncidentsItems.FirstOrDefault();
             }
         }
-        public bool isMailSent{get;set;}
+        public bool isMailSent { get; set; }
 
         public void SendEmail()
         {
@@ -265,14 +410,14 @@ namespace CMATCTUI.ViewModels
             if (smtpSettings == null)
             {
                 MessageBox.Show("Mail is not Configured Properly. Please contact Administrator.");
-             }
-             SmtpClient mailClient = new SmtpClient();
+            }
+            SmtpClient mailClient = new SmtpClient();
             if (ConnectingSMTPServer(mailClient, smtpSettings))
             {
                 var message = new MimeMessage();
 
 
-               
+
                 message.From.Add(new MailboxAddress("Test", smtpSettings.Username));
                 message.To.Add(MailboxAddress.Parse(smtpSettings.Username));
 
@@ -289,7 +434,7 @@ namespace CMATCTUI.ViewModels
                 multipart.Add(body);
 
                 //var filePath = @"C:\Demo\test.cmbx"; // <-- change this to your file path
-                var filePath = LoadCmbxFile();
+                var filePath = LoadLatestZipFile();
                 if (File.Exists(filePath))
                 {
                     var attachment = new MimePart()
@@ -324,7 +469,7 @@ namespace CMATCTUI.ViewModels
             bool IsConnect = false;
             try
             {
-              
+
                 SecureSocketOptions socketOptions;
 
                 string encryption = smtpSettings.Encryption?.ToUpper() ?? "STARTTLS"; // default if null

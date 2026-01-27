@@ -269,7 +269,8 @@ namespace CMATLTService
         private void FetchOnlineAuditrailsData(IInstrument selectedInstument, string instrumentName)
         {
             LogLibrary.LogService("AuditTrails Data Count is :" + selectedInstument.OnlineAuditTrail.Count() + "And Date is:" + DateTime.Now);
-            WriteOnlineAuditDataintoFile(selectedInstument.OnlineAuditTrail, instrumentName);
+            string seqName = Convert.ToString(selectedInstument.QueueControl.QueueItems.First().SequenceUri.OriginalString);
+            WriteOnlineAuditDataintoFile(selectedInstument.OnlineAuditTrail, instrumentName, seqName);
             
         }
         private void WriteOnlineAuditDataDuplicateintoFile(IAuditTrailMessages onlineAuditTrail, string instrName)
@@ -303,7 +304,7 @@ namespace CMATLTService
 
             File.WriteAllText(backupFile, json, Encoding.UTF8);
         }
-        private void WriteOnlineAuditDataintoFile(IAuditTrailMessages onlineAuditTrail, string instrName)
+        private void WriteOnlineAuditDataintoFile(IAuditTrailMessages onlineAuditTrail, string instrName,string seqName)
         {
             try
             {
@@ -344,7 +345,7 @@ namespace CMATLTService
                     jsonEntity["Message"] = line.Message;
                     jsonEntity["RetentionTime"] = line.RetentionTime;
                     jsonEntity["Time"] = line.Time;
-
+                    jsonEntity["SequenceName"] = seqName;
 
 
                     jsonEntities.Add(jsonEntity);

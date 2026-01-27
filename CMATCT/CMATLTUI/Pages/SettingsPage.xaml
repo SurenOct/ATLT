@@ -11,7 +11,7 @@
     <Page.DataContext>
         <vm:SettingsViewModel></vm:SettingsViewModel>
     </Page.DataContext>
-    
+     
     <ScrollViewer Margin="20">
         <StackPanel>
 
@@ -98,7 +98,7 @@
                                     <TextBox x:Name="TxtChromeleonPath1"
                        Grid.Row="1" Grid.Column="1"
                        Margin="0 5 0 5"
-                       Text="C:/ProgramData/Agilent Technologies/Instrument Control Framework folder/" />
+                       Text="C:\ProgramData\Agilent Technologies\Instrument Control Framework folder\" />
                     <!-- Waters Instruments Path -->
                     <TextBlock Grid.Row="2" Grid.Column="0"
                      Text="Waters Instruments Path:"
@@ -106,7 +106,7 @@
                                     <TextBox x:Name="TxtChromeleonPath2"
                    Grid.Row="2" Grid.Column="1"
                    Margin="0 5 0 5"
-                   Text="C:/Program Files (x86)/Waters Instruments/Logs/" />
+                   Text="C:\Program Files (x86)\Waters Instruments\Logs\" />
 
 
                 </Grid>

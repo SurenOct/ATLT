@@ -127,7 +127,7 @@ namespace CMATCTUI.ViewModels
             ServiceController sc = new ServiceController(serviceName);
             if (sc.Status == ServiceControllerStatus.Running)
             {
-                IsServiceStatus= Visibility.Collapsed;
+                IsServiceStatus = Visibility.Collapsed;
             }
             else
             {
@@ -142,7 +142,7 @@ namespace CMATCTUI.ViewModels
               Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
               "CMATLTData", "Logs");
 
-          //  string[] files = Directory.GetFiles(destinationFolder);
+            //  string[] files = Directory.GetFiles(destinationFolder);
             string[] logFiles = Directory.GetFiles(logFolder);
             //var filesWithDate = Directory.GetFiles(logFolder)
             //            .Select(filePath => new FileInfo(filePath))
@@ -154,24 +154,30 @@ namespace CMATCTUI.ViewModels
             //            })
             //            .OrderByDescending(f => f.CreatedOn)
             //                 .ToList();
-            
-                var filesWithDate = Directory.GetFiles(destinationFolder)
-                    .Select(filePath => new FileInfo(filePath))
-                    .Where(f => f.CreationTime.Date == DateTime.Today)
-                    .Select(f => new
-                    {
-                        FileName = f.Name,
-                        FullPath = f.FullName,
-                        CreatedOn = f.CreationTime
-                    })
-                    .ToList();
-                if (filesWithDate.Count() > 0)
-                {
-                    LastUpdatedFileDateAndTime = "  |  Last updated:" + filesWithDate.First().CreatedOn.ToString();
 
-                }
-           
-            
+            if (!Directory.Exists(destinationFolder))
+            {
+                MessageBox.Show("Data folder is not Exist");
+                return;
+            }
+
+            var filesWithDate = Directory.GetFiles(destinationFolder)
+                .Select(filePath => new FileInfo(filePath))
+                .Where(f => f.CreationTime.Date == DateTime.Today)
+                .Select(f => new
+                {
+                    FileName = f.Name,
+                    FullPath = f.FullName,
+                    CreatedOn = f.CreationTime
+                })
+                .ToList();
+            if (filesWithDate.Count() > 0)
+            {
+                LastUpdatedFileDateAndTime = "  |  Last updated:" + filesWithDate.First().CreatedOn.ToString();
+
+            }
+
+
             if (filesWithDate.Count() > 0)
             {
                 foreach (var filepath in filesWithDate)
@@ -183,7 +189,7 @@ namespace CMATCTUI.ViewModels
                     NumberOfWarnings = NumberOfWarnings + criticalWarnings.Where(a => a.Category.Contains("Warning")).Count();
                     NumberOfErrors = NumberOfErrors + criticalWarnings.Where(a => a.Category.Contains("Errors")).Count();
                 }
-                TotalAuditTrailsCount= NumberOfInformations+NumberOfWarnings+ NumberOfErrors;
+                TotalAuditTrailsCount = NumberOfInformations + NumberOfWarnings + NumberOfErrors;
                 NumberOfInstruments = filesWithDate.Count();
             }
         }

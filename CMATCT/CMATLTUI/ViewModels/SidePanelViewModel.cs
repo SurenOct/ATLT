@@ -1,9 +1,12 @@
 ﻿using CMATCTUI.Commands;
 using CMATCTUI.Pages;
+using Microsoft.Win32;
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -45,8 +48,12 @@ namespace CMATCTUI.ViewModels
             _dashBoardPage = new DashBoardPage();
             CurrentPage = _dashBoardPage;
             // CurrentPage = new FatAnalyzer { DataContext = new FatAnalyzerViewModel() };
-          
+           
         }
+
+       
+
+
         /// <summary>
         /// Deletes all files and subdirectories in the specified folder.
         /// </summary>

@@ -3,11 +3,13 @@ using CMATCTUI.Generic;
 using CMATCTUI.Models;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.Win32;
 using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.IO.Compression;
 using System.IO.Pipes;
@@ -69,7 +71,8 @@ namespace CMATCTUI.ViewModels
         public bool IsBusy
         {
             get => _isBusy;
-            set {
+            set
+            {
                 _isBusy = value;
                 OnPropertyChanged(nameof(IsBusy));
             }
@@ -78,7 +81,9 @@ namespace CMATCTUI.ViewModels
         public string ProgressStatus
         {
             get => _progressStatus;
-            set { _progressStatus = value;
+            set
+            {
+                _progressStatus = value;
                 OnPropertyChanged(nameof(ProgressStatus));
             }
         }
@@ -101,12 +106,37 @@ namespace CMATCTUI.ViewModels
         public ICommand GeneratedCmbxFileCommand { get; }
         public EmailViewModel(ObservableCollection<AuditLogItem> itemsFromParent)
         {
-            IsBusy = true;
-            GeneratedCmbxFileCommand = new RelayCommand(GenerateCmbxFile);
+           
+           
+            //string destinationEventFolder = System.IO.Path.Combine(
+            //          Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+            //          "CMATLTData", "CmbxEventFiles");
+            //string destinationCmbxFolder = System.IO.Path.Combine(
+            //         Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+            //         "CMATLTData", "CmbxFiles");
+            //string destinationCmbxZipFolder = System.IO.Path.Combine(
+            //          Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+            //          "CMATLTData", "CmbxFilesZipFiles");
 
+
+            //if (Directory.Exists(destinationEventFolder))
+            //{
+            //    Directory.Delete(destinationEventFolder,true); // true = delete all files/subfolders
+            //}
+            //if (Directory.Exists(destinationCmbxFolder))
+            //{
+            //    Directory.Delete(destinationCmbxFolder,true); // true = delete all files/subfolders
+            //}
+            //if (Directory.Exists(destinationCmbxZipFolder))
+            //{
+            //    Directory.Delete(destinationCmbxZipFolder,true); // true = delete all files/subfolders
+            //}
+
+
+            IsBusy = true;
+            GeneratedCmbxFileCommand = new RelayCommand(() => GenerateCmbxFile(""));
 
             SendEmailCommand = new RelayCommand(SendEmail);
-
 
             // Make a copy if you don't want parent and child to modify the same collection
             Items = new ObservableCollection<AuditLogItem>(itemsFromParent);
@@ -129,20 +159,37 @@ namespace CMATCTUI.ViewModels
         {
             try
             {
+               
+                string seqName = "";
+                if (Items.Count > 0 && Items.FirstOrDefault() != null)
+                {
+                    seqName = Items.FirstOrDefault().SequenceName;
+                }
+
                 string destinationFolder = System.IO.Path.Combine(
                       Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
                       "CMATLTData", "CmbxFilesZipFiles");
                 Directory.CreateDirectory(destinationFolder);
                 var items = Directory.GetFiles(destinationFolder);
                 ProgressStatus = "Generating CMBX File. Please wait...";
-                GenerateCmbxFile();
+                
+                GenerateCmbxFile(seqName);
+               
                 await Task.Delay(5000);
                 ProgressStatus = "Generating Agent Files. Please wait...";
-
+               
                 var listofAglientFiles = LoadingAgilentFile();
+               
                 await Task.Delay(1000); // simulate work
                 ProgressStatus = "Generating Water Audit Files. Please wait...";
+                
                 var listofWaterAuditFiles = LoadingWaterAuditFile();
+               
+                await Task.Delay(1000); // simulate work
+                ProgressStatus = "Generating Application And System Event logs of Current Date...";
+               
+                var listofEventLogs = ApplicationAndSystemLogs();
+                
                 await Task.Delay(1000); // simulate work
                 ProgressStatus = "Attaching the Zip Files...";
                 var cmbxFile = LoadCmbxFile();
@@ -152,16 +199,27 @@ namespace CMATCTUI.ViewModels
                 string dateString = DateTime.Now.ToString("yyyy-MM-dd");
                 string backupFile = Path.Combine(destinationFolder, $"{dateString}.zip");
                 string zipPath = backupFile;
-                string[] filesToZip =
-                    {
-                    listofAglientFiles.FirstOrDefault(),
-                    listofWaterAuditFiles.FirstOrDefault(),
-                    cmbxFile
-                };
+                List<string> filesToZip = new List<string>();
+                if (listofAglientFiles != null)
+                    filesToZip.AddRange(listofAglientFiles);
+                if (listofWaterAuditFiles != null)
+                    filesToZip.AddRange(listofWaterAuditFiles);
+                if (listofEventLogs != null)
+                    filesToZip.AddRange(listofEventLogs);
+                if (!string.IsNullOrEmpty(cmbxFile))
+                    filesToZip.Add(cmbxFile);
+                //string[] filesToZip =
+                //    {
+                //    listofAglientFiles.ToList(),
+                //    listofWaterAuditFiles.ToList(),
+                //    listofEventLogs.ToList(),
+                //    //listofEventLogs.FirstOrDefault(),
+                //    cmbxFile
+                //};
                 if (File.Exists(zipPath))
                 {
                     File.Delete(zipPath);
-                  
+
                     await Task.Delay(300); // let UI update
                 }
 
@@ -178,7 +236,7 @@ namespace CMATCTUI.ViewModels
                     ProgressStatus = "Zip file created successfully at: " + zipPath;
                     await Task.Delay(1000); // simulate work
                     IsBusy = false;
-                    StatusMessage = "Attached" +  LoadLatestZipFile();
+                    StatusMessage = "Attached" + LoadLatestZipFile();
 
                 }
             }
@@ -197,122 +255,219 @@ namespace CMATCTUI.ViewModels
         private List<string> LoadingAgilentFile()
         {
             List<string> filesWithDate = null;
-            string destinationFolder = @"C:\ProgramData\Agilent Technologies\Instrument Control Framework folder\";
-
-            if (Directory.Exists(destinationFolder))
+            try
             {
-                filesWithDate = Directory.GetFiles(destinationFolder)
-                .Where(f => System.IO.File.GetCreationTime(f).Date == DateTime.Today)
-                 .ToList();
-                if (filesWithDate.Count > 0)
+                
+                string destinationFolder = @"C:\ProgramData\Agilent Technologies\Instrument Control Framework folder\";
+
+                if (Directory.Exists(destinationFolder))
                 {
+                    filesWithDate = Directory.GetFiles(destinationFolder)
+                    .Where(f => System.IO.File.GetCreationTime(f).Date == DateTime.Today)
+                     .ToList();
+                    if (filesWithDate.Count > 0)
+                    {
 
+                    }
                 }
+                else
+                {
+                    // Folder does NOT exist
+                }
+                return filesWithDate;
             }
-            else
+            catch (Exception ex)
             {
-                // Folder does NOT exist
+                MessageBox.Show("Loading Agilent File" + ex.ToString());
             }
             return filesWithDate;
         }
         private List<string> LoadingWaterAuditFile()
         {
             List<string> filesWithDate = null;
-            string destinationFolder = @"C:\Program Files (x86)\Waters Instruments\Logs\";
-
-            if (Directory.Exists(destinationFolder))
+            try
             {
-                filesWithDate = Directory.GetFiles(destinationFolder)
-               .Where(f => System.IO.File.GetCreationTime(f).Date == DateTime.Today)
-                .ToList();
-                if (filesWithDate.Count > 0)
+               
+                string destinationFolder = @"C:\Program Files (x86)\Waters Instruments\Logs\";
+
+                if (Directory.Exists(destinationFolder))
+                {
+                    filesWithDate = Directory.GetFiles(destinationFolder)
+                   .Where(f => System.IO.File.GetCreationTime(f).Date == DateTime.Today)
+                    .ToList();
+                    if (filesWithDate.Count > 0)
+                    {
+
+                    }
+                }
+                else
                 {
 
                 }
+                return filesWithDate;
             }
-            else
+            catch(Exception ex)
             {
-
+                MessageBox.Show("LoadingWaterAuditFile" + ex.ToString());
             }
             return filesWithDate;
         }
 
-        private void GenerateCmbxFile()
+        public List<string> ApplicationAndSystemLogs()
         {
-
-            var client = new NamedPipeClientStream(
-                                    ".",
-                                    "CMATLTService",
-                                    PipeDirection.InOut
-                                    );
-
-            client.Connect(5000);
-
-            var writer = new StreamWriter(client) { AutoFlush = true };
-            writer.WriteLine("EXPORT_CMBX");
-
-
-            MessageBox.Show("Command sent");
-
-            Task.Run(() =>
+            List<string> filesWithDate = null;
+            try
             {
-                Thread.Sleep(5000);
-                MessageBox.Show("CMBX File Generated Successfully.");
-                //LoadFileName();
-            });
+                string destinationFolder = System.IO.Path.Combine(
+              Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+              "CMATLTData", "CmbxEventFiles");
+                Directory.CreateDirectory(destinationFolder);
+                try
+                {
+                    foreach (string file in Directory.GetFiles(destinationFolder))
+                    {
+                        File.Delete(file);
+                    }
 
 
-            //using (new CmSdkScope())
-            //{
-            //    CmSdk.Logon.DoLogon();
-            //    if (CmSdk.Logon.IsLoggedOn)
-            //    {
-            //        try
-            //        {
-            //            var exportEngine = CmSdk.GetExportEngine();
-            //            var tokenSource = new CancellationTokenSource();
-            //            var targetFileName = @"C:\Demo\test.cmbx";
-            //            var progress = new Progress<double>();
-            //            var itemsToExport = new List<Uri> { new Uri("chrom://tf-251216232713/ChromeleonLocal/Instrument Data/MyInuvion/SeqInuvion.seq") };
-            //            // Create and start a new export task
-            //            var importTask = exportEngine.ExportToCmbxAsync(
-            //                itemsToExport, // The items which will be exported
-            //                targetFileName, // The target filename
-            //                "Just a short description",
-            //                CmbxExportOptions.IncludeAllData, // Exporting options
-            //                CmbxContainerFormat.V2, // Container format (currently there are two different formats)
-            //                progress, // Progress information
-            //                tokenSource.Token // Cancellation token (in order to cancel the export operation)
-            //                );
+                    DateTime utcStartOfToday = DateTime.Today.ToUniversalTime();
 
-            //            // Wait for task completion and continue in the current synchronization 
-            //            // context (useful for UI threads)
-            //            importTask.ContinueWith(t =>
-            //            {
-            //                if (t.IsFaulted)
-            //                {
-            //                    // Faulted with exception
-            //                    Exception ex = t.Exception;
-            //                    while (ex is AggregateException && ex.InnerException != null)
-            //                        ex = ex.InnerException;
-            //                    MessageBox.Show("Error: " + ex.Message);
-            //                }
-            //                else if (t.IsCanceled)
-            //                {
-            //                    MessageBox.Show("Cancelled.");
-            //                }
-            //                else
-            //                {
-            //                    MessageBox.Show("Completed.");
-            //                }
-            //            }, TaskScheduler.FromCurrentSynchronizationContext());
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            MessageBox.Show("Error: " + ex.Message);
-            //        }
-            //    }
-            //}
+                    string query =
+                        $"*[System[TimeCreated[@SystemTime >= '{utcStartOfToday:o}']]]";
+
+                    using (EventLogSession session = new EventLogSession())
+                    {
+                        session.ExportLog(
+                            "Application",
+                            PathType.LogName,
+                            query,
+                            Path.Combine(destinationFolder, "Application_Today.evtx"),
+                            true
+                        );
+
+                        session.ExportLog(
+                            "System",
+                            PathType.LogName,
+                            query,
+                            Path.Combine(destinationFolder, "System_Today.evtx"),
+                            true
+                        );
+                    }
+
+                    MessageBox.Show(
+                        "Today's Application and System logs exported successfully",
+                        "Success"
+                    );
+
+                    if (Directory.Exists(destinationFolder))
+                    {
+                        filesWithDate = Directory.GetFiles(destinationFolder)
+                       .Where(f => System.IO.File.GetCreationTime(f).Date == DateTime.Today)
+                        .ToList();
+                        if (filesWithDate.Count > 0)
+                        {
+                            return filesWithDate;
+                        }
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+                return filesWithDate;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("ApplicationAndSystemLogs"+ ex.ToString());
+            }
+            return filesWithDate;
+
+        }
+
+        private void GenerateCmbxFile(string seqName)
+        {
+            try
+            {
+                var client = new NamedPipeClientStream(
+                                        ".",
+                                        "CMATLTService",
+                                        PipeDirection.InOut
+                                        );
+
+                client.Connect(5000);
+
+                var writer = new StreamWriter(client) { AutoFlush = true };
+                writer.WriteLine("EXPORT_CMBX & " + seqName);
+
+
+                //MessageBox.Show("Command sent");
+
+                Task.Run(() =>
+                {
+                    Thread.Sleep(5000);
+                    MessageBox.Show("CMBX File Generated Successfully.");
+                    //LoadFileName();
+                });
+
+
+                //using (new CmSdkScope())
+                //{
+                //    CmSdk.Logon.DoLogon();
+                //    if (CmSdk.Logon.IsLoggedOn)
+                //    {
+                //        try
+                //        {
+                //            var exportEngine = CmSdk.GetExportEngine();
+                //            var tokenSource = new CancellationTokenSource();
+                //            var targetFileName = @"C:\Demo\test.cmbx";
+                //            var progress = new Progress<double>();
+                //            var itemsToExport = new List<Uri> { new Uri("chrom://tf-251216232713/ChromeleonLocal/Instrument Data/MyInuvion/SeqInuvion.seq") };
+                //            // Create and start a new export task
+                //            var importTask = exportEngine.ExportToCmbxAsync(
+                //                itemsToExport, // The items which will be exported
+                //                targetFileName, // The target filename
+                //                "Just a short description",
+                //                CmbxExportOptions.IncludeAllData, // Exporting options
+                //                CmbxContainerFormat.V2, // Container format (currently there are two different formats)
+                //                progress, // Progress information
+                //                tokenSource.Token // Cancellation token (in order to cancel the export operation)
+                //                );
+
+                //            // Wait for task completion and continue in the current synchronization 
+                //            // context (useful for UI threads)
+                //            importTask.ContinueWith(t =>
+                //            {
+                //                if (t.IsFaulted)
+                //                {
+                //                    // Faulted with exception
+                //                    Exception ex = t.Exception;
+                //                    while (ex is AggregateException && ex.InnerException != null)
+                //                        ex = ex.InnerException;
+                //                    MessageBox.Show("Error: " + ex.Message);
+                //                }
+                //                else if (t.IsCanceled)
+                //                {
+                //                    MessageBox.Show("Cancelled.");
+                //                }
+                //                else
+                //                {
+                //                    MessageBox.Show("Completed.");
+                //                }
+                //            }, TaskScheduler.FromCurrentSynchronizationContext());
+                //        }
+                //        catch (Exception ex)
+                //        {
+                //            MessageBox.Show("Error: " + ex.Message);
+                //        }
+                //    }
+                //}
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Generate CMBX Error"+ ex.ToString());
+            }
 
         }
 
@@ -355,7 +510,63 @@ namespace CMATCTUI.ViewModels
             if (items.Count > 0)
                 return items.First().ToString();
             return string.Empty;
+
         }
+        private string SizeofZipFileLength()
+        {
+            long maxSizeBytes = 5 * 1024 * 1024; // 5 MB
+            string displaySize = "";
+            string destinationFolder = System.IO.Path.Combine(
+                 Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                 "CMATLTData", "CmbxFilesZipFiles");
+            var items = Directory.GetFiles(destinationFolder)
+                .OrderByDescending(f => System.IO.File.GetCreationTime(f))
+                 .ToList();
+            if (items.Count > 0)
+            {
+
+                FileInfo zipInfo = new FileInfo(Convert.ToString(items.FirstOrDefault()));
+
+                // ✅ Check file exists FIRST
+                if (!zipInfo.Exists)
+                {
+                    MessageBox.Show("Zip file not found.", "Error");
+
+                }
+
+                // ✅ Readable size for display
+                 displaySize = GetReadableFileSize(zipInfo.Length);
+
+                // (Optional) size in MB
+                double sizeInMb = Math.Round(zipInfo.Length / 1024d / 1024d, 2);
+
+                MessageBox.Show($"{sizeInMb} MB, {displaySize}");
+
+                // ✅ CORRECT size comparison (BYTES)
+                if (zipInfo.Length > maxSizeBytes)
+                {
+                    MessageBox.Show(
+                        $"Attachment size exceeds 5 MB.\nCurrent size: {displaySize}",
+                        "Attachment Too Large"
+                    );
+
+                }
+            }
+            return displaySize;
+        }
+        private string GetReadableFileSize(long bytes)
+        {
+            if (bytes < 1024)
+                return $"{bytes} B";
+
+            double kb = bytes / 1024d;
+            if (kb < 1024)
+                return $"{Math.Round(kb, 2)} KB";
+
+            double mb = kb / 1024d;
+            return $"{Math.Round(mb, 2)} MB";
+        }
+
         public void LoadIncedents()
         {
             XDocument doc = GenericXmlLoader.LoadingXML("IncidentsSettings.xml", "XMLConfiguration");
@@ -434,6 +645,7 @@ namespace CMATCTUI.ViewModels
                 multipart.Add(body);
 
                 //var filePath = @"C:\Demo\test.cmbx"; // <-- change this to your file path
+                var size = SizeofZipFileLength();
                 var filePath = LoadLatestZipFile();
                 if (File.Exists(filePath))
                 {

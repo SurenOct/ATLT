@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMATLTService", "CMATLTServ
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CMATLTSetup", "CMATLTSetup\CMATLTSetup.vdproj", "{CF012378-557F-8F35-8DD9-7B06B4E375B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMATLTServiceTrayApp", "CMATLTServiceTrayApp\CMATLTServiceTrayApp.csproj", "{24D850A9-7F81-46FE-9152-1081ED6DE347}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,14 @@ Global
 		{CF012378-557F-8F35-8DD9-7B06B4E375B1}.Release|Any CPU.Build.0 = Release
 		{CF012378-557F-8F35-8DD9-7B06B4E375B1}.Release|x86.ActiveCfg = Release
 		{CF012378-557F-8F35-8DD9-7B06B4E375B1}.Release|x86.Build.0 = Release
+		{24D850A9-7F81-46FE-9152-1081ED6DE347}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24D850A9-7F81-46FE-9152-1081ED6DE347}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24D850A9-7F81-46FE-9152-1081ED6DE347}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{24D850A9-7F81-46FE-9152-1081ED6DE347}.Debug|x86.Build.0 = Debug|Any CPU
+		{24D850A9-7F81-46FE-9152-1081ED6DE347}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24D850A9-7F81-46FE-9152-1081ED6DE347}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24D850A9-7F81-46FE-9152-1081ED6DE347}.Release|x86.ActiveCfg = Release|Any CPU
+		{24D850A9-7F81-46FE-9152-1081ED6DE347}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -22,6 +22,7 @@ namespace CMATCTUI.Models
         //public string Instrument { get; set; }
         //public string Summary { get; set; }
         //public string Severity { get; set; }
+        public string SequenceName { get; set; }
 
     }
 }

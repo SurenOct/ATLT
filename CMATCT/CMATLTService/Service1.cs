@@ -8,6 +8,7 @@ using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.ServiceProcess;
@@ -43,10 +44,9 @@ namespace CMATLTService
 
         protected override void OnStart(string[] args)
         {
-
+            Thread.Sleep(TimeSpan.FromMinutes(1));
             try
             {
-                // cmSdkScope = new CmSdkScope();
                 using (new CmSdkScope())
                 {
                     CmSdk.Logon.DoLogon();
@@ -56,9 +56,15 @@ namespace CMATLTService
                         Task.Run(() => ListenForTrigger());
                     }
                 }
+                
             }
             catch (Exception ex)
             {
+                var asm = typeof(CmSdkScope).Assembly;
+                File.WriteAllText(
+                    @"C:\TestService1\GAC_CHECK.txt",
+                    $"FromGAC={asm.GlobalAssemblyCache}, Location='{asm.Location}'"
+                );
                 LogLibrary.LogError("Service start error: " + ex.Message);
             }
             //LogLibrary.Log("Service started.");
@@ -76,7 +82,7 @@ namespace CMATLTService
             async _ => await ExecuteTaskAsync(),
             null,
             TimeSpan.Zero,
-            TimeSpan.FromMinutes(5));
+            TimeSpan.FromMinutes(2));
         }
 
         private async Task ExecuteTaskAsync()
@@ -134,7 +140,7 @@ namespace CMATLTService
                                 LogLibrary.LogService("Instrument Status :" + result + "and Date is:" + DateTime.Now);
                                 if (result)
                                 {
-                                    WriteOnlineAuditDataDuplicateintoFile(selectedinstument.OnlineAuditTrail, selectedinstument.Name);
+                                    //WriteOnlineAuditDataDuplicateintoFile(selectedinstument.OnlineAuditTrail, selectedinstument.Name);
                                     LogLibrary.LogService("Instrument Status :" + result + "and Date is:" + DateTime.Now);
                                     //messagebox.show("connected successfully to " + selectedinstument.name);
                                     LogLibrary.LogService("Ready to Fetching AuditTrails Data :" + DateTime.Now);
@@ -152,6 +158,10 @@ namespace CMATLTService
                                         //ExportSequenceData(sequenceUri, selectedinstument.Name);
 
 
+                                    }
+                                    else
+                                    {
+                                        LogLibrary.LogService("AuditTrails Data Count is --:" + selectedinstument.OnlineAuditTrail.Count()+ "And" + DateTime.Now);
                                     }
                                 }
                                 else
@@ -198,6 +208,10 @@ namespace CMATLTService
 
             // Create the folder (creates all parent folders if missing)
             Directory.CreateDirectory(destinationFolder);
+            foreach (string file in Directory.GetFiles(destinationFolder))
+            {
+                File.Delete(file);
+            }
 
             //string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
             //string backupFile = Path.Combine(destinationFolder, $"{instrName + "_" + timestamp}.json");
@@ -476,14 +490,19 @@ namespace CMATLTService
                     using (var reader = new StreamReader(server))
                     {
                         var command = reader.ReadLine();
-
-                        if (command?.Equals("RUN_NOW", StringComparison.OrdinalIgnoreCase) == true)
+                        var parts = command
+                                   .Split(new[] { "&" }, StringSplitOptions.RemoveEmptyEntries)
+                                   .Select(p => p.Trim())
+                                   .ToArray();
+                        var action = parts[0];
+                        if (action.Equals("RUN_NOW", StringComparison.OrdinalIgnoreCase) == true)
                         {
                             TriggerNow();
                         }
-                        else if (command?.Equals("EXPORT_CMBX", StringComparison.OrdinalIgnoreCase) == true)
+                        else if (action.Equals("EXPORT_CMBX", StringComparison.OrdinalIgnoreCase) == true)
                         {
-                            TriggerCmbxFile();
+                            var seqName = parts[1];
+                            TriggerCmbxFile(seqName);
                         }
                     }
                 }
@@ -494,9 +513,10 @@ namespace CMATLTService
 
         }
 
-        public void TriggerCmbxFile()
+        public void TriggerCmbxFile(string seqName)
         {
-            ExportSequenceData("chrom://tf-251216232713/ChromeleonLocal/Instrument Data/MyInuvion/SeqInuvion.seq", null);
+            // ExportSequenceData("chrom://tf-251216232713/ChromeleonLocal/Instrument Data/MyInuvion/SeqInuvion.seq", null);
+            ExportSequenceData(seqName, null);
         }
 
         public void ListenForTrigger1()

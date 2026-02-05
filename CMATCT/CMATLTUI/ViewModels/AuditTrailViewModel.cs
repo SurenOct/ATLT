@@ -356,7 +356,9 @@ namespace CMATCTUI.ViewModels
 
         private void CreateTicket()
         {
+           
             var childWindow = new EmailFormat();
+           
             childWindow.ViewModel = new EmailViewModel(new ObservableCollection<AuditLogItem>(SelectedAuditLogs));
             childWindow.Show();
             childWindow.Closed += (s, e) =>

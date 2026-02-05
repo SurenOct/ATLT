@@ -44,6 +44,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Management" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
@@ -71,6 +72,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomActions.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="GacInstaller.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>

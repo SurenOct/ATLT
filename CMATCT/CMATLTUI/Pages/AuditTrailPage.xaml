@@ -93,6 +93,7 @@
                 <DataGridTextColumn Header="Device" Binding="{Binding Device}" />
                 <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="2*" />
                 <DataGridTextColumn Header="Status" Binding="{Binding Status}" />
+                <DataGridTextColumn Visibility="Hidden" Header="Sequence" Binding="{Binding SequenceName}" />
             </DataGrid.Columns>
         </DataGrid>
 

@@ -1,16 +1,9 @@
-﻿using Hardcodet.Wpf.TaskbarNotification;
-using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
+using Hardcodet.Wpf.TaskbarNotification;
+using Microsoft.Win32;
 
 namespace CMATLTServiceTrayApp
 {
@@ -20,32 +13,32 @@ namespace CMATLTServiceTrayApp
     public partial class App : System.Windows.Application
     {
         private TaskbarIcon _trayIcon;
-        
+
         protected override void OnStartup(StartupEventArgs e)
         {
-            
+
             base.OnStartup(e);
             //MessageBox.Show("hit2");
             ////StartPipeServer();
             //StartFileWatcher();
             ////AutoStartHelper.SetTrayAppAutoStart(true);
             //MessageBox.Show("Tray App Started");
-          
 
-            
+
+
             _trayIcon = (TaskbarIcon)FindResource("TrayIcon");
-           
+
 
             _trayIcon.ToolTipText = "Tray icon loaded";
             _trayIcon.Visibility = Visibility.Visible;
 
-           // RegisterTray();
+            // RegisterTray();
 
         }
 
         private void RegisterTray()
         {
-             
+
             string servicePath = Assembly.GetExecutingAssembly().Location; // Full path of exe
             string serviceDir = Path.GetDirectoryName(servicePath);
             //string targetDir = "C:\\Program Files (x86)\\Thermo Fisher Scientific, Inc\\Setup2\\"; // MSI passes TARGETDIR
@@ -90,7 +83,7 @@ namespace CMATLTServiceTrayApp
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-          
+
             string installPath = Path.GetDirectoryName(
                                  System.Reflection.Assembly.GetExecutingAssembly().Location);
             string exePath = Path.Combine(installPath, "CMATLTUI.exe");

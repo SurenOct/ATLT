@@ -1,11 +1,4 @@
-﻿using CMATCTUI.Commands;
-using CMATCTUI.Generic;
-using CMATCTUI.Models;
-using MailKit.Net.Smtp;
-using MailKit.Security;
-using Microsoft.Win32;
-using MimeKit;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -20,6 +13,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
+using CMATCTUI.Commands;
+using CMATCTUI.Generic;
+using CMATCTUI.Models;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
 
 namespace CMATCTUI.ViewModels
 {
@@ -106,8 +105,8 @@ namespace CMATCTUI.ViewModels
         public ICommand GeneratedCmbxFileCommand { get; }
         public EmailViewModel(ObservableCollection<AuditLogItem> itemsFromParent)
         {
-           
-           
+
+
             //string destinationEventFolder = System.IO.Path.Combine(
             //          Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
             //          "CMATLTData", "CmbxEventFiles");
@@ -159,7 +158,7 @@ namespace CMATCTUI.ViewModels
         {
             try
             {
-               
+
                 string seqName = "";
                 if (Items.Count > 0 && Items.FirstOrDefault() != null)
                 {
@@ -172,24 +171,24 @@ namespace CMATCTUI.ViewModels
                 Directory.CreateDirectory(destinationFolder);
                 var items = Directory.GetFiles(destinationFolder);
                 ProgressStatus = "Generating CMBX File. Please wait...";
-                
+
                 GenerateCmbxFile(seqName);
-               
+
                 await Task.Delay(5000);
                 ProgressStatus = "Generating Agent Files. Please wait...";
-               
+
                 var listofAglientFiles = LoadingAgilentFile();
-               
+
                 await Task.Delay(1000); // simulate work
                 ProgressStatus = "Generating Water Audit Files. Please wait...";
-                
+
                 var listofWaterAuditFiles = LoadingWaterAuditFile();
-               
+
                 await Task.Delay(1000); // simulate work
                 ProgressStatus = "Generating Application And System Event logs of Current Date...";
-               
+
                 var listofEventLogs = ApplicationAndSystemLogs();
-                
+
                 await Task.Delay(1000); // simulate work
                 ProgressStatus = "Attaching the Zip Files...";
                 var cmbxFile = LoadCmbxFile();
@@ -257,7 +256,7 @@ namespace CMATCTUI.ViewModels
             List<string> filesWithDate = null;
             try
             {
-                
+
                 string destinationFolder = @"C:\ProgramData\Agilent Technologies\Instrument Control Framework folder\";
 
                 if (Directory.Exists(destinationFolder))
@@ -287,7 +286,7 @@ namespace CMATCTUI.ViewModels
             List<string> filesWithDate = null;
             try
             {
-               
+
                 string destinationFolder = @"C:\Program Files (x86)\Waters Instruments\Logs\";
 
                 if (Directory.Exists(destinationFolder))
@@ -306,7 +305,7 @@ namespace CMATCTUI.ViewModels
                 }
                 return filesWithDate;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("LoadingWaterAuditFile" + ex.ToString());
             }
@@ -378,9 +377,9 @@ namespace CMATCTUI.ViewModels
                 }
                 return filesWithDate;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                MessageBox.Show("ApplicationAndSystemLogs"+ ex.ToString());
+                MessageBox.Show("ApplicationAndSystemLogs" + ex.ToString());
             }
             return filesWithDate;
 
@@ -464,9 +463,9 @@ namespace CMATCTUI.ViewModels
                 //    }
                 //}
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                MessageBox.Show("Generate CMBX Error"+ ex.ToString());
+                MessageBox.Show("Generate CMBX Error" + ex.ToString());
             }
 
         }
@@ -535,7 +534,7 @@ namespace CMATCTUI.ViewModels
                 }
 
                 // ✅ Readable size for display
-                 displaySize = GetReadableFileSize(zipInfo.Length);
+                displaySize = GetReadableFileSize(zipInfo.Length);
 
                 // (Optional) size in MB
                 double sizeInMb = Math.Round(zipInfo.Length / 1024d / 1024d, 2);
@@ -614,8 +613,9 @@ namespace CMATCTUI.ViewModels
                     Server = root.Element("Server")?.Value,
                     Port = int.Parse(root.Element("Port")?.Value ?? "0"),
                     Encryption = root.Element("Encryption")?.Value,
-                    Username = root.Element("Username")?.Value,
-                    Password = root.Element("Password")?.Value
+                    SenderEmailID = root.Element("SenderEmailID")?.Value,
+                    SenderPassword = root.Element("SenderPassword")?.Value,
+                    ReceiverEmailID = root.Element("ReceiverEmailID")?.Value
                 };
             }
             if (smtpSettings == null)
@@ -629,8 +629,8 @@ namespace CMATCTUI.ViewModels
 
 
 
-                message.From.Add(new MailboxAddress("Test", smtpSettings.Username));
-                message.To.Add(MailboxAddress.Parse(smtpSettings.Username));
+                message.From.Add(new MailboxAddress("Test", smtpSettings.SenderEmailID));
+                message.To.Add(MailboxAddress.Parse(smtpSettings.ReceiverEmailID));
 
                 message.Subject = "Incedent Type:" + _selectedIncidentType;
                 //message.Body = new TextPart("plain")
@@ -681,7 +681,6 @@ namespace CMATCTUI.ViewModels
             bool IsConnect = false;
             try
             {
-
                 SecureSocketOptions socketOptions;
 
                 string encryption = smtpSettings.Encryption?.ToUpper() ?? "STARTTLS"; // default if null

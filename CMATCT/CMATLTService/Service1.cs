@@ -1,20 +1,18 @@
-﻿using CMATLTLoger;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using CMATLTLoger;
+using Newtonsoft.Json;
 using Thermo.Chromeleon.Sdk.Common;
 using Thermo.Chromeleon.Sdk.Interfaces.Data;
 using Thermo.Chromeleon.Sdk.Interfaces.Instruments;
@@ -56,7 +54,7 @@ namespace CMATLTService
                         Task.Run(() => ListenForTrigger());
                     }
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -94,8 +92,8 @@ namespace CMATLTService
             try
             {
                 await DoWorkAsync();
-                 
-               
+
+
             }
             finally
             {
@@ -103,11 +101,9 @@ namespace CMATLTService
             }
 
         }
-        
+
         private async Task DoWorkAsync()
         {
-            
-
             using (new CmSdkScope())
             {
                 CmSdk.Logon.DoLogon();
@@ -135,13 +131,13 @@ namespace CMATLTService
                             IInstrument selectedinstument = instr;
                             try
                             {
-                                LogLibrary.LogService("Selected Instrument is :" + selectedinstument + "and Date is:" + DateTime.Now);
+                                LogLibrary.LogService("Selected Instrument is :" + selectedinstument + ". Date is:" + DateTime.Now);
                                 bool result = await ConnectingToInstumentasync(selectedinstument);
-                                LogLibrary.LogService("Instrument Status :" + result + "and Date is:" + DateTime.Now);
+                                LogLibrary.LogService("Instrument Status :" + result + ". Date is:" + DateTime.Now);
                                 if (result)
                                 {
                                     //WriteOnlineAuditDataDuplicateintoFile(selectedinstument.OnlineAuditTrail, selectedinstument.Name);
-                                    LogLibrary.LogService("Instrument Status :" + result + "and Date is:" + DateTime.Now);
+                                    LogLibrary.LogService("Instrument Status :" + result + ". Date is:" + DateTime.Now);
                                     //messagebox.show("connected successfully to " + selectedinstument.name);
                                     LogLibrary.LogService("Ready to Fetching AuditTrails Data :" + DateTime.Now);
                                     //FetchOnlineAuditrailsData(selectedinstument, selectedinstument.Name);
@@ -161,7 +157,7 @@ namespace CMATLTService
                                     }
                                     else
                                     {
-                                        LogLibrary.LogService("AuditTrails Data Count is --:" + selectedinstument.OnlineAuditTrail.Count()+ "And" + DateTime.Now);
+                                        LogLibrary.LogService("AuditTrails Data Count is --:" + selectedinstument.OnlineAuditTrail.Count() + "And" + DateTime.Now);
                                     }
                                 }
                                 else
@@ -197,80 +193,104 @@ namespace CMATLTService
         /// Export Sequence Data
         /// </summary>
         /// <param name="sequenceUri"></param>
-    
+
         private void ExportSequenceData(string sequenceUri, string instrName)
         {
-            string seqName = sequenceUri.Split('/').LastOrDefault().Split('.')[0];
-            LogLibrary.LogService("Ready to Writing Audit information to file:" + DateTime.Now);
-            string destinationFolder = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-            "CMATLTData", "CmbxFiles");
-
-            // Create the folder (creates all parent folders if missing)
-            Directory.CreateDirectory(destinationFolder);
-            foreach (string file in Directory.GetFiles(destinationFolder))
+            try
             {
-                File.Delete(file);
-            }
+                if (string.IsNullOrEmpty(sequenceUri))
+                {
+                    LogLibrary.LogService("Sequence URI is null or empty. Date is:" + DateTime.Now);
+                    return;
+                }
 
-            //string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
-            //string backupFile = Path.Combine(destinationFolder, $"{instrName + "_" + timestamp}.json");
+                if (string.IsNullOrEmpty(instrName))
+                {
+                    LogLibrary.LogService("Instrument Name is null or empty. Date is:" + DateTime.Now);
+                    return;
+                }
 
-            string dateString = DateTime.Now.ToString("yyyy-MM-dd");
-            string backupFile = Path.Combine(destinationFolder, $"{seqName}_{dateString}.cmbx");
 
-            using (new CmSdkScope())
-            {
-                CmSdk.Logon.DoLogon();
-                if (CmSdk.Logon.IsLoggedOn)
+                string seqName = sequenceUri.Split('/').LastOrDefault().Split('.')[0];
+                LogLibrary.LogService("Ready to Writing Audit information to file:" + DateTime.Now);
+                string destinationFolder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                "CMATLTData", "CmbxFiles");
+
+                // Create the folder (creates all parent folders if missing)
+                Directory.CreateDirectory(destinationFolder);
+                if (!Directory.Exists(destinationFolder))
+                {
+                    LogLibrary.LogService("Directory : " + destinationFolder + " do not exist. Date is:" + DateTime.Now);
+                    return;
+                }
+                foreach (string file in Directory.GetFiles(destinationFolder))
+                {
+                    File.Delete(file);
+                }
+
+                //string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
+                //string backupFile = Path.Combine(destinationFolder, $"{instrName + "_" + timestamp}.json");
+
+                string dateString = DateTime.Now.ToString("yyyy-MM-dd");
+                string backupFile = Path.Combine(destinationFolder, $"{seqName}_{dateString}.cmbx");
+
+                using (new CmSdkScope())
                 {
                     CmSdk.Logon.DoLogon();
                     if (CmSdk.Logon.IsLoggedOn)
                     {
-                        var exportEngine = CmSdk.GetExportEngine();
-                        var tokenSource = new CancellationTokenSource();
-                        //var targetFileName = @"C:\Demo\test.cmbx";
-                        var targetFileName = backupFile;
-                        var progress = new Progress<double>();
-                        var itemsToExport = new List<Uri> { new Uri(sequenceUri) };
-                        // Create and start a new export task
-                        var importTask = exportEngine.ExportToCmbxAsync(
-                            itemsToExport, // The items which will be exported
-                            targetFileName, // The target filename
-                            "Just a short description",
-                            CmbxExportOptions.IncludeAllData, // Exporting options
-                            CmbxContainerFormat.V2, // Container format (currently there are two different formats)
-                            progress, // Progress information
-                            tokenSource.Token // Cancellation token (in order to cancel the export operation)
-                            );
-
-                        // Wait for task completion and continue in the current synchronization 
-                        // context (useful for UI threads)
-                        importTask.ContinueWith(t =>
+                        CmSdk.Logon.DoLogon();
+                        if (CmSdk.Logon.IsLoggedOn)
                         {
-                            if (t.IsFaulted)
-                            {
-                                // Faulted with exception
-                                Exception ex = t.Exception;
-                                while (ex is AggregateException && ex.InnerException != null)
-                                    ex = ex.InnerException;
+                            var exportEngine = CmSdk.GetExportEngine();
+                            var tokenSource = new CancellationTokenSource();
+                            //var targetFileName = @"C:\Demo\test.cmbx";
+                            var targetFileName = backupFile;
+                            var progress = new Progress<double>();
+                            var itemsToExport = new List<Uri> { new Uri(sequenceUri) };
+                            // Create and start a new export task
+                            var importTask = exportEngine.ExportToCmbxAsync(
+                                itemsToExport, // The items which will be exported
+                                targetFileName, // The target filename
+                                "Just a short description",
+                                CmbxExportOptions.IncludeAllData, // Exporting options
+                                CmbxContainerFormat.V2, // Container format (currently there are two different formats)
+                                progress, // Progress information
+                                tokenSource.Token // Cancellation token (in order to cancel the export operation)
+                                );
 
-                            }
-                            else if (t.IsCanceled)
+                            // Wait for task completion and continue in the current synchronization 
+                            // context (useful for UI threads)
+                            importTask.ContinueWith(t =>
                             {
+                                if (t.IsFaulted)
+                                {
+                                    // Faulted with exception
+                                    Exception ex = t.Exception;
+                                    while (ex is AggregateException && ex.InnerException != null)
+                                        ex = ex.InnerException;
 
-                            }
-                            else
-                            {
+                                }
+                                else if (t.IsCanceled)
+                                {
 
-                            }
-                        });
+                                }
+                                else
+                                {
+
+                                }
+                            });
+                        }
+
                     }
-
                 }
             }
-
-
+            catch (Exception ex)
+            {
+                LogLibrary.LogError("Error in ExportSequenceData: " + ex.Message);
+                return;
+            }
         }
 
 
@@ -285,7 +305,7 @@ namespace CMATLTService
             LogLibrary.LogService("AuditTrails Data Count is :" + selectedInstument.OnlineAuditTrail.Count() + "And Date is:" + DateTime.Now);
             string seqName = Convert.ToString(selectedInstument.QueueControl.QueueItems.First().SequenceUri.OriginalString);
             WriteOnlineAuditDataintoFile(selectedInstument.OnlineAuditTrail, instrumentName, seqName);
-            
+
         }
         private void WriteOnlineAuditDataDuplicateintoFile(IAuditTrailMessages onlineAuditTrail, string instrName)
         {
@@ -318,7 +338,7 @@ namespace CMATLTService
 
             File.WriteAllText(backupFile, json, Encoding.UTF8);
         }
-        private void WriteOnlineAuditDataintoFile(IAuditTrailMessages onlineAuditTrail, string instrName,string seqName)
+        private void WriteOnlineAuditDataintoFile(IAuditTrailMessages onlineAuditTrail, string instrName, string seqName)
         {
             try
             {
@@ -387,9 +407,9 @@ namespace CMATLTService
             //CmSdk.Logon.DoLogon();
             //if (CmSdk.Logon.IsLoggedOn)
             //{
-            LogLibrary.LogService("Connecting To Instrument:" + selectedinstument + "and Date is:" + DateTime.Now);
+            LogLibrary.LogService("Connecting To Instrument:" + selectedinstument + ". Date:" + DateTime.Now);
             Progress result = await selectedinstument.ConnectAsync();
-            LogLibrary.LogService("Instrument Status is:" + result + "and Date is:" + DateTime.Now);
+            LogLibrary.LogService("Instrument Status is:" + result + ". Date:" + DateTime.Now);
             return result == Progress.Completed;
             // }
             // }
@@ -409,7 +429,7 @@ namespace CMATLTService
             //{
             LogLibrary.LogService("Fetching Instruments Details : " + DateTime.Now);
             var items = Thermo.Chromeleon.Sdk.Common.CmSdk.GetInstrumentAccess();
-            LogLibrary.LogService("Fetched Instruments Details count is: " + items.Instruments.Count() + " and Date is:" + DateTime.Now);
+            LogLibrary.LogService("Fetched Instruments Details count is: " + items.Instruments.Count() + ". Date is:" + DateTime.Now);
             return items.Instruments;
             // }
             //}
@@ -465,7 +485,7 @@ namespace CMATLTService
             //server.WaitForConnection();
 
 
-         
+
             PipeSecurity pipeSecurity = new PipeSecurity();
             pipeSecurity.AddAccessRule(
                 new PipeAccessRule(
@@ -507,7 +527,7 @@ namespace CMATLTService
                     }
                 }
             }
-        
+
 
 
 
@@ -528,12 +548,12 @@ namespace CMATLTService
             while (true)
             {
                 var context = listener.GetContext();
-                 var reader = new StreamReader(context.Request.InputStream);
+                var reader = new StreamReader(context.Request.InputStream);
                 var command = reader.ReadToEnd();
 
                 if (command == "RUN_NOW")
                 {
-                     
+
                 }
 
                 context.Response.StatusCode = 200;

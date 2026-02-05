@@ -37,6 +37,10 @@
     <Reference Include="CMATLTLoger">
       <HintPath>..\CMATLTLoger\bin\Debug\CMATLTLoger.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=2.0.17.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\WS\CM\Output\Debug\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -54,19 +58,19 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
-    <Reference Include="Thermo.Chromeleon.Sdk, Version=7.3.2.10759, Culture=neutral, PublicKeyToken=f1413f165c7768f2, processorArchitecture=MSIL">
+    <Reference Include="Thermo.Chromeleon.Sdk, Version=7.4.1.65534, Culture=neutral, PublicKeyToken=f1413f165c7768f2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Thermo.Chromeleon.Sdk\v4.0_7.3.2.10759__f1413f165c7768f2\Thermo.Chromeleon.Sdk.dll</HintPath>
     </Reference>
-    <Reference Include="Thermo.Chromeleon.Sdk.Addins, Version=7.3.2.10759, Culture=neutral, PublicKeyToken=f1413f165c7768f2, processorArchitecture=MSIL">
+    <Reference Include="Thermo.Chromeleon.Sdk.Addins, Version=7.4.1.65534, Culture=neutral, PublicKeyToken=f1413f165c7768f2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Thermo.Chromeleon.Sdk.Addins\v4.0_7.3.2.10759__f1413f165c7768f2\Thermo.Chromeleon.Sdk.Addins.dll</HintPath>
     </Reference>
-    <Reference Include="Thermo.Chromeleon.Sdk.Implementation, Version=7.3.2.10759, Culture=neutral, PublicKeyToken=f1413f165c7768f2, processorArchitecture=MSIL">
+    <Reference Include="Thermo.Chromeleon.Sdk.Implementation, Version=7.4.1.65534, Culture=neutral, PublicKeyToken=f1413f165c7768f2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Thermo.Chromeleon.Sdk.Implementation\v4.0_7.3.2.10759__f1413f165c7768f2\Thermo.Chromeleon.Sdk.Implementation.dll</HintPath>
     </Reference>
-    <Reference Include="Thermo.Chromeleon.SdkControls, Version=7.3.2.10759, Culture=neutral, PublicKeyToken=f1413f165c7768f2, processorArchitecture=MSIL">
+    <Reference Include="Thermo.Chromeleon.SdkControls, Version=7.4.1.65534, Culture=neutral, PublicKeyToken=f1413f165c7768f2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Thermo.Chromeleon.SdkControls\v4.0_7.3.2.10759__f1413f165c7768f2\Thermo.Chromeleon.SdkControls.dll</HintPath>
     </Reference>

@@ -3,6 +3,7 @@
   <Server>10.123.12.27</Server>
   <Port>25</Port>
   <Encryption>NONE</Encryption>
-  <Username>chaitanyakumar.svs@thermofisher.com</Username>
-  <Password>Sivaya$123</Password>
+  <SenderEmailID>chaitanyakumar.svs@thermofisher.com</SenderEmailID>
+  <SenderPassword>Sivaya$123</SenderPassword>
+  <ReceiverEmailID>receiver@example.com</ReceiverEmailID>
 </SmtpSettings>

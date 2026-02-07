@@ -1,0 +1,14 @@
+<Window x:Class="CMATCTUI.ChildWindows.LogViewerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Application Logs" Height="600" Width="1000">
+    <Grid>
+        <TextBox x:Name="LogTextBox"
+                 IsReadOnly="True"
+                 VerticalScrollBarVisibility="Auto"
+                 HorizontalScrollBarVisibility="Auto"
+                 FontFamily="Consolas"
+                 FontSize="12"
+                 Padding="10"/>
+    </Grid>
+</Window>

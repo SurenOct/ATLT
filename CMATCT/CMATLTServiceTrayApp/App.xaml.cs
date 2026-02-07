@@ -1,7 +1,10 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows;
+using CMATCTUI.ChildWindows;
+using CMATLTLoger;
 using Hardcodet.Wpf.TaskbarNotification;
 using Microsoft.Win32;
 
@@ -29,7 +32,7 @@ namespace CMATLTServiceTrayApp
             _trayIcon = (TaskbarIcon)FindResource("TrayIcon");
 
 
-            _trayIcon.ToolTipText = "Tray icon loaded";
+            _trayIcon.ToolTipText = "ATLT Tool";
             _trayIcon.Visibility = Visibility.Visible;
 
             // RegisterTray();
@@ -43,7 +46,7 @@ namespace CMATLTServiceTrayApp
             string serviceDir = Path.GetDirectoryName(servicePath);
             //string targetDir = "C:\\Program Files (x86)\\Thermo Fisher Scientific, Inc\\Setup2\\"; // MSI passes TARGETDIR
             //string exePath = Path.Combine(targetDir, "MyServiceTrayApp.exe");
-            string exePath = Path.Combine(serviceDir, "CMATLTServiceTrayApp.exe");
+            //string exePath = Path.Combine(serviceDir, "CMATLTServiceTrayApp.exe");
 
             using (var key = Registry.CurrentUser.OpenSubKey(
                      @"Software\Microsoft\Windows\CurrentVersion\Run", true))
@@ -65,44 +68,107 @@ namespace CMATLTServiceTrayApp
 
         private void StartService_Click(object sender, RoutedEventArgs e)
         {
-            ServiceManager.StartService();
-            System.Windows.Forms.MessageBox.Show("Service Started");
+            LogLibrary.LogUIInfo("StartService_Click invoked");
+            try
+            {
+                ServiceManager.StartService();
+                ShowNotification("Service Control", "Service started successfully", BalloonIcon.Info);
+            }
+            catch (Exception ex)
+            {
+                LogLibrary.LogUIError($"Failed to start service: {ex.Message}");
+                ShowNotification("Service Control", $"Failed to start service: {ex.Message}", BalloonIcon.Error);
+            }
         }
 
         private void StopService_Click(object sender, RoutedEventArgs e)
         {
-            ServiceManager.StopService();
-            System.Windows.Forms.MessageBox.Show("Service Stopped");
+            LogLibrary.LogUIInfo("StopService_Click invoked");
+            try
+            {
+                ServiceManager.StopService();
+                ShowNotification("Service Control", "Service stopped", BalloonIcon.Info);
+            }
+            catch (Exception ex)
+            {
+                LogLibrary.LogUIError($"Failed to stop service: {ex.Message}");
+                ShowNotification("Service Control", $"Failed to stop service: {ex.Message}", BalloonIcon.Error);
+            }
         }
 
         private void StatusService_Click(object sender, RoutedEventArgs e)
         {
-            var status = ServiceManager.GetStatus();
-            System.Windows.Forms.MessageBox.Show($"Service Status: {status}");
-        }
-
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-
-            string installPath = Path.GetDirectoryName(
-                                 System.Reflection.Assembly.GetExecutingAssembly().Location);
-            string exePath = Path.Combine(installPath, "CMATLTUI.exe");
-
-            if (File.Exists(exePath))
+            LogLibrary.LogUIInfo("StatusService_Click invoked");
+            try
             {
-                ProcessStartInfo psi = new ProcessStartInfo
-                {
-                    FileName = exePath,
-                    UseShellExecute = true,  // needed for GUI apps
-                    CreateNoWindow = false
-                };
-                Process.Start(psi);
+                var status = ServiceManager.GetStatus();
+                ShowNotification("Service Status", $"Current status: {status}", BalloonIcon.Info);
+            }
+            catch (Exception ex)
+            {
+                LogLibrary.LogUIError($"Failed to get status: {ex.Message}");
+                ShowNotification("Service Status", $"Failed to get status: {ex.Message}", BalloonIcon.Error);
             }
         }
 
-        //private void Exit_Click(object sender, RoutedEventArgs e)
-        //{
-        //    Shutdown();
-        //}
+        private void OpenUI_Click(object sender, RoutedEventArgs e)
+        {
+            LogLibrary.LogUIInfo("OpenUI_Click invoked");
+            try
+            {
+                string installPath = Path.GetDirectoryName(
+                                     System.Reflection.Assembly.GetExecutingAssembly().Location);
+                string exePath = Path.Combine(installPath, "CMATLTUI.exe");
+
+                if (File.Exists(exePath))
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = exePath,
+                        UseShellExecute = true,  // needed for GUI apps
+                        CreateNoWindow = false
+                    };
+                    Process.Start(psi);
+                }
+                else
+                {
+                    ShowNotification("Error", "CMATLTUI.exe not found", BalloonIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogLibrary.LogUIError($"Failed to open UI: {ex.Message}");
+                ShowNotification("Error", $"Failed to open UI: {ex.Message}", BalloonIcon.Error);
+            }
+        }
+
+        private void ViewLogs_Click(object sender, RoutedEventArgs e)
+        {
+            LogLibrary.LogUIInfo("ViewLogs_Click invoked");
+            try
+            {
+                var logViewer = new LogViewerWindow();
+                logViewer.Show();
+            }
+            catch (Exception ex)
+            {
+                LogLibrary.LogUIError($"Failed to open logs: {ex.Message}");
+                ShowNotification("Error", $"Failed to open logs: {ex.Message}", BalloonIcon.Error);
+            }
+        }
+
+        private void ExitTray_Click(object sender, RoutedEventArgs e)
+        {
+            LogLibrary.LogUIInfo("ExitTray_Click invoked");
+            Shutdown();
+        }
+
+        /// <summary>
+        /// Shows a balloon tip notification that auto-closes after 3 seconds
+        /// </summary>
+        private void ShowNotification(string title, string message, BalloonIcon icon = BalloonIcon.Info)
+        {
+            _trayIcon?.ShowBalloonTip(title, message, icon);
+        }
     }
 }

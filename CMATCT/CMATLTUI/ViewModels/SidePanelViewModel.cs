@@ -1,15 +1,13 @@
-﻿using CMATCTUI.Commands;
-using CMATCTUI.Pages;
-using Microsoft.Win32;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using CMATCTUI.Commands;
+using CMATCTUI.Pages;
+using CMATLTLoger;
 
 //Test Comment
 namespace CMATCTUI.ViewModels
@@ -45,13 +43,15 @@ namespace CMATCTUI.ViewModels
             NavigateToDashBoardPageCommand = new RelayCommand(NavigateToDashBoardPage);
             NavigateToAboutPageCommand = new RelayCommand(NavigateToAboutPage);
 
+            LogLibrary.LogUIInfo("Application started. All Page Commands initialized.");
+
             _dashBoardPage = new DashBoardPage();
             CurrentPage = _dashBoardPage;
             // CurrentPage = new FatAnalyzer { DataContext = new FatAnalyzerViewModel() };
-           
+            LogLibrary.LogUIInfo("Default page set to Dashboard.");
         }
 
-       
+
 
 
         /// <summary>
@@ -60,77 +60,127 @@ namespace CMATCTUI.ViewModels
         /// <param name="folderPath"></param>
         private void DeleteFilesInFolder()
         {
-                string folderPath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-        "CMATLTData", "Data");
-
-
-            if (!Directory.Exists(folderPath))
-                return;
-
-            var files = Directory.GetFiles(folderPath);
-
-            foreach (var file in files)
+            try
             {
-                FileInfo fileInfo = new FileInfo(file);
+                string folderPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                    "CMATLTData", "Data");
 
-                // Check if file is older than 30 days
-                if (fileInfo.CreationTime < DateTime.Now.AddDays(-30))
+                LogLibrary.LogUIInfo($"Attempting to delete files in folder: {folderPath}");
+
+                if (!Directory.Exists(folderPath))
                 {
-                    try
+                    LogLibrary.LogUIWarning($"Folder not found: {folderPath}. No files to delete.");
+                    return;
+                }
+
+                var files = Directory.GetFiles(folderPath);
+
+                foreach (var file in files)
+                {
+                    FileInfo fileInfo = new FileInfo(file);
+
+                    // Check if file is older than 30 days
+                    if (fileInfo.CreationTime < DateTime.Now.AddDays(-30))
                     {
-                        MessageBox.Show($"Deleting file: {fileInfo.Name}");
-                        fileInfo.Delete();
-                    }
-                    catch (Exception ex)
-                    {
-                        // Log exception if needed
-                        Console.WriteLine($"Failed to delete {fileInfo.Name}: {ex.Message}");
+                        try
+                        {
+                            MessageBox.Show($"Deleting file: {fileInfo.Name}");
+                            fileInfo.Delete();
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log exception if needed
+                            Console.WriteLine($"Failed to delete {fileInfo.Name}: {ex.Message}");
+                            LogLibrary.LogUIError($"Failed to delete {fileInfo.Name}: {ex.Message}");
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                // Log exception if needed
+                Console.WriteLine($"Error while deleting files: {ex.Message}");
+                LogLibrary.LogUIError($"Error while deleting files: {ex.Message}");
             }
         }
 
         private void NavigateToAuditTrailPage()
         {
-            string destinationFolder = Path.Combine(
-               Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-               "CMATLTData", "Data");
-            if (!Directory.Exists(destinationFolder))
+            LogLibrary.LogUIInfo("Navigating to Audit Trail Page.");
+            try
             {
-                MessageBox.Show("No Local Database available");
-                return;
+                string destinationFolder = Path.Combine(
+                   Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                   "CMATLTData", "Data");
+                if (!Directory.Exists(destinationFolder))
+                {
+                    MessageBox.Show("No Local Database available");
+                    return;
+                }
+                LogLibrary.LogUIInfo("Local Database found. Navigating to Audit Trail Page.");
+
+                if (auditTrailPage == null)
+                    auditTrailPage = new AuditTrailPage();
+                CurrentPage = auditTrailPage;
+                LogLibrary.LogUIInfo("Audit Trail Page set as current page.");
             }
-
-
-            if (auditTrailPage == null)
-                auditTrailPage = new AuditTrailPage();
-            CurrentPage = auditTrailPage;
+            catch (Exception ex)
+            {
+                LogLibrary.LogUIError($"Error navigating to Audit Trail Page: {ex.Message}");
+                MessageBox.Show("An error occurred while trying to access the Audit Trail. Please check the logs for more details.");
+            }
         }
 
         private void NavigateToSettingsPage()
         {
-            if (_settingsPage == null)
-                _settingsPage = new SettingsPage();
-            CurrentPage = _settingsPage;
+            LogLibrary.LogUIInfo("Navigating to Settings Page.");
+            try
+            {
+                if (_settingsPage == null)
+                    _settingsPage = new SettingsPage();
+                CurrentPage = _settingsPage;
+                LogLibrary.LogUIInfo("Settings Page set as current page.");
 
-
-            // CurrentPage = new Reports();
-
+                // CurrentPage = new Reports();
+            }
+            catch (Exception ex)
+            {
+                LogLibrary.LogUIError($"Error navigating to Settings Page: {ex.Message}");
+                MessageBox.Show("An error occurred while trying to access the Settings. Please check the logs for more details.");
+            }
         }
 
         private void NavigateToDashBoardPage()
         {
-            if (_dashBoardPage == null)
-                _dashBoardPage = new DashBoardPage();
-            CurrentPage = _dashBoardPage;
+            LogLibrary.LogUIInfo("Navigating to Dashboard Page.");
+            try
+            {
+                if (_dashBoardPage == null)
+                    _dashBoardPage = new DashBoardPage();
+                CurrentPage = _dashBoardPage;
+            }
+            catch (Exception ex)
+            {
+                LogLibrary.LogUIError($"Error navigating to Dashboard Page: {ex.Message}");
+                MessageBox.Show("An error occurred while trying to access the Dashboard. Please check the logs for more details.");
+            }
         }
 
         private void NavigateToAboutPage()
         {
-            if (_aboutPage == null)
-                _aboutPage = new AboutPage();
-            CurrentPage = _aboutPage;
+            LogLibrary.LogUIInfo("Navigating to About Page.");
+            try
+            {
+                if (_aboutPage == null)
+                    _aboutPage = new AboutPage();
+                CurrentPage = _aboutPage;
+            }
+            catch (Exception ex)
+            {
+                LogLibrary.LogUIError($"Error navigating to About Page: {ex.Message}");
+                MessageBox.Show("An error occurred while trying to access the About Page. Please check the logs for more details.");
+            }
         }
 
 

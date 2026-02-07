@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <SmtpSettings>
-  <Server>10.123.12.27</Server>
-  <Port>25</Port>
+  <Server>domainserver</Server>
+  <Port>portnumber</Port>
   <Encryption>NONE</Encryption>
-  <SenderEmailID>chaitanyakumar.svs@thermofisher.com</SenderEmailID>
-  <SenderPassword>Sivaya$123</SenderPassword>
-  <ReceiverEmailID>receiver@example.com</ReceiverEmailID>
+  <SenderEmailID>sendersemailid</SenderEmailID>
+  <SenderPassword>senderspassword</SenderPassword>
+  <ReceiverEmailID>receiversemailid</ReceiverEmailID>
 </SmtpSettings>

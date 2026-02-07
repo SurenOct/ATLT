@@ -1,11 +1,8 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using CMATLTLoger;
+using Microsoft.Win32;
 
 namespace CMATLTServiceTrayApp
 {
@@ -15,6 +12,7 @@ namespace CMATLTServiceTrayApp
 
         public static void StartService()
         {
+            LogLibrary.LogUIInfo("Attempting to start service from tray ...");
             using (ServiceController sc = new ServiceController(ServiceName))
             {
                 if (sc.Status == ServiceControllerStatus.Stopped)
@@ -28,11 +26,13 @@ namespace CMATLTServiceTrayApp
                         ServiceControllerStatus.Running,
                         TimeSpan.FromSeconds(60) // increase timeout
                     );
+                    LogLibrary.LogUIInfo("Service started successfully from tray.");
                 }
             }
         }
         public static void SetTrayAppAutoStart(bool enable)
         {
+            LogLibrary.LogUIInfo($"Setting tray app auto-start to {(enable ? "enabled" : "disabled")} ...");
             try
             {
                 string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
@@ -53,6 +53,7 @@ namespace CMATLTServiceTrayApp
         }
         public static void StopService()
         {
+            LogLibrary.LogUIInfo("Attempting to stop service from tray ...");
             using (ServiceController sc = new ServiceController(ServiceName))
             {
                 if (sc.Status == ServiceControllerStatus.Running)
@@ -60,24 +61,20 @@ namespace CMATLTServiceTrayApp
                     sc.Stop();
                 }
 
-                //if (sc.Status == ServiceControllerStatus.StartPending)
-                //{
-                //    sc.WaitForStatus(
-                //        ServiceControllerStatus.Running,
-                //        TimeSpan.FromSeconds(60) // increase timeout
-                //    );
-                //}
+                if (sc.Status == ServiceControllerStatus.StopPending)
+                {
+                    sc.WaitForStatus(
+                        ServiceControllerStatus.Stopped,
+                        TimeSpan.FromSeconds(60) // increase timeout
+                    );
+                    LogLibrary.LogUIInfo("Service stopped successfully from tray.");
+                }
             }
-            //var sc = new ServiceController(ServiceName);
-            //if (sc.Status == ServiceControllerStatus.Running)
-            //{
-            //    sc.Stop();
-            //    sc.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(10));
-            //}
         }
 
         public static ServiceControllerStatus GetStatus()
         {
+            LogLibrary.LogUIInfo("Checking service status from tray ...");
             var sc = new ServiceController(ServiceName);
             return sc.Status;
         }

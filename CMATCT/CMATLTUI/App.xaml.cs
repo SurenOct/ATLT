@@ -1,10 +1,11 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using CMATLTLoger;
+using Microsoft.Win32;
 
 namespace CMATCTUI
 {
@@ -33,9 +34,9 @@ namespace CMATCTUI
         private void RegisterTrayAsync()
         {
 
-     //       MessageBox.Show(
-     //System.Security.Principal.WindowsIdentity.GetCurrent().Name,
-     //"Running As");
+            //       MessageBox.Show(
+            //System.Security.Principal.WindowsIdentity.GetCurrent().Name,
+            //"Running As");
 
             Task.Run(() =>
             {
@@ -66,6 +67,7 @@ namespace CMATCTUI
                 catch (Exception ex)
                 {
                     // log exception (don’t show MessageBox from background thread)
+                    LogLibrary.LogError($"Failed to register tray app: {ex.Message}");
                 }
             });
         }

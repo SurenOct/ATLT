@@ -14,11 +14,13 @@
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Start ATLT Service" Click="StartService_Click"/>
-                    <MenuItem Header="Stop ATLTService" Click="StopService_Click"/>
-                    <MenuItem Header="Service S tatus" Click="StatusService_Click"/>
-                    <MenuItem Header="Open ATLT UI" Click="MenuItem_Click"/>
+                    <MenuItem Header="Stop ATLT Service" Click="StopService_Click"/>
+                    <MenuItem Header="ATLT Service Status" Click="StatusService_Click"/>
                     <Separator/>
-                    <!--<MenuItem Header="Exit" Click="Exit_Click"/>-->
+                    <MenuItem Header="ATLT UI" Click="OpenUI_Click"/>
+                    <MenuItem Header="ATLT Logs" Click="ViewLogs_Click"/>
+                    <Separator/>
+                    <MenuItem Header="Exit Tray" Click="ExitTray_Click"/>
                 </ContextMenu>
             </tb:TaskbarIcon.ContextMenu>
 

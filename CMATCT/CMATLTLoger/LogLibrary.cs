@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CMATLTLoger
 {
@@ -13,7 +9,9 @@ namespace CMATLTLoger
         public static readonly string FolderPath;
         private static readonly string ServiceLogPath;
         private static readonly string ServiceHealthLogPath;
-        //TEst
+        private static readonly string UILogPath;
+
+        //Constructor
         static LogLibrary()
         {
             // 1. Define folder
@@ -27,23 +25,20 @@ namespace CMATLTLoger
             // 3. Define two files in the same folder
             ServiceLogPath = Path.Combine(FolderPath, "service.log");
             ServiceHealthLogPath = Path.Combine(FolderPath, "ServiceHealthLog.txt");
+            UILogPath = Path.Combine(FolderPath, "ui.log");
 
-            // 4. Ensure both files exist
-            if (!File.Exists(ServiceLogPath))
-                using (File.Create(ServiceLogPath)) { }
-
-            if (!File.Exists(ServiceHealthLogPath))
-                using (File.Create(ServiceHealthLogPath)) { }
+            // 4. Ensure all files exist
+            EnsureFileExists(ServiceLogPath);
+            EnsureFileExists(ServiceHealthLogPath);
+            EnsureFileExists(UILogPath);
         }
-        public static string GetLogPath()
+
+        private static void EnsureFileExists(string filePath)
         {
-            string folder = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-                "MyService", "Logs");
-
-            Directory.CreateDirectory(folder);
-            return Path.Combine(folder, "service.log");
+            if (!File.Exists(filePath))
+                using (File.Create(filePath)) { }
         }
+
         public static void LogService(string message)
         {
             lock (_lock)
@@ -60,10 +55,46 @@ namespace CMATLTLoger
             }
         }
 
+        public static void LogUI(string message, string level = "INFO")
+        {
+            lock (_lock)
+            {
+                File.AppendAllText(UILogPath,
+                    $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} [{level}]: {message}{Environment.NewLine}");
+            }
+        }
+
+        public static void LogUIDebug(string message)
+        {
+            LogUI(message, "DEBUG");
+        }
+
+        public static void LogUIInfo(string message)
+        {
+            LogUI(message, "INFO");
+        }
+
+        public static void LogUIWarning(string message)
+        {
+            LogUI(message, "WARNING");
+        }
+
+        public static void LogUIError(string message)
+        {
+            LogUI(message, "ERROR");
+        }
+
+        public static void LogUIError(Exception ex)
+        {
+            LogUI($"{ex.GetType().Name}: {ex.Message}\nStackTrace: {ex.StackTrace}", "ERROR");
+        }
+
         public static void LogError(Exception ex)
         {
             LogError($"{ex.Source?.Trim()}; {ex.Message?.Trim()}");
         }
+
+        // Legacy methods (keep for backward compatibility)
         public static void Log(string message)
         {
             File.AppendAllText(GetLogPath(), $"{DateTime.Now}: {message}\r\n");
@@ -82,6 +113,7 @@ namespace CMATLTLoger
             {
             }
         }
+
         public static void WriteErrorLog(string Message)
         {
             StreamWriter sw = null;
@@ -97,5 +129,14 @@ namespace CMATLTLoger
             }
         }
 
+        public static string GetLogPath()
+        {
+            string folder = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                "MyService", "Logs");
+
+            Directory.CreateDirectory(folder);
+            return Path.Combine(folder, "service.log");
+        }
     }
 }

@@ -16,6 +16,7 @@ using System.Xml.Linq;
 using CMATCTUI.Commands;
 using CMATCTUI.Generic;
 using CMATCTUI.Models;
+using CMATLTLoger;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
@@ -666,6 +667,7 @@ namespace CMATCTUI.ViewModels
                 message.Body = multipart;
 
                 mailClient.Send(message);
+                mailClient.Authenticate(smtpSettings.SenderEmailID, smtpSettings.SenderPassword);
                 mailClient.Disconnect(true);
                 IsConnect = true;
             }
@@ -708,6 +710,7 @@ namespace CMATCTUI.ViewModels
             }
             catch (Exception ex)
             {
+                LogLibrary.LogError("SMTP Connection Error: " + ex.ToString());
                 IsConnect = false;
             }
             return IsConnect;

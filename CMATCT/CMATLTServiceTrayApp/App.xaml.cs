@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using CMATCTUI.ChildWindows;
 using CMATLTLoger;
 using Hardcodet.Wpf.TaskbarNotification;
@@ -37,7 +38,61 @@ namespace CMATLTServiceTrayApp
 
             // RegisterTray();
 
+
         }
+        private void TrayMenu_Click(object sender, RoutedEventArgs e)
+        {
+            string id = null;
+            if (sender is MenuItem item)
+            {
+                id = item.Tag.ToString();
+                switch (id)
+                {
+                    case "StartATLTService":
+                        StartService();
+                        DisableItems(id);
+                        break;
+                    case "StopATLTService":
+                        StopService();
+                        DisableItems(id);
+                        break;
+                    case "ATLTServiceStatus":
+                        CheckStatus();
+                        break;
+                    case "ATLTUI":
+                        OpenUI();
+                        break;
+                    case "ATLTLogs":
+                        ViewLogs();
+                        break;
+                    case "ExitTray":
+                        ExistTray(); // closes the app
+                        break;
+                }
+            }
+
+           
+
+        }
+        private void DisableItems(string mnName)
+        {
+            foreach (var item in _trayIcon.ContextMenu.Items)
+            {
+                string itemName = ((System.Windows.FrameworkElement)item).Name;
+                if (itemName == "StartATLTService" || itemName == "StopATLTService")
+                {
+                    if (mnName == itemName)
+                    {
+                        (item as MenuItem).IsEnabled = false;
+                    }
+                    else
+                    {
+                        (item as MenuItem).IsEnabled = true;
+                    }
+                }
+            }
+        }
+
 
         private void RegisterTray()
         {
@@ -66,7 +121,7 @@ namespace CMATLTServiceTrayApp
             base.OnExit(e);
         }
 
-        private void StartService_Click(object sender, RoutedEventArgs e)
+        private void StartService()
         {
             LogLibrary.LogUIInfo("StartService_Click invoked");
             try
@@ -81,9 +136,9 @@ namespace CMATLTServiceTrayApp
             }
         }
 
-        private void StopService_Click(object sender, RoutedEventArgs e)
+        private void StopService()
         {
-            LogLibrary.LogUIInfo("StopService_Click invoked");
+            LogLibrary.LogUIInfo("StopService invoked");
             try
             {
                 ServiceManager.StopService();
@@ -96,9 +151,9 @@ namespace CMATLTServiceTrayApp
             }
         }
 
-        private void StatusService_Click(object sender, RoutedEventArgs e)
+        private void CheckStatus()
         {
-            LogLibrary.LogUIInfo("StatusService_Click invoked");
+            LogLibrary.LogUIInfo("StatusService invoked");
             try
             {
                 var status = ServiceManager.GetStatus();
@@ -111,7 +166,7 @@ namespace CMATLTServiceTrayApp
             }
         }
 
-        private void OpenUI_Click(object sender, RoutedEventArgs e)
+        private void OpenUI()
         {
             LogLibrary.LogUIInfo("OpenUI_Click invoked");
             try
@@ -142,7 +197,7 @@ namespace CMATLTServiceTrayApp
             }
         }
 
-        private void ViewLogs_Click(object sender, RoutedEventArgs e)
+        private void ViewLogs()
         {
             LogLibrary.LogUIInfo("ViewLogs_Click invoked");
             try
@@ -157,7 +212,7 @@ namespace CMATLTServiceTrayApp
             }
         }
 
-        private void ExitTray_Click(object sender, RoutedEventArgs e)
+        private void ExistTray()
         {
             LogLibrary.LogUIInfo("ExitTray_Click invoked");
             Shutdown();

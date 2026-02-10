@@ -52,7 +52,7 @@ namespace CMATLTServiceTrayApp
                         StartService();
                         DisableItems(id);
                         break;
-                    case "StopATLTServic":
+                    case "StopATLTService":
                         StopService();
                         DisableItems(id);
                         break;
@@ -79,7 +79,7 @@ namespace CMATLTServiceTrayApp
             foreach (var item in _trayIcon.ContextMenu.Items)
             {
                 string itemName = ((System.Windows.FrameworkElement)item).Name;
-                if (itemName == "StartATLTService" || itemName == "StopATLTServic")
+                if (itemName == "StartATLTService" || itemName == "StopATLTService")
                 {
                     if (mnName == itemName)
                     {

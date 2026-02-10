@@ -14,7 +14,7 @@
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
                     <MenuItem x:Name="StartATLTService"  Tag="StartATLTService" Header="Start ATLT Service" Click="TrayMenu_Click"/>
-                    <MenuItem x:Name="StopATLTServic"  Tag="StopATLTServic" Header="Stop ATLT Service" Click="TrayMenu_Click"/>
+                    <MenuItem x:Name="StopATLTService"  Tag="StopATLTService" Header="Stop ATLT Service" Click="TrayMenu_Click"/>
                     <MenuItem  x:Name="ATLTServiceStatus"  Tag="ATLTServiceStatus" Header="ATLT Service Status" Click="TrayMenu_Click"/>
                     <Separator/>
                     <MenuItem  x:Name="ATLTUI" Tag="ATLTUI" Header="ATLT UI" Click="TrayMenu_Click"/>

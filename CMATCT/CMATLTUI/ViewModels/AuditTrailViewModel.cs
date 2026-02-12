@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.ServiceProcess;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -503,36 +504,88 @@ namespace CMATCTUI.ViewModels
 
         private void CreateTicket()
         {
-            try
+            if (CMServicesStatus())
             {
-                LogLibrary.LogUIInfo($"Creating ticket for {SelectedAuditLogs.Count} audit logs");
-
-                var childWindow = new EmailFormat();
-                childWindow.ViewModel = new EmailViewModel(new ObservableCollection<AuditLogItem>(SelectedAuditLogs));
-                childWindow.Show();
-
-                childWindow.Closed += (s, e) =>
+                try
                 {
-                    if (childWindow.ViewModel.isMailSent)
+
+                    LogLibrary.LogUIInfo($"Creating ticket for {SelectedAuditLogs.Count} audit logs");
+
+                    var childWindow = new EmailFormat();
+                    childWindow.ViewModel = new EmailViewModel(new ObservableCollection<AuditLogItem>(SelectedAuditLogs));
+                    childWindow.Show();
+
+                    childWindow.Closed += (s, e) =>
                     {
-                        LogLibrary.LogUIInfo("Email sent successfully, marking logs as completed");
-                        CreatedCompletedAuditLogs(SelectedAuditLogs);
+                        if (childWindow.ViewModel.isMailSent)
+                        {
+                            LogLibrary.LogUIInfo("Email sent successfully, marking logs as completed");
+                            CreatedCompletedAuditLogs(SelectedAuditLogs);
 
-                        // Refresh the ErrorsView to reflect any changes made in the child window
-                        // ErrorsView.Refresh();
-                    }
-                };
+                            // Refresh the ErrorsView to reflect any changes made in the child window
+                            // ErrorsView.Refresh();
+                        }
+                    };
+                }
+                catch (Exception ex)
+                {
+                    LogLibrary.LogUIError($"Error creating ticket: {ex.Message}");
+                    LogLibrary.LogUIError(ex);
+                    MessageBox.Show($"Error creating ticket: {ex.Message}",
+                                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
             }
-            catch (Exception ex)
+            else
             {
-                LogLibrary.LogUIError($"Error creating ticket: {ex.Message}");
-                LogLibrary.LogUIError(ex);
-                MessageBox.Show($"Error creating ticket: {ex.Message}",
-                                "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Chromeleon Services are not running. Please start the services and try again.", "Services Not Running", MessageBoxButton.OK, MessageBoxImage.Warning); LogLibrary.LogUIWarning("Attempted to create ticket while Chromeleon services are not running");
+            }
+        }
+        /// <summary>
+        /// CM Services Status Check
+        /// </summary>
+        /// <returns></returns>
+        private bool CMServicesStatus()
+        {
+            string[] serviceNames = {
+        "ChromeleonLicenseServer",
+        "ChromeleonUserServer",
+        "ChromeleonDiscoveryServer",
+        "ChromeleonDiscoveryLocalCache",
+        "ChromeleonDataVaultServer",
+        "ChromeleonRawFileServerOutOfProcx86",
+        "ChromeleonDataTransferService",
+        "ChromeleonSchedulerServer",
+        "ChromeleonUpdaterService",
+        "ChromeleonCacheService",
+        "ChromeleonApplicationProcessingServer",
+        "ChromeleonDataProcessingServer",
+        "ChromeleonHardwareMonitoringService",
+        "ChromeleonInstrumentServer"
+    };
+
+            foreach (string serviceName in serviceNames)
+            {
+                try
+                {
+                    using (ServiceController sc = new ServiceController(serviceName))
+                    {
+                        if (sc.Status != ServiceControllerStatus.Running)
+                        {
+                            return false;   // If any service is not running
+                        }
+                    }
+                }
+                catch (InvalidOperationException)
+                {
+                    // Service not found
+                    return false;
+                }
             }
 
-
+            return true; // All services are running
         }
+
 
         /// <summary>
         /// Created Completed Audit Logs

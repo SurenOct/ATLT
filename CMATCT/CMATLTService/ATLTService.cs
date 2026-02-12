@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
@@ -20,6 +21,65 @@ using Thermo.Chromeleon.Sdk.Interfaces.Instruments.Collections;
 
 namespace CMATLTService
 {
+
+#if TROUBLESHOOTING
+    public partial class TroubleShootingService : ATLTService
+    {
+        private ManualResetEventSlim _debugStopEvent;
+
+        public void StartForDebugging()
+        {
+            try
+            {
+                _debugStopEvent = new ManualResetEventSlim(false);
+                //_cmSdkScope = new CmSdkScope();
+                using (new CmSdkScope())
+                {
+                    CmSdk.Logon.DoLogon();
+                    if (CmSdk.Logon.IsLoggedOn)
+                    {
+                        TriggerActionFlow();
+                        Task.Run(() => ListenForTrigger());
+                        LogLibrary.Log("Service started. Listening for Trigger to start collecting logs.");
+                        Console.WriteLine("Service started successfully in debug mode.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed to log on to CmSdk.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogLibrary.LogError("Service start error: " + ex.Message);
+                Console.WriteLine($"Error starting service: {ex.Message}");
+            }
+        }
+
+        public void WaitForShutdown()
+        {
+            _debugStopEvent?.Wait();
+        }
+
+        public void StopForDebugging()
+        {
+            Console.WriteLine("Stopping service...");
+
+            _timer?.Dispose();
+
+            // Wait for semaphore
+            _semaphore?.Wait(TimeSpan.FromSeconds(5));
+            _semaphore?.Dispose();
+
+            //_cmSdkScope?.Dispose();
+
+            _debugStopEvent?.Set();
+            _debugStopEvent?.Dispose();
+
+            Console.WriteLine("Service stopped.");
+        }
+    }
+#endif
     public partial class ATLTService : ServiceBase
     {
         int schedularTime = Convert.ToInt32(ConfigurationManager.AppSettings["ThreadTime"]);
@@ -32,24 +92,43 @@ namespace CMATLTService
         //string msiPath;
         //string installLogDirectory;
         //string installLogPath;
+#if TROUBLESHOOTING
+        protected Timer _timer;
+#else
         private Timer _timer;
+
+#endif
+#if TROUBLESHOOTING
+
+        protected readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+
+#else
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+#endif
+
         public CmSdkScope cmSdkScope { get; private set; }
         public ATLTService()
         {
+
+            //LogLibrary.LogError("ATLTService Start intialise: ");
             InitializeComponent();
+            //LogLibrary.LogError("After ATLTService Start intialise: ");
         }
 
         protected override void OnStart(string[] args)
         {
+
+            //LogLibrary.LogError("OnStart: ");
             Thread.Sleep(TimeSpan.FromMinutes(1));
             try
             {
                 using (new CmSdkScope())
                 {
+                    // LogLibrary.LogError("CmSdkScope: ");
                     CmSdk.Logon.DoLogon();
                     if (CmSdk.Logon.IsLoggedOn)
                     {
+                        //  LogLibrary.LogError("IsLoggedOn: ");
                         TriggerActionFlow();
                         Task.Run(() => ListenForTrigger());
                     }
@@ -59,10 +138,10 @@ namespace CMATLTService
             catch (Exception ex)
             {
                 var asm = typeof(CmSdkScope).Assembly;
-                File.WriteAllText(
-                    @"C:\TestService1\GAC_CHECK.txt",
-                    $"FromGAC={asm.GlobalAssemblyCache}, Location='{asm.Location}'"
-                );
+                //File.WriteAllText(
+                //    @"C:\TestService1\GAC_CHECK.txt",
+                //    $"FromGAC={asm.GlobalAssemblyCache}, Location='{asm.Location}'"
+                //);
                 LogLibrary.LogError("CmSdkScope GAC Name:" + asm.GlobalAssemblyCache.ToString() + ", Location=" + asm.Location);
                 LogLibrary.LogError("Service start error: " + ex.Message);
             }
@@ -76,7 +155,11 @@ namespace CMATLTService
 
         }
 
+#if TROUBLESHOOTING
+        public void TriggerActionFlow()
+#else
         private void TriggerActionFlow()
+#endif
         {
             LogLibrary.LogService("log Created : " + DateTime.Now.ToString());
             _timer = new Timer(
@@ -447,7 +530,11 @@ namespace CMATLTService
             Task.Run(() => ExecuteTaskAsync());
         }
 
+#if TROUBLESHOOTING
+        public void ListenForTrigger()
+#else
         private void ListenForTrigger()
+#endif
         {
             //var server = new System.IO.Pipes.NamedPipeServerStream("CMATLTService", System.IO.Pipes.PipeDirection.In);
 

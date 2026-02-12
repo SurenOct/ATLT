@@ -1,13 +1,14 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using System.Windows;
-using System.Windows.Controls;
-using CMATCTUI.ChildWindows;
+﻿using CMATCTUI.ChildWindows;
 using CMATLTLoger;
 using Hardcodet.Wpf.TaskbarNotification;
 using Microsoft.Win32;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
+using System.Threading;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace CMATLTServiceTrayApp
 {
@@ -16,10 +17,19 @@ namespace CMATLTServiceTrayApp
     /// </summary>
     public partial class App : System.Windows.Application
     {
+        private static Mutex _mutex;
         private TaskbarIcon _trayIcon;
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            bool isNewInstance;
+            _mutex = new Mutex(true, "ATLTTRAY_APP_UNIQUE_KEY", out isNewInstance);
+            if (!isNewInstance)
+            {
+                MessageBox.Show("Application Tray is already running.");
+                Shutdown();
+                return;
+            }
 
             base.OnStartup(e);
             //MessageBox.Show("hit2");

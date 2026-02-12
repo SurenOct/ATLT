@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <SmtpSettings>
   <Server>domainserver</Server>
-  <Port>portnumber</Port>
+  <Port>0</Port>
   <Encryption>NONE</Encryption>
   <SenderEmailID>sendersemailid</SenderEmailID>
   <SenderPassword>senderspassword</SenderPassword>

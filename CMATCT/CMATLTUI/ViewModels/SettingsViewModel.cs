@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -75,6 +76,12 @@ namespace CMATCTUI.ViewModels
         /// <exception cref="NotImplementedException"></exception>
         private void ServiceTrigger()
         {
+            if (!CMServicesStatusList())
+            {
+                MessageBox.Show("One or more CM services are not running.");
+                return;
+            }
+
             //var client = new NamedPipeClientStream(".", "CMATLTService", PipeDirection.Out);
             //client.Connect(2000); // Wait max 2 sec
 
@@ -138,7 +145,50 @@ namespace CMATCTUI.ViewModels
                 }
             }
         }
+        /// <summary>
+        /// CM Services Status Check
+        /// </summary>
+        /// <returns></returns>
+        private bool CMServicesStatusList()
+        {
+            string[] serviceNames = {
+        "ChromeleonLicenseServer",
+        "ChromeleonUserServer",
+        "ChromeleonDiscoveryServer",
+        "ChromeleonDiscoveryLocalCache",
+        "ChromeleonDataVaultServer",
+        "ChromeleonRawFileServerOutOfProcx86",
+        "ChromeleonDataTransferService",
+        "ChromeleonSchedulerServer",
+        "ChromeleonUpdaterService",
+        "ChromeleonCacheService",
+        "ChromeleonApplicationProcessingServer",
+        "ChromeleonDataProcessingServer",
+        "ChromeleonHardwareMonitoringService",
+        "ChromeleonInstrumentServer"
+    };
 
+            foreach (string serviceName in serviceNames)
+            {
+                try
+                {
+                    using (ServiceController sc = new ServiceController(serviceName))
+                    {
+                        if (sc.Status != ServiceControllerStatus.Running)
+                        {
+                            return false;   // If any service is not running
+                        }
+                    }
+                }
+                catch (InvalidOperationException)
+                {
+                    // Service not found
+                    return false;
+                }
+            }
+
+            return true; // All services are running
+        }
         /// <summary>
         /// Service Time Updated
         /// </summary>

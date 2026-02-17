@@ -119,7 +119,7 @@ namespace CMATLTService
         //    }
         //    catch (Exception ex)
         //    {
-        //        File.WriteAllText(@"C:\Temp\EXCEPTION.txt", "Installation " + ex.ToString());
+        //        LogLibrary.LogError("Installation error: " + ex.Message);
         //    }
         //}
 
@@ -136,7 +136,6 @@ namespace CMATLTService
             //{
             //    //Debugger.Launch();   // 👈 REQUIRED
             //    //Debugger.Break();
-            //    Directory.CreateDirectory(@"C:\TestService1");
 
             //    try
             //    {
@@ -163,7 +162,7 @@ namespace CMATLTService
             //    }
             //    catch (Exception ex)
             //    {
-            //        File.WriteAllText(@"C:\TestService1\EXCEPTION.txt", "Installation " + ex.ToString());
+            //        LogLibrary.LogError("Uninstallation error: " + ex.Message);
             //    }
             //}
 
@@ -178,7 +177,7 @@ namespace CMATLTService
                 }
                 catch (Exception ex)
                 {
-                   
+
                 }
             }
 

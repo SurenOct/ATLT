@@ -23,9 +23,9 @@ namespace CMATLTLoger
             Directory.CreateDirectory(FolderPath);
 
             // 3. Define two files in the same folder
-            ServiceLogPath = Path.Combine(FolderPath, "service.log");
-            ServiceHealthLogPath = Path.Combine(FolderPath, "ServiceHealthLog.txt");
-            UILogPath = Path.Combine(FolderPath, "ui.log");
+            ServiceLogPath = Path.Combine(FolderPath, "Service.log");
+            ServiceHealthLogPath = Path.Combine(FolderPath, "ServiceHealth.log");
+            UILogPath = Path.Combine(FolderPath, "UI.log");
 
             // 4. Ensure all files exist
             EnsureFileExists(ServiceLogPath);

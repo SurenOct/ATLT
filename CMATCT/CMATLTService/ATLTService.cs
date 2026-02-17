@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
@@ -128,9 +127,11 @@ namespace CMATLTService
                     CmSdk.Logon.DoLogon();
                     if (CmSdk.Logon.IsLoggedOn)
                     {
-                        //  LogLibrary.LogError("IsLoggedOn: ");
+                        LogLibrary.LogUIInfo("CM ATLT Service Logged On Success ");
                         TriggerActionFlow();
+                        LogLibrary.LogUIInfo("CM ATLT Service Started Task for fetching log ");
                         Task.Run(() => ListenForTrigger());
+                        LogLibrary.LogUIInfo("CM ATLT Service Started to listen for UI Commands ");
                     }
                 }
 
@@ -138,10 +139,6 @@ namespace CMATLTService
             catch (Exception ex)
             {
                 var asm = typeof(CmSdkScope).Assembly;
-                //File.WriteAllText(
-                //    @"C:\TestService1\GAC_CHECK.txt",
-                //    $"FromGAC={asm.GlobalAssemblyCache}, Location='{asm.Location}'"
-                //);
                 LogLibrary.LogError("CmSdkScope GAC Name:" + asm.GlobalAssemblyCache.ToString() + ", Location=" + asm.Location);
                 LogLibrary.LogError("Service start error: " + ex.Message);
             }
@@ -196,7 +193,7 @@ namespace CMATLTService
                 if (CmSdk.Logon.IsLoggedOn)
                 {
 
-                    LogLibrary.LogService("================Service started==================" + DateTime.Now);
+                    LogLibrary.LogService("CM ATLT Service trying to fetch CM Data..." + DateTime.Now);
                     // LogLibrary.WriteErrorLog("log writing : " + DateTime.Now.ToString());
 
                     try

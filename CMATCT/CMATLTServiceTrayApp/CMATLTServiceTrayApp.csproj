@@ -139,6 +139,10 @@
       <Project>{5aebff16-41b7-4559-8e4c-e88cf1df7420}</Project>
       <Name>CMATLTLoger</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CMATLTUI\CMATLTUI.csproj">
+      <Project>{5F975D82-FEB0-4C52-9A09-FBBA7A2F19A4}</Project>
+      <Name>CMATLTUI</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

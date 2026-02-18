@@ -211,7 +211,7 @@ namespace CMATCTUI.ViewModels
         {
             try
             {
-                LogLibrary.LogUIInfo("AuditTrailViewModel initialization started");
+                //LogLibrary.LogUIInfo("AuditTrailViewModel initialization started");
 
                 SelectedAuditLogs = new ObservableCollection<AuditLogItem>();
                 //InstrumentsDetails = new ObservableCollection<string>();
@@ -222,13 +222,13 @@ namespace CMATCTUI.ViewModels
                     Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
                     "CMATLTData", "Data");
 
-                LogLibrary.LogUIDebug($"Destination folder: {destinationFolder}");
+                //LogLibrary.LogUIDebug($"Destination folder: {destinationFolder}");
 
                 // ✅ CHECK if directory exists first
                 if (!Directory.Exists(destinationFolder))
                 {
                     IsFilterStackEnabled = false;
-                    LogLibrary.LogUIWarning("Data folder does not exist. No audit trails available.");
+                   // LogLibrary.LogUIWarning("Data folder does not exist. No audit trails available.");
                     MessageBox.Show("Data folder does not exist. No audit trails available.",
                                     "No Data", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
@@ -240,12 +240,12 @@ namespace CMATCTUI.ViewModels
                 this.FromDate = DateTime.Now.Date;
                 MinDate = DateTime.Today.AddDays(-30).Date;
 
-                LogLibrary.LogUIInfo($"Found {filesWithDate.Count} files for today");
+               // LogLibrary.LogUIInfo($"Found {filesWithDate.Count} files for today");
 
                 if (filesWithDate.Count <= 0)
                 {
                     IsFilterStackEnabled = false;
-                    LogLibrary.LogUIWarning("No data files available for today");
+                    //LogLibrary.LogUIWarning("No data files available for today");
                     MessageBox.Show("Data is Not Available in Database",
                                     "No Data", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
@@ -266,12 +266,12 @@ namespace CMATCTUI.ViewModels
 
                 // InstrumentsDetails.Add("--ALL--");
                 InstrumentsDetails = new ObservableCollection<string>(InstrumentsDetails.Distinct());
-                LogLibrary.LogUIInfo($"Loaded {InstrumentsDetails.Count} instruments");
+               // LogLibrary.LogUIInfo($"Loaded {InstrumentsDetails.Count} instruments");
 
                 if (InstrumentsDetails.Count > 0)
                 {
                     SelectedInstrument = InstrumentsDetails[0];
-                    LogLibrary.LogUIDebug($"Selected instrument: {SelectedInstrument}");
+                   // LogLibrary.LogUIDebug($"Selected instrument: {SelectedInstrument}");
                 }
 
                 /* old commented code below , need to remove after testing
@@ -309,11 +309,11 @@ namespace CMATCTUI.ViewModels
                   
                  */
 
-                LogLibrary.LogUIInfo("AuditTrailViewModel initialized successfully");
+                //LogLibrary.LogUIInfo("AuditTrailViewModel initialized successfully");
             }
             catch (Exception ex)
             {
-                LogLibrary.LogUIError(ex);
+              //  LogLibrary.LogUIError(ex);
                 MessageBox.Show($"Error initializing Audit Trail: {ex.Message}",
                                 "Initialization Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -323,13 +323,13 @@ namespace CMATCTUI.ViewModels
         {
             if (instrumentName == null)
             {
-                LogLibrary.LogUIWarning("OnInstrumentChanged called with null instrument name");
+              //  LogLibrary.LogUIWarning("OnInstrumentChanged called with null instrument name");
                 return;
             }
 
             try
             {
-                LogLibrary.LogUIDebug($"Instrument changed to: {instrumentName}");
+                //LogLibrary.LogUIDebug($"Instrument changed to: {instrumentName}");
 
                 if (this.filesWithDate != null && this.filesWithDate.Count() <= 0)
                 {
@@ -343,13 +343,13 @@ namespace CMATCTUI.ViewModels
 
                 if (instrumentsDetails.Count > 0)
                 {
-                    LogLibrary.LogUIInfo($"Loading data for instrument: {instrumentName}");
+                   // LogLibrary.LogUIInfo($"Loading data for instrument: {instrumentName}");
                     DynamicJsonFileLoading(instrumentsDetails.First(), instrumentName);
                     ReadTicketsRaisedForLogs();
                 }
                 else
                 {
-                    LogLibrary.LogUIWarning($"No data found for instrument: {instrumentName}");
+                    //LogLibrary.LogUIWarning($"No data found for instrument: {instrumentName}");
                     AuditErrors = new ObservableCollection<AuditLogItem>();
                 }
 
@@ -373,8 +373,8 @@ namespace CMATCTUI.ViewModels
             }
             catch (Exception ex)
             {
-                LogLibrary.LogUIError($"Error in OnInstrumentChanged: {ex.Message}");
-                LogLibrary.LogUIError(ex);
+                //LogLibrary.LogUIError($"Error in OnInstrumentChanged: {ex.Message}");
+                //LogLibrary.LogUIError(ex);
             }
         }
 
@@ -383,14 +383,14 @@ namespace CMATCTUI.ViewModels
         {
             try
             {
-                LogLibrary.LogUIDebug($"Loading JSON file: {instrumentsFilePath}");
+                //LogLibrary.LogUIDebug($"Loading JSON file: {instrumentsFilePath}");
 
                 SelectedAuditLogs = new ObservableCollection<AuditLogItem>();
                 AuditErrors = new ObservableCollection<AuditLogItem>();
                 LoadJsonData(instrumentsFilePath);
                 ErrorsView = CollectionViewSource.GetDefaultView(AuditErrors);
 
-                LogLibrary.LogUIInfo($"Loaded {AuditErrors.Count} audit records for {selectedInstrument}");
+               // LogLibrary.LogUIInfo($"Loaded {AuditErrors.Count} audit records for {selectedInstrument}");
 
                 /* old commented code below , need to remove after testing
                  
@@ -407,8 +407,8 @@ namespace CMATCTUI.ViewModels
             }
             catch (Exception ex)
             {
-                LogLibrary.LogUIError($"Error in DynamicJsonFileLoading: {ex.Message}");
-                LogLibrary.LogUIError(ex);
+                //LogLibrary.LogUIError($"Error in DynamicJsonFileLoading: {ex.Message}");
+                //LogLibrary.LogUIError(ex);
                 MessageBox.Show($"Error loading audit data: {ex.Message}",
                                 "Load Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -420,20 +420,20 @@ namespace CMATCTUI.ViewModels
             {
                 if (!File.Exists(filePath))
                 {
-                    LogLibrary.LogUIError($"File not found: {filePath}");
+                   // LogLibrary.LogUIError($"File not found: {filePath}");
                     MessageBox.Show($"File not found: {filePath}",
                                     "File Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
-                LogLibrary.LogUIDebug($"Reading JSON from: {filePath}");
+               // LogLibrary.LogUIDebug($"Reading JSON from: {filePath}");
                 var jsonString = System.IO.File.ReadAllText(filePath);
 
                 AuditErrors = JsonConvert.DeserializeObject<ObservableCollection<AuditLogItem>>(jsonString);
 
                 if (AuditErrors == null || AuditErrors.Count == 0)
                 {
-                    LogLibrary.LogUIWarning($"No data found in file: {filePath}");
+                  //  LogLibrary.LogUIWarning($"No data found in file: {filePath}");
                     return;
                 }
 
@@ -442,7 +442,7 @@ namespace CMATCTUI.ViewModels
                 a.Category == "Error" ||
                 a.Category == "abort").ToList();
 
-                LogLibrary.LogUIInfo($"Filtered {items.Count} warning/error records from {AuditErrors.Count} total");
+               // LogLibrary.LogUIInfo($"Filtered {items.Count} warning/error records from {AuditErrors.Count} total");
 
                 AuditErrors = new ObservableCollection<AuditLogItem>(items);
 
@@ -456,21 +456,21 @@ namespace CMATCTUI.ViewModels
                     }
                     else
                     {
-                        LogLibrary.LogUIWarning($"Failed to parse time: {db.Time}");
+                 //       LogLibrary.LogUIWarning($"Failed to parse time: {db.Time}");
                     }
                 }
             }
             catch (JsonException jex)
             {
-                LogLibrary.LogUIError($"JSON parsing error in {filePath}: {jex.Message}");
+                //LogLibrary.LogUIError($"JSON parsing error in {filePath}: {jex.Message}");
                 MessageBox.Show($"Invalid JSON in file: {filePath}\n{jex.Message}",
                                 "JSON Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 AuditErrors = new ObservableCollection<AuditLogItem>();
             }
             catch (Exception ex)
             {
-                LogLibrary.LogUIError($"Error loading JSON data: {ex.Message}");
-                LogLibrary.LogUIError(ex);
+                //LogLibrary.LogUIError($"Error loading JSON data: {ex.Message}");
+                //LogLibrary.LogUIError(ex);
                 MessageBox.Show($"Error loading data: {ex.Message}",
                                 "Load Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 AuditErrors = new ObservableCollection<AuditLogItem>();
@@ -509,7 +509,7 @@ namespace CMATCTUI.ViewModels
                 try
                 {
 
-                    LogLibrary.LogUIInfo($"Creating ticket for {SelectedAuditLogs.Count} audit logs");
+                    //LogLibrary.LogUIInfo($"Creating ticket for {SelectedAuditLogs.Count} audit logs");
 
                     var childWindow = new EmailFormat();
                     childWindow.ViewModel = new EmailViewModel(new ObservableCollection<AuditLogItem>(SelectedAuditLogs));
@@ -519,7 +519,7 @@ namespace CMATCTUI.ViewModels
                     {
                         if (childWindow.ViewModel.isMailSent)
                         {
-                            LogLibrary.LogUIInfo("Email sent successfully, marking logs as completed");
+                           // LogLibrary.LogUIInfo("Email sent successfully, marking logs as completed");
                             CreatedCompletedAuditLogs(SelectedAuditLogs);
 
                             // Refresh the ErrorsView to reflect any changes made in the child window
@@ -529,8 +529,8 @@ namespace CMATCTUI.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    LogLibrary.LogUIError($"Error creating ticket: {ex.Message}");
-                    LogLibrary.LogUIError(ex);
+                    //LogLibrary.LogUIError($"Error creating ticket: {ex.Message}");
+                    //LogLibrary.LogUIError(ex);
                     MessageBox.Show($"Error creating ticket: {ex.Message}",
                                     "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
@@ -538,7 +538,8 @@ namespace CMATCTUI.ViewModels
             }
             else
             {
-                MessageBox.Show("Chromeleon Services are not running. Please start the services and try again.", "Services Not Running", MessageBoxButton.OK, MessageBoxImage.Warning); LogLibrary.LogUIWarning("Attempted to create ticket while Chromeleon services are not running");
+                MessageBox.Show("Chromeleon Services are not running. Please start the services and try again.", "Services Not Running", MessageBoxButton.OK, MessageBoxImage.Warning); 
+                //LogLibrary.LogUIWarning("Attempted to create ticket while Chromeleon services are not running");
             }
         }
         /// <summary>
@@ -596,7 +597,7 @@ namespace CMATCTUI.ViewModels
         {
             try
             {
-                LogLibrary.LogUIDebug("Marking selected audit logs as completed");
+               // LogLibrary.LogUIDebug("Marking selected audit logs as completed");
 
                 foreach (var log in selectedAuditLogs)
                 {
@@ -612,12 +613,12 @@ namespace CMATCTUI.ViewModels
                 }
 
                 WriteToTicketsRaisedForLogs(selectedAuditLogs);
-                LogLibrary.LogUIInfo($"Marked {selectedAuditLogs.Count} logs as completed");
+               // LogLibrary.LogUIInfo($"Marked {selectedAuditLogs.Count} logs as completed");
             }
             catch (Exception ex)
             {
-                LogLibrary.LogUIError($"Error marking logs as completed: {ex.Message}");
-                LogLibrary.LogUIError(ex);
+                //LogLibrary.LogUIError($"Error marking logs as completed: {ex.Message}");
+                //LogLibrary.LogUIError(ex);
             }
         }
 
@@ -630,7 +631,7 @@ namespace CMATCTUI.ViewModels
         {
             try
             {
-                LogLibrary.LogUIDebug("Writing completed tickets to file");
+                //LogLibrary.LogUIDebug("Writing completed tickets to file");
 
                 TicketsRaisedForLogs(selectedAuditLogs);
                 ReadTicketsRaisedForLogs();
@@ -638,8 +639,8 @@ namespace CMATCTUI.ViewModels
             }
             catch (Exception ex)
             {
-                LogLibrary.LogUIError($"Error writing tickets: {ex.Message}");
-                LogLibrary.LogUIError(ex);
+                //LogLibrary.LogUIError($"Error writing tickets: {ex.Message}");
+                //LogLibrary.LogUIError(ex);
             }
 
         }
@@ -651,7 +652,7 @@ namespace CMATCTUI.ViewModels
         {
             try
             {
-                LogLibrary.LogUIDebug("Reading completed tickets from file");
+               // LogLibrary.LogUIDebug("Reading completed tickets from file");
 
                 AuditCompletedErrors = new ObservableCollection<AuditLogItem>();
 
@@ -661,7 +662,7 @@ namespace CMATCTUI.ViewModels
 
                 if (!Directory.Exists(destinationFolder))
                 {
-                    LogLibrary.LogUIWarning("Completed audit logs folder does not exist");
+                   // LogLibrary.LogUIWarning("Completed audit logs folder does not exist");
                     return;
                 }
 
@@ -676,7 +677,7 @@ namespace CMATCTUI.ViewModels
                     })
                     .ToList();
 
-                LogLibrary.LogUIInfo($"Found {filesWithDate.Count} completed ticket files for today");
+                //LogLibrary.LogUIInfo($"Found {filesWithDate.Count} completed ticket files for today");
 
                 if (filesWithDate.Count() > 0)
                 {
@@ -691,14 +692,14 @@ namespace CMATCTUI.ViewModels
                             List<List<AuditLogItem>> nestedList = JsonConvert.DeserializeObject<List<List<AuditLogItem>>>(json);
                             if (nestedList == null)
                             {
-                                LogLibrary.LogUIWarning($"No data found in completed ticket file: {file.FullPath}");
+                              //  LogLibrary.LogUIWarning($"No data found in completed ticket file: {file.FullPath}");
                                 continue;
                             }
                             // Flatten to a single list if needed
                             List<AuditLogItem> flatList = nestedList.SelectMany(x => x).ToList();
                             if (flatList == null)
                             {
-                                LogLibrary.LogUIWarning($"No data found after flattening completed ticket file: {file.FullPath}");
+                               // LogLibrary.LogUIWarning($"No data found after flattening completed ticket file: {file.FullPath}");
                                 continue;
                             }
 
@@ -721,15 +722,15 @@ namespace CMATCTUI.ViewModels
                                 }
                             }
 
-                            LogLibrary.LogUIInfo($"Loaded {flatList.Count} completed tickets for {SelectedInstrument}");
+                            //LogLibrary.LogUIInfo($"Loaded {flatList.Count} completed tickets for {SelectedInstrument}");
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                LogLibrary.LogUIError($"Error reading completed tickets: {ex.Message}");
-                LogLibrary.LogUIError(ex);
+                //LogLibrary.LogUIError($"Error reading completed tickets: {ex.Message}");
+                //LogLibrary.LogUIError(ex);
             }
 
         }
@@ -743,7 +744,7 @@ namespace CMATCTUI.ViewModels
         {
             try
             {
-                LogLibrary.LogUIDebug("Preparing completed tickets for writing to file");
+               // LogLibrary.LogUIDebug("Preparing completed tickets for writing to file");
 
                 var completedItems = completedAuditLogs as ObservableCollection<AuditLogItem>;
 
@@ -859,12 +860,12 @@ namespace CMATCTUI.ViewModels
                 //}
                 // old commented code above , need to remove after testing
                 */
-                LogLibrary.LogUIInfo($"Successfully wrote {completedItems.Count} completed tickets to file: {backupFile}");
+              //  LogLibrary.LogUIInfo($"Successfully wrote {completedItems.Count} completed tickets to file: {backupFile}");
             }
             catch (Exception ex)
             {
-                LogLibrary.LogUIError($"Error writing completed tickets: {ex.Message}");
-                LogLibrary.LogUIError(ex);
+                //LogLibrary.LogUIError($"Error writing completed tickets: {ex.Message}");
+                //LogLibrary.LogUIError(ex);
                 MessageBox.Show($"Error writing completed tickets: {ex.Message}",
                                 "Write Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
@@ -937,12 +938,12 @@ namespace CMATCTUI.ViewModels
                                 vm.IsButtonEnabled = false;
                             }
 
-                            LogLibrary.LogUIDebug($"Selection changed: {grid.SelectedItems.Count} items selected, button enabled: {vm.IsButtonEnabled}");
+                            //LogLibrary.LogUIDebug($"Selection changed: {grid.SelectedItems.Count} items selected, button enabled: {vm.IsButtonEnabled}");
                         }
                     }
                     catch (Exception ex)
                     {
-                        LogLibrary.LogUIError($"Error in SelectionChanged event: {ex.Message}");
+                        //LogLibrary.LogUIError($"Error in SelectionChanged event: {ex.Message}");
                     }
                 };
             }

@@ -13,6 +13,8 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CMATLTSetup", "CMATLTSetup\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMATLTServiceTrayApp", "CMATLTServiceTrayApp\CMATLTServiceTrayApp.csproj", "{24D850A9-7F81-46FE-9152-1081ED6DE347}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CMATLTServiceTrayAppLaunch", "CMATLTServiceTrayAppLaunch\CMATLTServiceTrayAppLaunch.csproj", "{6EB00A76-2711-49A0-8231-A1DBE100450F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,14 @@ Global
 		{24D850A9-7F81-46FE-9152-1081ED6DE347}.Release|Any CPU.Build.0 = Release|Any CPU
 		{24D850A9-7F81-46FE-9152-1081ED6DE347}.Release|x86.ActiveCfg = Release|x86
 		{24D850A9-7F81-46FE-9152-1081ED6DE347}.Release|x86.Build.0 = Release|x86
+		{6EB00A76-2711-49A0-8231-A1DBE100450F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EB00A76-2711-49A0-8231-A1DBE100450F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EB00A76-2711-49A0-8231-A1DBE100450F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6EB00A76-2711-49A0-8231-A1DBE100450F}.Debug|x86.Build.0 = Debug|Any CPU
+		{6EB00A76-2711-49A0-8231-A1DBE100450F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EB00A76-2711-49A0-8231-A1DBE100450F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EB00A76-2711-49A0-8231-A1DBE100450F}.Release|x86.ActiveCfg = Release|Any CPU
+		{6EB00A76-2711-49A0-8231-A1DBE100450F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

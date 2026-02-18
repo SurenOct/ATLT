@@ -55,39 +55,39 @@ namespace CMATLTLoger
             }
         }
 
-        public static void LogUI(string message, string level = "INFO")
-        {
-            lock (_lock)
-            {
-                File.AppendAllText(UILogPath,
-                    $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} [{level}]: {message}{Environment.NewLine}");
-            }
-        }
+        //public static void LogUI(string message, string level = "INFO")
+        //{
+        //    lock (_lock)
+        //    {
+        //        File.AppendAllText(UILogPath,
+        //            $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} [{level}]: {message}{Environment.NewLine}");
+        //    }
+        //}
 
-        public static void LogUIDebug(string message)
-        {
-            LogUI(message, "DEBUG");
-        }
+        //public static void LogUIDebug(string message)
+        //{
+        //    LogUI(message, "DEBUG");
+        //}
 
-        public static void LogUIInfo(string message)
-        {
-            LogUI(message, "INFO");
-        }
+        //public static void LogUIInfo(string message)
+        //{
+        //    LogUI(message, "INFO");
+        //}
 
-        public static void LogUIWarning(string message)
-        {
-            LogUI(message, "WARNING");
-        }
+        //public static void LogUIWarning(string message)
+        //{
+        //    LogUI(message, "WARNING");
+        //}
 
-        public static void LogUIError(string message)
-        {
-            LogUI(message, "ERROR");
-        }
+        //public static void LogUIError(string message)
+        //{
+        //    LogUI(message, "ERROR");
+        //}
 
-        public static void LogUIError(Exception ex)
-        {
-            LogUI($"{ex.GetType().Name}: {ex.Message}\nStackTrace: {ex.StackTrace}", "ERROR");
-        }
+        //public static void LogUIError(Exception ex)
+        //{
+        //    LogUI($"{ex.GetType().Name}: {ex.Message}\nStackTrace: {ex.StackTrace}", "ERROR");
+        //}
 
         public static void LogError(Exception ex)
         {

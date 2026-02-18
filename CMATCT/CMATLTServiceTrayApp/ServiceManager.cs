@@ -12,7 +12,7 @@ namespace CMATLTServiceTrayApp
 
         public static void StartService()
         {
-            LogLibrary.LogUIInfo("Attempting to start service from tray ...");
+            //LogLibrary.LogUIInfo("Attempting to start service from tray ...");
             using (ServiceController sc = new ServiceController(ServiceName))
             {
                 if (sc.Status == ServiceControllerStatus.Stopped)
@@ -26,13 +26,13 @@ namespace CMATLTServiceTrayApp
                         ServiceControllerStatus.Running,
                         TimeSpan.FromSeconds(60) // increase timeout
                     );
-                    LogLibrary.LogUIInfo("Service started successfully from tray.");
+                    //LogLibrary.LogUIInfo("Service started successfully from tray.");
                 }
             }
         }
         public static void SetTrayAppAutoStart(bool enable)
         {
-            LogLibrary.LogUIInfo($"Setting tray app auto-start to {(enable ? "enabled" : "disabled")} ...");
+            //LogLibrary.LogUIInfo($"Setting tray app auto-start to {(enable ? "enabled" : "disabled")} ...");
             try
             {
                 string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
@@ -53,7 +53,7 @@ namespace CMATLTServiceTrayApp
         }
         public static void StopService()
         {
-            LogLibrary.LogUIInfo("Attempting to stop service from tray ...");
+           //  LogLibrary.LogUIInfo("Attempting to stop service from tray ...");
             using (ServiceController sc = new ServiceController(ServiceName))
             {
                 if (sc.Status == ServiceControllerStatus.Running)
@@ -67,14 +67,14 @@ namespace CMATLTServiceTrayApp
                         ServiceControllerStatus.Stopped,
                         TimeSpan.FromSeconds(60) // increase timeout
                     );
-                    LogLibrary.LogUIInfo("Service stopped successfully from tray.");
+                   // LogLibrary.LogUIInfo("Service stopped successfully from tray.");
                 }
             }
         }
 
         public static ServiceControllerStatus GetStatus()
         {
-            LogLibrary.LogUIInfo("Checking service status from tray ...");
+            //LogLibrary.LogUIInfo("Checking service status from tray ...");
             var sc = new ServiceController(ServiceName);
             return sc.Status;
         }

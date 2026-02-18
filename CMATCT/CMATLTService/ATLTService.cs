@@ -127,11 +127,15 @@ namespace CMATLTService
                     CmSdk.Logon.DoLogon();
                     if (CmSdk.Logon.IsLoggedOn)
                     {
-                        LogLibrary.LogUIInfo("CM ATLT Service Logged On Success ");
+                      //  LogLibrary.LogUIInfo("CM ATLT Service Logged On Success ");
                         TriggerActionFlow();
-                        LogLibrary.LogUIInfo("CM ATLT Service Started Task for fetching log ");
+                        //LogLibrary.LogUIInfo("CM ATLT Service Started Task for fetching log ");
                         Task.Run(() => ListenForTrigger());
-                        LogLibrary.LogUIInfo("CM ATLT Service Started to listen for UI Commands ");
+                        //LogLibrary.LogUIInfo("CM ATLT Service Started to listen for UI Commands ");
+                    }
+                    else
+                    {
+                        LogLibrary.LogError("Failed to IsLoggedOn to CmSdk may be chromeleon services are stopped. Date is:" + DateTime.Now);
                     }
                 }
 

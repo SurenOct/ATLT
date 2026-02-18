@@ -1,4 +1,5 @@
-﻿using CMATCTUI.ChildWindows;
+﻿using CMATCTUI;
+using CMATCTUI.ChildWindows;
 using CMATLTLoger;
 using Hardcodet.Wpf.TaskbarNotification;
 using Microsoft.Win32;
@@ -133,7 +134,7 @@ namespace CMATLTServiceTrayApp
 
         private void StartService()
         {
-            LogLibrary.LogUIInfo("StartService_Click invoked");
+           // LogLibrary.LogUIInfo("StartService_Click invoked");
             try
             {
                 ServiceManager.StartService();
@@ -141,14 +142,14 @@ namespace CMATLTServiceTrayApp
             }
             catch (Exception ex)
             {
-                LogLibrary.LogUIError($"Failed to start service: {ex.Message}");
+             //   LogLibrary.LogUIError($"Failed to start service: {ex.Message}");
                 ShowNotification("Service Control", $"Failed to start service: {ex.Message}", BalloonIcon.Error);
             }
         }
 
         private void StopService()
         {
-            LogLibrary.LogUIInfo("StopService invoked");
+            //LogLibrary.LogUIInfo("StopService invoked");
             try
             {
                 ServiceManager.StopService();
@@ -156,14 +157,14 @@ namespace CMATLTServiceTrayApp
             }
             catch (Exception ex)
             {
-                LogLibrary.LogUIError($"Failed to stop service: {ex.Message}");
+               // LogLibrary.LogUIError($"Failed to stop service: {ex.Message}");
                 ShowNotification("Service Control", $"Failed to stop service: {ex.Message}", BalloonIcon.Error);
             }
         }
 
         private void CheckStatus()
         {
-            LogLibrary.LogUIInfo("StatusService invoked");
+            //LogLibrary.LogUIInfo("StatusService invoked");
             try
             {
                 var status = ServiceManager.GetStatus();
@@ -171,45 +172,47 @@ namespace CMATLTServiceTrayApp
             }
             catch (Exception ex)
             {
-                LogLibrary.LogUIError($"Failed to get status: {ex.Message}");
+               // LogLibrary.LogUIError($"Failed to get status: {ex.Message}");
                 ShowNotification("Service Status", $"Failed to get status: {ex.Message}", BalloonIcon.Error);
             }
         }
 
         private void OpenUI()
         {
-            LogLibrary.LogUIInfo("OpenUI_Click invoked");
+            //LogLibrary.LogUIInfo("OpenUI_Click invoked");
             try
             {
-                string installPath = Path.GetDirectoryName(
-                                     System.Reflection.Assembly.GetExecutingAssembly().Location);
-                string exePath = Path.Combine(installPath, "CMATLTUI.exe");
+                MasterPage pa = new MasterPage();
+                pa.Show();
+                //string installPath = Path.GetDirectoryName(
+                //                     System.Reflection.Assembly.GetExecutingAssembly().Location);
+                //string exePath = Path.Combine(installPath, "CMATLTUI.exe");
 
-                if (File.Exists(exePath))
-                {
-                    ProcessStartInfo psi = new ProcessStartInfo
-                    {
-                        FileName = exePath,
-                        UseShellExecute = true,  // needed for GUI apps
-                        CreateNoWindow = false
-                    };
-                    Process.Start(psi);
-                }
-                else
-                {
-                    ShowNotification("Error", "CMATLTUI.exe not found", BalloonIcon.Error);
-                }
+                //if (File.Exists(exePath))
+                //{
+                //    ProcessStartInfo psi = new ProcessStartInfo
+                //    {
+                //        FileName = exePath,
+                //        UseShellExecute = true,  // needed for GUI apps
+                //        CreateNoWindow = false
+                //    };
+                //    Process.Start(psi);
+                //}
+                //else
+                //{
+                //    ShowNotification("Error", "CMATLTUI.exe not found", BalloonIcon.Error);
+                //}
             }
             catch (Exception ex)
             {
-                LogLibrary.LogUIError($"Failed to open UI: {ex.Message}");
+               // LogLibrary.LogUIError($"Failed to open UI: {ex.Message}");
                 ShowNotification("Error", $"Failed to open UI: {ex.Message}", BalloonIcon.Error);
             }
         }
 
         private void ViewLogs()
         {
-            LogLibrary.LogUIInfo("ViewLogs_Click invoked");
+            //LogLibrary.LogUIInfo("ViewLogs_Click invoked");
             try
             {
                 var logViewer = new LogViewerWindow();
@@ -217,14 +220,14 @@ namespace CMATLTServiceTrayApp
             }
             catch (Exception ex)
             {
-                LogLibrary.LogUIError($"Failed to open logs: {ex.Message}");
+                //LogLibrary.LogUIError($"Failed to open logs: {ex.Message}");
                 ShowNotification("Error", $"Failed to open logs: {ex.Message}", BalloonIcon.Error);
             }
         }
 
         private void ExistTray()
         {
-            LogLibrary.LogUIInfo("ExitTray_Click invoked");
+            //LogLibrary.LogUIInfo("ExitTray_Click invoked");
             Shutdown();
         }
 

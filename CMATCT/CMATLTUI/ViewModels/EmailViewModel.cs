@@ -131,7 +131,7 @@ namespace CMATCTUI.ViewModels
             //{
             //    Directory.Delete(destinationCmbxZipFolder,true); // true = delete all files/subfolders
             //}
-
+            LogLibrary.LogUIInfo("EmailViewModel Intiated");
 
             IsBusy = true;
             GeneratedCmbxFileCommand = new RelayCommand(() => GenerateCmbxFile(""));
@@ -159,7 +159,7 @@ namespace CMATCTUI.ViewModels
         {
             try
             {
-
+                LogLibrary.LogUIInfo("Loading AgilentWaterAuditZipUtility files");
                 string seqName = "";
                 if (Items.Count > 0 && Items.FirstOrDefault() != null)
                 {
@@ -242,6 +242,7 @@ namespace CMATCTUI.ViewModels
             }
             catch (Exception ex)
             {
+                LogLibrary.LogUIError("Loading AgilentWaterAuditZipUtility files" + ex.Message);
                 MessageBox.Show("Error during zipping files: " + ex.Message);
             }
             finally
@@ -254,6 +255,7 @@ namespace CMATCTUI.ViewModels
 
         private List<string> LoadingAgilentFile()
         {
+            LogLibrary.LogUIInfo("Loading LoadingAgilentFile files");
             List<string> filesWithDate = null;
             try
             {
@@ -267,7 +269,7 @@ namespace CMATCTUI.ViewModels
                      .ToList();
                     if (filesWithDate.Count > 0)
                     {
-
+                        LogLibrary.LogUIInfo("Files with today's date found: " + filesWithDate.Count());
                     }
                 }
                 else
@@ -278,6 +280,7 @@ namespace CMATCTUI.ViewModels
             }
             catch (Exception ex)
             {
+                LogLibrary.LogUIError("Loading Agilent File" + ex.Message);
                 MessageBox.Show("Loading Agilent File" + ex.ToString());
             }
             return filesWithDate;
@@ -287,7 +290,7 @@ namespace CMATCTUI.ViewModels
             List<string> filesWithDate = null;
             try
             {
-
+                LogLibrary.LogUIInfo("Loading LoadingWaterAuditFile files");
                 string destinationFolder = @"C:\Program Files (x86)\Waters Instruments\Logs\";
 
                 if (Directory.Exists(destinationFolder))
@@ -297,18 +300,20 @@ namespace CMATCTUI.ViewModels
                     .ToList();
                     if (filesWithDate.Count > 0)
                     {
-
+                        LogLibrary.LogUIInfo("Files with today's date found: " + filesWithDate.Count());
                     }
                 }
                 else
                 {
-
+                    LogLibrary.LogUIInfo("Destination folder does not exist: " + destinationFolder);
                 }
+
                 return filesWithDate;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("LoadingWaterAuditFile" + ex.ToString());
+                LogLibrary.LogUIError("Loading Water Audit File" + ex.Message);
+                MessageBox.Show("Loading Water Audit File" + ex.ToString());
             }
             return filesWithDate;
         }
@@ -318,6 +323,7 @@ namespace CMATCTUI.ViewModels
             List<string> filesWithDate = null;
             try
             {
+                LogLibrary.LogUIInfo("Loading Application and System Logs files");
                 string destinationFolder = System.IO.Path.Combine(
               Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
               "CMATLTData", "CmbxEventFiles");
@@ -353,7 +359,8 @@ namespace CMATCTUI.ViewModels
                             true
                         );
                     }
-
+                    
+                    LogLibrary.LogUIInfo("Today's Application and System logs exported successfully");
                     MessageBox.Show(
                         "Today's Application and System logs exported successfully",
                         "Success"
@@ -374,13 +381,15 @@ namespace CMATCTUI.ViewModels
                 }
                 catch (Exception ex)
                 {
+                    LogLibrary.LogUIError("Exporting Application and System Logs" + ex.Message);
                     MessageBox.Show(ex.ToString());
                 }
                 return filesWithDate;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("ApplicationAndSystemLogs" + ex.ToString());
+                LogLibrary.LogUIError("Loading Application and System Logs" + ex.Message);
+                MessageBox.Show("Loading Application and System Logs" + ex.ToString());
             }
             return filesWithDate;
 
@@ -390,6 +399,7 @@ namespace CMATCTUI.ViewModels
         {
             try
             {
+                LogLibrary.LogUIInfo("Generating CMBX file: " + seqName);
                 var client = new NamedPipeClientStream(
                                         ".",
                                         "CMATLTService",
@@ -466,6 +476,7 @@ namespace CMATCTUI.ViewModels
             }
             catch (Exception ex)
             {
+                LogLibrary.LogUIError("Generate CMBX Error" + ex.Message);
                 MessageBox.Show("Generate CMBX Error" + ex.ToString());
             }
 
@@ -488,6 +499,7 @@ namespace CMATCTUI.ViewModels
         }
         private string LoadCmbxFile()
         {
+                        LogLibrary.LogUIInfo("Loading CMBX file");
             string destinationFolder = System.IO.Path.Combine(
                   Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
                   "CMATLTData", "CmbxFiles");
@@ -501,6 +513,7 @@ namespace CMATCTUI.ViewModels
         }
         private string LoadLatestZipFile()
         {
+                LogLibrary.LogUIInfo("Loading latest zip file");
             string destinationFolder = System.IO.Path.Combine(
                   Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
                   "CMATLTData", "CmbxFilesZipFiles");
@@ -514,6 +527,7 @@ namespace CMATCTUI.ViewModels
         }
         private string SizeofZipFileLength()
         {
+                LogLibrary.LogUIInfo("Calculating size of latest zip file");
             long maxSizeBytes = 5 * 1024 * 1024; // 5 MB
             string displaySize = "";
             string destinationFolder = System.IO.Path.Combine(
@@ -569,6 +583,8 @@ namespace CMATCTUI.ViewModels
 
         public void LoadIncedents()
         {
+            LogLibrary.LogUIInfo("Loading incidents");
+
             XDocument doc = GenericXmlLoader.LoadingXML("IncidentsSettings.xml", "XMLConfiguration");
             IncidentsItems = new List<string>();
             XElement root = doc.Element("IncedentsSetting");
@@ -585,16 +601,19 @@ namespace CMATCTUI.ViewModels
 
         public void SendEmail()
         {
+            LogLibrary.LogUIInfo("Sending email");
             isMailSent = true;
 
             if (IsMailSent())
             {
+                LogLibrary.LogUIInfo("Email sent successfully.");
                 isMailSent = true;
                 MessageBox.Show("Email sent successfully.");
 
             }
             else
             {
+                LogLibrary.LogUIError("Failed to send email.");
                 MessageBox.Show("Failed to send email.");
                 isMailSent = false;
             }
@@ -602,6 +621,7 @@ namespace CMATCTUI.ViewModels
         }
         public bool IsMailSent()
         {
+            LogLibrary.LogUIInfo("Checking if email is sent");
             bool IsConnect = false;
             XDocument doc = GenericXmlLoader.LoadingXML("SMTPSettings.xml", "XMLConfiguration");
             SmtpSettings smtpSettings = null;
@@ -621,6 +641,7 @@ namespace CMATCTUI.ViewModels
             }
             if (smtpSettings == null)
             {
+                LogLibrary.LogUIError("Mail is not Configured Properly. Please contact Administrator.");
                 MessageBox.Show("Mail is not Configured Properly. Please contact Administrator.");
             }
             SmtpClient mailClient = new SmtpClient();
@@ -650,6 +671,7 @@ namespace CMATCTUI.ViewModels
                 var filePath = LoadLatestZipFile();
                 if (File.Exists(filePath))
                 {
+                    LogLibrary.LogUIInfo("Attaching file: " + filePath);
                     var attachment = new MimePart()
                     {
                         Content = new MimeContent(File.OpenRead(filePath)),
@@ -661,6 +683,7 @@ namespace CMATCTUI.ViewModels
                 }
                 else
                 {
+                    LogLibrary.LogUIError("Attachment file not found: " + filePath);
                     MessageBox.Show("Attachment file not found: " + filePath);
                 }
 
@@ -673,6 +696,7 @@ namespace CMATCTUI.ViewModels
             }
             else
             {
+                LogLibrary.LogUIError("Unable to connect to SMTP Server. Please check the configuration.");
                 MessageBox.Show("Unable to connect to SMTP Server. Please check the configuration.");
             }
             return IsConnect;
@@ -683,6 +707,8 @@ namespace CMATCTUI.ViewModels
             bool IsConnect = false;
             try
             {
+                LogLibrary.LogUIInfo("Connecting to SMTP Server: " + smtpSettings.Server);
+
                 SecureSocketOptions socketOptions;
 
                 string encryption = smtpSettings.Encryption?.ToUpper() ?? "STARTTLS"; // default if null

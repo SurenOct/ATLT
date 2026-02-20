@@ -1,5 +1,6 @@
 ﻿using CMATCTUI.Commands;
 using CMATCTUI.Generic;
+using CMATLTLoger;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -66,6 +67,7 @@ namespace CMATCTUI.ViewModels
 
         public SettingsViewModel()
         {
+            LogLibrary.LogUIInfo("SettingsViewModel Initialized");
             ServiceUpdatedCommand = new RelayCommand(ServiceTimeUpdated);
             ServiceTriggerCommand=new RelayCommand(ServiceTrigger);
             LoadCurrentScanTimeDetails();
@@ -78,6 +80,7 @@ namespace CMATCTUI.ViewModels
         {
             if (!CMServicesStatusList())
             {
+                LogLibrary.LogUIError("One or more CM services are not running.");
                 MessageBox.Show("One or more CM services are not running.");
                 return;
             }
@@ -110,10 +113,11 @@ namespace CMATCTUI.ViewModels
 
 
                 MessageBox.Show("Command sent");
-
+                                LogLibrary.LogUIInfo("Command sent to CMATLTService");
             }
             catch(Exception ex)
             {
+                LogLibrary.LogUIError("Failed to send command: " + ex.Message);
                 MessageBox.Show("Failed to send command: " + ex.Message);
             }
 
@@ -125,7 +129,7 @@ namespace CMATCTUI.ViewModels
         private void LoadCurrentScanTimeDetails()
         {
             //ServiceTime
-
+                
             string destinationFolderTimeXml = System.IO.Path.Combine(
               Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
               "CMATLTData");
@@ -141,6 +145,7 @@ namespace CMATCTUI.ViewModels
                     foreach (XElement item in root.Elements("TimeIntervel"))
                     {
                         ServiceTime = int.Parse(item.Value);
+                        LogLibrary.LogUIInfo("Loaded service time: " + ServiceTime);
                     }
                 }
             }
@@ -151,6 +156,7 @@ namespace CMATCTUI.ViewModels
         /// <returns></returns>
         private bool CMServicesStatusList()
         {
+           LogLibrary.LogUIInfo("Checking CM services status...");
             string[] serviceNames = {
         "ChromeleonLicenseServer",
         "ChromeleonUserServer",
@@ -167,7 +173,7 @@ namespace CMATCTUI.ViewModels
         "ChromeleonHardwareMonitoringService",
         "ChromeleonInstrumentServer"
     };
-
+            
             foreach (string serviceName in serviceNames)
             {
                 try
@@ -176,12 +182,14 @@ namespace CMATCTUI.ViewModels
                     {
                         if (sc.Status != ServiceControllerStatus.Running)
                         {
+                            LogLibrary.LogUIError("Service not running: " + serviceName);
                             return false;   // If any service is not running
                         }
                     }
                 }
                 catch (InvalidOperationException)
                 {
+                    LogLibrary.LogUIError("Service not found: " + serviceName);
                     // Service not found
                     return false;
                 }
@@ -194,6 +202,8 @@ namespace CMATCTUI.ViewModels
         /// </summary>
         private void ServiceTimeUpdated()
         {
+            LogLibrary.LogUIInfo("Updating service time...");
+
             if (ServiceTime > 0)
             {
                 string destinationFolderTimeXml = Path.Combine(
@@ -215,6 +225,7 @@ namespace CMATCTUI.ViewModels
             }
             else
             {
+                    LogLibrary.LogUIError("Invalid service time entered: " + ServiceTime);
                 MessageBox.Show("Please enter valid service time");
             }
         }

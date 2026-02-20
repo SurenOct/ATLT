@@ -35,6 +35,7 @@ namespace CMATCTUI.ViewModels
         private AboutPage _aboutPage;
         public SidePanelViewModel()
         {
+            LogLibrary.LogUIInfo("SidePanelViewModel Initialized");
             DeleteFilesInFolder();
             //_serialService = SerialPortInstance.Instance;
             //_serialService.OpenPort();
@@ -62,15 +63,19 @@ namespace CMATCTUI.ViewModels
         {
             try
             {
+
                 string folderPath = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
                     "CMATLTData", "Data");
 
-               // LogLibrary.LogUIInfo($"Attempting to delete files in folder: {folderPath}");
+                LogLibrary.LogUIInfo($"Attempting to delete files in folder: {folderPath}");
 
                 if (!Directory.Exists(folderPath))
                 {
-                 //   LogLibrary.LogUIWarning($"Folder not found: {folderPath}. No files to delete.");
+                    LogLibrary.LogError($"Folder not found: {folderPath}. No files to delete.");
+                    MessageBox.Show($"Folder not found: {folderPath}. No files to delete.");
+
+                    //   LogLibrary.LogUIWarning($"Folder not found: {folderPath}. No files to delete.");
                     return;
                 }
 
@@ -92,7 +97,7 @@ namespace CMATCTUI.ViewModels
                         {
                             // Log exception if needed
                             Console.WriteLine($"Failed to delete {fileInfo.Name}: {ex.Message}");
-                           // LogLibrary.LogUIError($"Failed to delete {fileInfo.Name}: {ex.Message}");
+                            LogLibrary.LogUIError($"Failed to delete {fileInfo.Name}: {ex.Message}");
                         }
                     }
                 }
@@ -101,13 +106,13 @@ namespace CMATCTUI.ViewModels
             {
                 // Log exception if needed
                 Console.WriteLine($"Error while deleting files: {ex.Message}");
-               // LogLibrary.LogUIError($"Error while deleting files: {ex.Message}");
+                // LogLibrary.LogUIError($"Error while deleting files: {ex.Message}");
             }
         }
 
         private void NavigateToAuditTrailPage()
         {
-           // LogLibrary.LogUIInfo("Navigating to Audit Trail Page.");
+            LogLibrary.LogUIInfo("Navigating to Audit Trail Page.");
             try
             {
                 string destinationFolder = Path.Combine(
@@ -118,42 +123,42 @@ namespace CMATCTUI.ViewModels
                     MessageBox.Show("No Local Database available");
                     return;
                 }
-                //LogLibrary.LogUIInfo("Local Database found. Navigating to Audit Trail Page.");
+                LogLibrary.LogUIInfo("Local Database found. Navigating to Audit Trail Page.");
 
                 if (auditTrailPage == null)
                     auditTrailPage = new AuditTrailPage();
                 CurrentPage = auditTrailPage;
-                //LogLibrary.LogUIInfo("Audit Trail Page set as current page.");
+                LogLibrary.LogUIInfo("Audit Trail Page set as current page.");
             }
             catch (Exception ex)
             {
-                //LogLibrary.LogUIError($"Error navigating to Audit Trail Page: {ex.Message}");
+                LogLibrary.LogUIError($"Error navigating to Audit Trail Page: {ex.Message}");
                 MessageBox.Show("An error occurred while trying to access the Audit Trail. Please check the logs for more details.");
             }
         }
 
         private void NavigateToSettingsPage()
         {
-            //LogLibrary.LogUIInfo("Navigating to Settings Page.");
+            LogLibrary.LogUIInfo("Navigating to Settings Page.");
             try
             {
                 if (_settingsPage == null)
                     _settingsPage = new SettingsPage();
                 CurrentPage = _settingsPage;
-               // LogLibrary.LogUIInfo("Settings Page set as current page.");
+                LogLibrary.LogUIInfo("Settings Page set as current page.");
 
                 // CurrentPage = new Reports();
             }
             catch (Exception ex)
             {
-               // LogLibrary.LogUIError($"Error navigating to Settings Page: {ex.Message}");
+                LogLibrary.LogUIError($"Error navigating to Settings Page: {ex.Message}");
                 MessageBox.Show("An error occurred while trying to access the Settings. Please check the logs for more details.");
             }
         }
 
         private void NavigateToDashBoardPage()
         {
-           // LogLibrary.LogUIInfo("Navigating to Dashboard Page.");
+            LogLibrary.LogUIInfo("Navigating to Dashboard Page.");
             try
             {
                 if (_dashBoardPage == null)
@@ -162,14 +167,14 @@ namespace CMATCTUI.ViewModels
             }
             catch (Exception ex)
             {
-               // LogLibrary.LogUIError($"Error navigating to Dashboard Page: {ex.Message}");
+                LogLibrary.LogUIError($"Error navigating to Dashboard Page: {ex.Message}");
                 MessageBox.Show("An error occurred while trying to access the Dashboard. Please check the logs for more details.");
             }
         }
 
         private void NavigateToAboutPage()
         {
-           // LogLibrary.LogUIInfo("Navigating to About Page.");
+            LogLibrary.LogUIInfo("Navigating to About Page.");
             try
             {
                 if (_aboutPage == null)
@@ -178,7 +183,7 @@ namespace CMATCTUI.ViewModels
             }
             catch (Exception ex)
             {
-             //   LogLibrary.LogUIError($"Error navigating to About Page: {ex.Message}");
+                LogLibrary.LogUIError($"Error navigating to About Page: {ex.Message}");
                 MessageBox.Show("An error occurred while trying to access the About Page. Please check the logs for more details.");
             }
         }

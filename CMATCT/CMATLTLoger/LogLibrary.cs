@@ -55,34 +55,54 @@ namespace CMATLTLoger
             }
         }
 
-        //public static void LogUI(string message, string level = "INFO")
-        //{
-        //    lock (_lock)
-        //    {
-        //        File.AppendAllText(UILogPath,
-        //            $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} [{level}]: {message}{Environment.NewLine}");
-        //    }
-        //}
+        public static void LogUI(string message, string level = "INFO")
+        {
+            AppendSafe(UILogPath,
+                 $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} [{level}]: {message}");
+        }
+        private static void AppendSafe(string path, string message)
+        {
+            lock (_lock)
+            {
+                try
+                {
+                    using (var fs = new FileStream(
+                        path,
+                        FileMode.Append,
+                        FileAccess.Write,
+                        FileShare.ReadWrite))
+                    using (var sw = new StreamWriter(fs))
+                    {
+                        sw.WriteLine(message);
+                    }
+                }
+                catch
+                {
+                    // Never allow logging to crash the app
+                }
+            }
+        }
+
 
         //public static void LogUIDebug(string message)
         //{
         //    LogUI(message, "DEBUG");
         //}
 
-        //public static void LogUIInfo(string message)
-        //{
-        //    LogUI(message, "INFO");
-        //}
+        public static void LogUIInfo(string message)
+        {
+            LogUI(message, "INFO");
+        }
 
         //public static void LogUIWarning(string message)
         //{
         //    LogUI(message, "WARNING");
         //}
 
-        //public static void LogUIError(string message)
-        //{
-        //    LogUI(message, "ERROR");
-        //}
+        public static void LogUIError(string message)
+        {
+            LogUI(message, "ERROR");
+        }
 
         //public static void LogUIError(Exception ex)
         //{

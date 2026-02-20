@@ -1,4 +1,5 @@
 ﻿using CMATCTUI.Models;
+using CMATLTLoger;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -114,7 +115,7 @@ namespace CMATCTUI.ViewModels
 
         public DashBoardViewModel()
         {
-
+            LogLibrary.LogUIInfo("DashBoardViewModel initialization started");
             LoadingAuditLogFilesAndLogsCount();
         }
 
@@ -157,6 +158,7 @@ namespace CMATCTUI.ViewModels
 
             if (!Directory.Exists(destinationFolder))
             {
+                LogLibrary.LogUIInfo("destinationFolder not exist" + destinationFolder);
                 MessageBox.Show("Data folder is not Exist");
                 return;
             }
@@ -180,6 +182,7 @@ namespace CMATCTUI.ViewModels
 
             if (filesWithDate.Count() > 0)
             {
+                LogLibrary.LogUIInfo("Files with today's date found: " + filesWithDate.Count());
                 foreach (var filepath in filesWithDate)
                 {
                     var jsonString = System.IO.File.ReadAllText(filepath.FullPath);
@@ -191,6 +194,11 @@ namespace CMATCTUI.ViewModels
                 }
                 TotalAuditTrailsCount = NumberOfInformations + NumberOfWarnings + NumberOfErrors;
                 NumberOfInstruments = filesWithDate.Count();
+            }
+            else
+            {
+                LogLibrary.LogUIInfo("No files with today's date found in: " + destinationFolder);
+             
             }
         }
 

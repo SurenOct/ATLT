@@ -103,9 +103,7 @@
     <Compile Include="ProjectInstaller.Designer.cs">
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
-    <Compile Include="ATLTService.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="ATLTService.cs" />
     <Compile Include="ATLTService.Designer.cs">
       <DependentUpon>ATLTService.cs</DependentUpon>
     </Compile>

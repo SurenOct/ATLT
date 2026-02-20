@@ -14,13 +14,13 @@ namespace CMATCTUI
     /// </summary>
     public partial class App : Application
     {
-        private static Mutex _mutex;
+        private static Mutex _mutexForUI;
 
         protected override void OnStartup(StartupEventArgs e)
         {
             //RegisterTrayAsync();
-            const string appName = "CM ATCT";
-            _mutex = new Mutex(true, appName, out bool isNew);
+            const string appName = "CMATLTUI";
+            _mutexForUI = new Mutex(true, appName, out bool isNew);
 
             if (!isNew)
             {

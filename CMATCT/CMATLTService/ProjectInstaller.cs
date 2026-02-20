@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 
 namespace CMATLTService
 {
@@ -8,6 +9,13 @@ namespace CMATLTService
         public ProjectInstaller()
         {
             InitializeComponent();
+            var eventLogInstaller = new EventLogInstaller
+            {
+                Log = "Application",
+                Source = "ATLTService"
+            };
+
+            Installers.Add(eventLogInstaller);
         }
     }
 }

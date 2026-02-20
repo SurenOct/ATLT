@@ -22,7 +22,7 @@ namespace CMATLTLoger
             // 2. Create folder if it doesn't exist
             Directory.CreateDirectory(FolderPath);
 
-            // 3. Define two files in the same folder
+            // 3. Define three files in the same folder
             ServiceLogPath = Path.Combine(FolderPath, "Service.log");
             ServiceHealthLogPath = Path.Combine(FolderPath, "ServiceHealth.log");
             UILogPath = Path.Combine(FolderPath, "UI.log");
@@ -115,10 +115,10 @@ namespace CMATLTLoger
         }
 
         // Legacy methods (keep for backward compatibility)
-        public static void Log(string message)
-        {
-            File.AppendAllText(GetLogPath(), $"{DateTime.Now}: {message}\r\n");
-        }
+        //public static void Log(string message)
+        //{
+        //    File.AppendAllText(GetLogPath(), $"{DateTime.Now}: {message}\r\n");
+        //}
         public static void WriteErrorLog(Exception ex)
         {
             StreamWriter sw = null;
@@ -149,14 +149,14 @@ namespace CMATLTLoger
             }
         }
 
-        public static string GetLogPath()
-        {
-            string folder = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-                "MyService", "Logs");
+        //public static string GetLogPath()
+        //{
+        //    string folder = Path.Combine(
+        //        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+        //        "CMATLTData", "Logs");
 
-            Directory.CreateDirectory(folder);
-            return Path.Combine(folder, "service.log");
-        }
+        //    Directory.CreateDirectory(folder);
+        //    return Path.Combine(folder, "Service.log");
+        //}
     }
 }

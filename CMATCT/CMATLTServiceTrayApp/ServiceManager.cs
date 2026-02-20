@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ServiceProcess;
 using System.Windows;
-using CMATLTLoger;
 using Microsoft.Win32;
 
 namespace CMATLTServiceTrayApp
@@ -24,7 +23,7 @@ namespace CMATLTServiceTrayApp
                 {
                     sc.WaitForStatus(
                         ServiceControllerStatus.Running,
-                        TimeSpan.FromSeconds(60) // increase timeout
+                        TimeSpan.FromSeconds(120) // increase timeout
                     );
                     //LogLibrary.LogUIInfo("Service started successfully from tray.");
                 }
@@ -53,7 +52,7 @@ namespace CMATLTServiceTrayApp
         }
         public static void StopService()
         {
-           //  LogLibrary.LogUIInfo("Attempting to stop service from tray ...");
+            //  LogLibrary.LogUIInfo("Attempting to stop service from tray ...");
             using (ServiceController sc = new ServiceController(ServiceName))
             {
                 if (sc.Status == ServiceControllerStatus.Running)
@@ -65,9 +64,9 @@ namespace CMATLTServiceTrayApp
                 {
                     sc.WaitForStatus(
                         ServiceControllerStatus.Stopped,
-                        TimeSpan.FromSeconds(60) // increase timeout
+                        TimeSpan.FromSeconds(120) // increase timeout
                     );
-                   // LogLibrary.LogUIInfo("Service stopped successfully from tray.");
+                    // LogLibrary.LogUIInfo("Service stopped successfully from tray.");
                 }
             }
         }

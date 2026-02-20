@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.IO.Pipes;
@@ -7,7 +6,6 @@ using System.Linq;
 using System.Net;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,9 +29,9 @@ namespace CMATLTService
             try
             {
                 _debugStopEvent = new ManualResetEventSlim(false);
-                //_cmSdkScope = new CmSdkScope();
-                using (new CmSdkScope())
-                {
+                if (cmSdkScope == null)
+                    cmSdkScope = new CmSdkScope();
+                
                     CmSdk.Logon.DoLogon();
                     if (CmSdk.Logon.IsLoggedOn)
                     {
@@ -46,7 +44,7 @@ namespace CMATLTService
                     {
                         Console.WriteLine("Failed to log on to CmSdk.");
                     }
-                }
+                
             }
             catch (Exception ex)
             {
@@ -70,7 +68,7 @@ namespace CMATLTService
             _semaphore?.Wait(TimeSpan.FromSeconds(5));
             _semaphore?.Dispose();
 
-            //_cmSdkScope?.Dispose();
+            cmSdkScope?.Dispose();
 
             _debugStopEvent?.Set();
             _debugStopEvent?.Dispose();
@@ -79,6 +77,55 @@ namespace CMATLTService
         }
     }
 #endif
+
+    using System;
+    using System.Diagnostics;
+    using System.ServiceProcess;
+
+    internal static class SafeEventLog
+    {
+        private const string Source = "ATLTService";
+        private const string LogName = "Application";
+
+        public static void Info(string message) =>
+            WriteInEventViewer(EventLogEntryType.Information, message, null);
+
+        public static void Warn(string message) =>
+            WriteInEventViewer(EventLogEntryType.Warning, message, null);
+
+        public static void Error(string message, Exception ex) =>
+            WriteInEventViewer(EventLogEntryType.Error, message, ex);
+
+        private static void WriteInEventViewer(EventLogEntryType type, string message, Exception ex)
+        {
+            // Keep formatting cheap and safe
+            string final = ex == null ? message : $"{message}{Environment.NewLine}{ex}";
+
+            // First choice: your own source (requires pre-registration)
+            try
+            {
+                EventLog.WriteEntry(Source, final, type);
+                return;
+            }
+            catch
+            {
+                // ignore and try fallback
+            }
+
+            // Fallback: write using a built-in source.
+            // NOTE: Some machines may restrict this too; we swallow if it fails.
+            try
+            {
+                // ".NET Runtime" is commonly present, but not guaranteed everywhere.
+                EventLog.WriteEntry(".NET Runtime", $"[{Source}] {final}", type);
+            }
+            catch
+            {
+                // Last resort: do nothing (no file, no crash)
+            }
+        }
+    }
+
     public partial class ATLTService : ServiceBase
     {
         int schedularTime = Convert.ToInt32(ConfigurationManager.AppSettings["ThreadTime"]);
@@ -105,57 +152,60 @@ namespace CMATLTService
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 #endif
 
-        public CmSdkScope cmSdkScope { get; private set; }
+        private readonly EventLog _eventLog = new EventLog
+        {
+            Log = "Application",
+            Source = "ATLTService"
+        };
+
+        public CmSdkScope _cmSdkScope { get; private set; }
         public ATLTService()
         {
-
-            //LogLibrary.LogError("ATLTService Start intialise: ");
+            SafeEventLog.Info("Service Constructor entered");
             InitializeComponent();
-            //LogLibrary.LogError("After ATLTService Start intialise: ");
+            SafeEventLog.Info("Service Constructor Leaving");
         }
 
         protected override void OnStart(string[] args)
         {
 
-            //LogLibrary.LogError("OnStart: ");
+            SafeEventLog.Info("Service OnStart() entered");
             Thread.Sleep(TimeSpan.FromMinutes(1));
             try
             {
-                // using (new CmSdkScope())
-                if (cmSdkScope == null)
-                    cmSdkScope = new CmSdkScope();
-                //  {
-                // LogLibrary.LogError("CmSdkScope: ");
+                if (_cmSdkScope == null)
+                {
+                    _cmSdkScope = new CmSdkScope();
+                    SafeEventLog.Info("Service OnStart() CmSDk Scope Object Initialize");
+                }
+
                 CmSdk.Logon.DoLogon();
+                SafeEventLog.Info("Service OnStart() CmSDk DoLogOn Called");
                 if (CmSdk.Logon.IsLoggedOn)
                 {
-                    //  LogLibrary.LogUIInfo("CM ATLT Service Logged On Success ");
+                    SafeEventLog.Info("Service OnStart() Logged On Successful ");
+
                     TriggerActionFlow();
-                    //LogLibrary.LogUIInfo("CM ATLT Service Started Task for fetching log ");
+                    SafeEventLog.Info("Service OnStart() Started Task for fetching log");
+
                     Task.Run(() => ListenForTrigger());
-                    //LogLibrary.LogUIInfo("CM ATLT Service Started to listen for UI Commands ");
+                    SafeEventLog.Info("Service OnStart() Started listening for UI Commands ");
                 }
                 else
                 {
-                    LogLibrary.LogError("Failed to IsLoggedOn to CmSdk may be chromeleon services are stopped. Date is:" + DateTime.Now);
+                    SafeEventLog.Warn("Service OnStart() Logged On Failed, Check if Chromeleon services are running!!!");
+                    LogLibrary.LogError("Service OnStart() Logged On Failed, Check if Chromeleon services are running!!! Date is:" + DateTime.Now);
                 }
-                //}
-
             }
             catch (Exception ex)
             {
                 var asm = typeof(CmSdkScope).Assembly;
                 LogLibrary.LogError("CmSdkScope GAC Name:" + asm.GlobalAssemblyCache.ToString() + ", Location=" + asm.Location);
-                LogLibrary.LogError("Service start error: " + ex.Message);
+                SafeEventLog.Error("Service start error: " + ex.Message, ex);
             }
             var assembly = typeof(CmSdkScope).Assembly;
-            LogLibrary.LogError("CmSdkScope GAC Name:" + assembly.GlobalAssemblyCache.ToString() + ", Location=" + assembly.Location);
+            LogLibrary.LogService("CmSdkScope connected to: \nGAC Name:" + assembly.GlobalAssemblyCache.ToString() + ",\nLocation=" + assembly.Location);
             LogLibrary.LogService("CM ATLT Service started...");
-            //workerThread = new Thread(new ThreadStart(WorkerLoop));
-            // Library.WriteErrorLog("Test window service started");
-            //workerThread.IsBackground = true;   // service will stop even if thread is running
-            //workerThread.Start();
-
         }
 
 #if TROUBLESHOOTING
@@ -193,10 +243,9 @@ namespace CMATLTService
 
         private async Task DoWorkAsync()
         {
-            if (cmSdkScope == null)
-                cmSdkScope = new CmSdkScope();
-            //using (new CmSdkScope())
-            //{
+            if (_cmSdkScope == null)
+                _cmSdkScope = new CmSdkScope();
+
             CmSdk.Logon.DoLogon();
             if (CmSdk.Logon.IsLoggedOn)
             {
@@ -275,7 +324,7 @@ namespace CMATLTService
 
 
             }
-            // }
+
             // Your logic here
             await Task.Delay(2000);
         }
@@ -326,10 +375,10 @@ namespace CMATLTService
                 string dateString = DateTime.Now.ToString("yyyy-MM-dd");
                 string backupFile = Path.Combine(destinationFolder, $"{seqName}_{dateString}.cmbx");
 
-                //using (new CmSdkScope())
-                //{
-                if (cmSdkScope == null)
-                    cmSdkScope = new CmSdkScope();
+
+                if (_cmSdkScope == null)
+                    _cmSdkScope = new CmSdkScope();
+
                 CmSdk.Logon.DoLogon();
                 if (CmSdk.Logon.IsLoggedOn)
                 {
@@ -377,7 +426,6 @@ namespace CMATLTService
                     }
 
                 }
-                //  }
             }
             catch (Exception ex)
             {
@@ -495,18 +543,11 @@ namespace CMATLTService
         /// <exception cref="NotImplementedException"></exception>
         private async Task<bool> ConnectingToInstumentasync(IInstrument selectedinstument)
         {
-            //using (new CmSdkScope())
-            //{
-            //CmSdk.Logon.DoLogon();
-            //if (CmSdk.Logon.IsLoggedOn)
-            //{
             LogLibrary.LogService("Connecting To Instrument:" + selectedinstument + ". Date:" + DateTime.Now);
             Progress result = await selectedinstument.ConnectAsync();
             LogLibrary.LogService("Instrument Status is:" + result + ". Date:" + DateTime.Now);
             return result == Progress.Completed;
-            // }
-            // }
-            // return false;
+
         }
 
         /// <summary>
@@ -515,18 +556,11 @@ namespace CMATLTService
         /// <returns></returns>
         private IEnumerable<IInstrument> GetInstrument()
         {
-            //using (new CmSdkScope())
-            //{
-            //CmSdk.Logon.DoLogon();
-            //if (CmSdk.Logon.IsLoggedOn)
-            //{
             LogLibrary.LogService("Fetching Instruments Details : " + DateTime.Now);
             var items = Thermo.Chromeleon.Sdk.Common.CmSdk.GetInstrumentAccess();
             LogLibrary.LogService("Fetched Instruments Details count is: " + items.Instruments.Count() + ". Date is:" + DateTime.Now);
             return items.Instruments;
-            // }
-            //}
-            return Enumerable.Empty<IInstrument>();
+
         }
 
         /// <summary>
@@ -706,8 +740,11 @@ namespace CMATLTService
 
         protected override void OnStop()
         {
+            SafeEventLog.Info("Service OnStop() entered");
             _timer?.Dispose();
             _semaphore?.Dispose();
+            _cmSdkScope?.Dispose();
+            SafeEventLog.Info("Service OnStop() completed");
         }
     }
 }

@@ -1,15 +1,14 @@
-﻿using CMATCTUI;
-using CMATCTUI.ChildWindows;
-using CMATLTLoger;
-using Hardcodet.Wpf.TaskbarNotification;
-using Microsoft.Win32;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using CMATCTUI;
+using CMATCTUI.ChildWindows;
+using CMATLTLoger;
+using Hardcodet.Wpf.TaskbarNotification;
+using Microsoft.Win32;
 
 namespace CMATLTServiceTrayApp
 {
@@ -18,13 +17,14 @@ namespace CMATLTServiceTrayApp
     /// </summary>
     public partial class App : System.Windows.Application
     {
-        private static Mutex _mutex;
+        private static Mutex _mutexForTrayApp;
         private TaskbarIcon _trayIcon;
 
         protected override void OnStartup(StartupEventArgs e)
         {
             bool isNewInstance;
-            _mutex = new Mutex(true, "ATLTTRAY_APP_UNIQUE_KEY", out isNewInstance);
+            const string appName = "CMATLTServiceTrayApp";
+            _mutexForTrayApp = new Mutex(true, appName, out isNewInstance);
             if (!isNewInstance)
             {
                 MessageBox.Show("Application Tray is already running.");
@@ -81,10 +81,8 @@ namespace CMATLTServiceTrayApp
                         break;
                 }
             }
-
-           
-
         }
+
         private void DisableItems(string mnName)
         {
             foreach (var item in _trayIcon.ContextMenu.Items)
@@ -134,7 +132,7 @@ namespace CMATLTServiceTrayApp
 
         private void StartService()
         {
-           LogLibrary.LogUIInfo("StartService_Click invoked");
+            LogLibrary.LogUIInfo("StartService_Click invoked");
             try
             {
                 ServiceManager.StartService();
@@ -142,7 +140,7 @@ namespace CMATLTServiceTrayApp
             }
             catch (Exception ex)
             {
-               LogLibrary.LogUIError($"Failed to start service: {ex.Message}");
+                LogLibrary.LogUIError($"Failed to start service: {ex.Message}");
                 ShowNotification("Service Control", $"Failed to start service: {ex.Message}", BalloonIcon.Error);
             }
         }

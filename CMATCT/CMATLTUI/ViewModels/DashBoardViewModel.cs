@@ -1,17 +1,14 @@
-﻿using CMATCTUI.Models;
-using CMATLTLoger;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using CMATCTUI.Models;
+using CMATLTLoger;
+using Newtonsoft.Json;
 
 namespace CMATCTUI.ViewModels
 {
@@ -158,9 +155,18 @@ namespace CMATCTUI.ViewModels
 
             if (!Directory.Exists(destinationFolder))
             {
-                LogLibrary.LogUIInfo("destinationFolder not exist" + destinationFolder);
-                MessageBox.Show("Data folder is not Exist");
-                return;
+                LogLibrary.LogUIInfo("Data folder does not Exist, creating it now" + destinationFolder);
+                //MessageBox.Show("Data folder does not Exist");
+                DirectoryInfo info = Directory.CreateDirectory(destinationFolder);
+                if (info.Exists)
+                {
+                    LogLibrary.LogUIInfo("Data folder created successfully at: " + destinationFolder);
+                }
+                else
+                {
+                    LogLibrary.LogUIError("Failed to create Data folder at: " + destinationFolder + "Try to create it manually and start Service again.");
+                    return;
+                }
             }
 
             var filesWithDate = Directory.GetFiles(destinationFolder)
@@ -198,7 +204,7 @@ namespace CMATCTUI.ViewModels
             else
             {
                 LogLibrary.LogUIInfo("No files with today's date found in: " + destinationFolder);
-             
+
             }
         }
 

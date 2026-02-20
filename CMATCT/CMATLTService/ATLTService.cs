@@ -121,23 +121,25 @@ namespace CMATLTService
             Thread.Sleep(TimeSpan.FromMinutes(1));
             try
             {
-                using (new CmSdkScope())
+                // using (new CmSdkScope())
+                if (cmSdkScope == null)
+                    cmSdkScope = new CmSdkScope();
+                //  {
+                // LogLibrary.LogError("CmSdkScope: ");
+                CmSdk.Logon.DoLogon();
+                if (CmSdk.Logon.IsLoggedOn)
                 {
-                    // LogLibrary.LogError("CmSdkScope: ");
-                    CmSdk.Logon.DoLogon();
-                    if (CmSdk.Logon.IsLoggedOn)
-                    {
-                      //  LogLibrary.LogUIInfo("CM ATLT Service Logged On Success ");
-                        TriggerActionFlow();
-                        //LogLibrary.LogUIInfo("CM ATLT Service Started Task for fetching log ");
-                        Task.Run(() => ListenForTrigger());
-                        //LogLibrary.LogUIInfo("CM ATLT Service Started to listen for UI Commands ");
-                    }
-                    else
-                    {
-                        LogLibrary.LogError("Failed to IsLoggedOn to CmSdk may be chromeleon services are stopped. Date is:" + DateTime.Now);
-                    }
+                    //  LogLibrary.LogUIInfo("CM ATLT Service Logged On Success ");
+                    TriggerActionFlow();
+                    //LogLibrary.LogUIInfo("CM ATLT Service Started Task for fetching log ");
+                    Task.Run(() => ListenForTrigger());
+                    //LogLibrary.LogUIInfo("CM ATLT Service Started to listen for UI Commands ");
                 }
+                else
+                {
+                    LogLibrary.LogError("Failed to IsLoggedOn to CmSdk may be chromeleon services are stopped. Date is:" + DateTime.Now);
+                }
+                //}
 
             }
             catch (Exception ex)
@@ -191,87 +193,89 @@ namespace CMATLTService
 
         private async Task DoWorkAsync()
         {
-            using (new CmSdkScope())
+            if (cmSdkScope == null)
+                cmSdkScope = new CmSdkScope();
+            //using (new CmSdkScope())
+            //{
+            CmSdk.Logon.DoLogon();
+            if (CmSdk.Logon.IsLoggedOn)
             {
-                CmSdk.Logon.DoLogon();
-                if (CmSdk.Logon.IsLoggedOn)
+
+                LogLibrary.LogService("CM ATLT Service trying to fetch CM Data..." + DateTime.Now);
+                // LogLibrary.WriteErrorLog("log writing : " + DateTime.Now.ToString());
+
+                try
                 {
-
-                    LogLibrary.LogService("CM ATLT Service trying to fetch CM Data..." + DateTime.Now);
-                    // LogLibrary.WriteErrorLog("log writing : " + DateTime.Now.ToString());
-
-                    try
+                    foreach (IInstrument instr in GetInstrument())
                     {
-                        foreach (IInstrument instr in GetInstrument())
+                        //string sequenceUri = null;
+                        //string sequenceUri1 = instr?
+                        //                     .QueueControl?
+                        //                     .QueueItems?
+                        //                     .FirstOrDefault()?
+                        //                     .SequenceUri?
+                        //                     .OriginalString;
+
+
+                        LogLibrary.LogService("Instruments Loop Entered." + DateTime.Now);
+                        //iinstrument instr = (iinstrument)getinstrument();
+                        IInstrument selectedinstument = instr;
+                        try
                         {
-                            //string sequenceUri = null;
-                            //string sequenceUri1 = instr?
-                            //                     .QueueControl?
-                            //                     .QueueItems?
-                            //                     .FirstOrDefault()?
-                            //                     .SequenceUri?
-                            //                     .OriginalString;
-
-
-                            LogLibrary.LogService("Instruments Loop Entered." + DateTime.Now);
-                            //iinstrument instr = (iinstrument)getinstrument();
-                            IInstrument selectedinstument = instr;
-                            try
+                            LogLibrary.LogService("Selected Instrument is :" + selectedinstument + ". Date is:" + DateTime.Now);
+                            bool result = await ConnectingToInstumentasync(selectedinstument);
+                            LogLibrary.LogService("Instrument Status :" + result + ". Date is:" + DateTime.Now);
+                            if (result)
                             {
-                                LogLibrary.LogService("Selected Instrument is :" + selectedinstument + ". Date is:" + DateTime.Now);
-                                bool result = await ConnectingToInstumentasync(selectedinstument);
+                                //WriteOnlineAuditDataDuplicateintoFile(selectedinstument.OnlineAuditTrail, selectedinstument.Name);
                                 LogLibrary.LogService("Instrument Status :" + result + ". Date is:" + DateTime.Now);
-                                if (result)
+                                //messagebox.show("connected successfully to " + selectedinstument.name);
+                                LogLibrary.LogService("Ready to Fetching AuditTrails Data :" + DateTime.Now);
+                                //FetchOnlineAuditrailsData(selectedinstument, selectedinstument.Name);
+
+                                if (selectedinstument.OnlineAuditTrail.Count() > 0)
                                 {
-                                    //WriteOnlineAuditDataDuplicateintoFile(selectedinstument.OnlineAuditTrail, selectedinstument.Name);
-                                    LogLibrary.LogService("Instrument Status :" + result + ". Date is:" + DateTime.Now);
-                                    //messagebox.show("connected successfully to " + selectedinstument.name);
-                                    LogLibrary.LogService("Ready to Fetching AuditTrails Data :" + DateTime.Now);
-                                    //FetchOnlineAuditrailsData(selectedinstument, selectedinstument.Name);
 
-                                    if (selectedinstument.OnlineAuditTrail.Count() > 0)
-                                    {
+                                    FetchOnlineAuditrailsData(selectedinstument, selectedinstument.Name);
 
-                                        FetchOnlineAuditrailsData(selectedinstument, selectedinstument.Name);
-
-                                        //sequenceUri = instr.QueueControl.QueueItems.First().SequenceUri.OriginalString.ToString();
+                                    //sequenceUri = instr.QueueControl.QueueItems.First().SequenceUri.OriginalString.ToString();
 
 
 
-                                        //ExportSequenceData(sequenceUri, selectedinstument.Name);
+                                    //ExportSequenceData(sequenceUri, selectedinstument.Name);
 
 
-                                    }
-                                    else
-                                    {
-                                        LogLibrary.LogService("AuditTrails Data Count is --:" + selectedinstument.OnlineAuditTrail.Count() + "And" + DateTime.Now);
-                                    }
                                 }
                                 else
                                 {
-                                    LogLibrary.LogService("Failed to connect to Instrument :" + selectedinstument + ". Date is:" + DateTime.Now);
+                                    LogLibrary.LogService("AuditTrails Data Count is --:" + selectedinstument.OnlineAuditTrail.Count() + "And" + DateTime.Now);
                                 }
-
                             }
-                            catch (Exception ex)
+                            else
                             {
-
-                                LogLibrary.LogError("Error in processing instrument " + selectedinstument.Name + ": " + ex.Message);
+                                LogLibrary.LogService("Failed to connect to Instrument :" + selectedinstument + ". Date is:" + DateTime.Now);
                             }
 
                         }
+                        catch (Exception ex)
+                        {
 
-                        //ExportSequenceData("chrom://tf-251216232713/ChromeleonLocal/Instrument Data/MyInuvion/SeqInuvion.seq",null);
+                            LogLibrary.LogError("Error in processing instrument " + selectedinstument.Name + ": " + ex.Message);
+                        }
+
                     }
-                    catch (Exception ex)
-                    {
 
-                        LogLibrary.LogError("Error in DoWorkAsync: " + ex.Message);
-                    }
-
-
+                    //ExportSequenceData("chrom://tf-251216232713/ChromeleonLocal/Instrument Data/MyInuvion/SeqInuvion.seq",null);
                 }
+                catch (Exception ex)
+                {
+
+                    LogLibrary.LogError("Error in DoWorkAsync: " + ex.Message);
+                }
+
+
             }
+            // }
             // Your logic here
             await Task.Delay(2000);
         }
@@ -322,56 +326,58 @@ namespace CMATLTService
                 string dateString = DateTime.Now.ToString("yyyy-MM-dd");
                 string backupFile = Path.Combine(destinationFolder, $"{seqName}_{dateString}.cmbx");
 
-                using (new CmSdkScope())
+                //using (new CmSdkScope())
+                //{
+                if (cmSdkScope == null)
+                    cmSdkScope = new CmSdkScope();
+                CmSdk.Logon.DoLogon();
+                if (CmSdk.Logon.IsLoggedOn)
                 {
                     CmSdk.Logon.DoLogon();
                     if (CmSdk.Logon.IsLoggedOn)
                     {
-                        CmSdk.Logon.DoLogon();
-                        if (CmSdk.Logon.IsLoggedOn)
+                        var exportEngine = CmSdk.GetExportEngine();
+                        var tokenSource = new CancellationTokenSource();
+                        //var targetFileName = @"C:\Demo\test.cmbx";
+                        var targetFileName = backupFile;
+                        var progress = new Progress<double>();
+                        var itemsToExport = new List<Uri> { new Uri(sequenceUri) };
+                        // Create and start a new export task
+                        var importTask = exportEngine.ExportToCmbxAsync(
+                            itemsToExport, // The items which will be exported
+                            targetFileName, // The target filename
+                            "Just a short description",
+                            CmbxExportOptions.IncludeAllData, // Exporting options
+                            CmbxContainerFormat.V2, // Container format (currently there are two different formats)
+                            progress, // Progress information
+                            tokenSource.Token // Cancellation token (in order to cancel the export operation)
+                            );
+
+                        // Wait for task completion and continue in the current synchronization 
+                        // context (useful for UI threads)
+                        importTask.ContinueWith(t =>
                         {
-                            var exportEngine = CmSdk.GetExportEngine();
-                            var tokenSource = new CancellationTokenSource();
-                            //var targetFileName = @"C:\Demo\test.cmbx";
-                            var targetFileName = backupFile;
-                            var progress = new Progress<double>();
-                            var itemsToExport = new List<Uri> { new Uri(sequenceUri) };
-                            // Create and start a new export task
-                            var importTask = exportEngine.ExportToCmbxAsync(
-                                itemsToExport, // The items which will be exported
-                                targetFileName, // The target filename
-                                "Just a short description",
-                                CmbxExportOptions.IncludeAllData, // Exporting options
-                                CmbxContainerFormat.V2, // Container format (currently there are two different formats)
-                                progress, // Progress information
-                                tokenSource.Token // Cancellation token (in order to cancel the export operation)
-                                );
-
-                            // Wait for task completion and continue in the current synchronization 
-                            // context (useful for UI threads)
-                            importTask.ContinueWith(t =>
+                            if (t.IsFaulted)
                             {
-                                if (t.IsFaulted)
-                                {
-                                    // Faulted with exception
-                                    Exception ex = t.Exception;
-                                    while (ex is AggregateException && ex.InnerException != null)
-                                        ex = ex.InnerException;
+                                // Faulted with exception
+                                Exception ex = t.Exception;
+                                while (ex is AggregateException && ex.InnerException != null)
+                                    ex = ex.InnerException;
 
-                                }
-                                else if (t.IsCanceled)
-                                {
+                            }
+                            else if (t.IsCanceled)
+                            {
 
-                                }
-                                else
-                                {
+                            }
+                            else
+                            {
 
-                                }
-                            });
-                        }
-
+                            }
+                        });
                     }
+
                 }
+                //  }
             }
             catch (Exception ex)
             {
